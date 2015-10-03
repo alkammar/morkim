@@ -1,0 +1,98 @@
+package lib.morkim.mfw.ui;
+
+import lib.morkim.mfw.R;
+import lib.morkim.mfw.adapters.Controller;
+import lib.morkim.mfw.adapters.Transition;
+import lib.morkim.mfw.app.MorkimApp;
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.WindowManager;
+
+public abstract class Screen extends Activity implements MView {
+
+	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
+	
+	protected Navigation navigation;
+	protected Controller controller;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setCustomTilteBar();
+
+		navigation = ((MorkimApp) getApplication()).acquireNavigation();
+		controller = ((MorkimApp) getApplication()).acquireController(this);
+
+		controller.attach(this, savedInstanceState);
+
+		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
+		Transition transition = Transition.values()[transitionOrdinal];
+		animateTransition(transition);
+	}
+	
+	public void configureUiElements() {};
+
+	private void animateTransition(Transition transition) {
+		switch (transition) {
+		case RIGHT:
+			overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+			break;
+		case LEFT:
+			overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		controller.bindViewModel();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		controller.unbindViewModel();
+	}
+
+	protected void setCustomTilteBar() {
+
+	}
+
+	public void keepScreenOn(boolean keepOn) {
+
+		if (keepOn) 
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		else
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		
+		((MorkimApp) getApplication()).destroyController(controller);
+	}
+	
+	@Override
+	public void finish() {
+		super.finish();
+
+		((MorkimApp) getApplication()).destroyController(controller);
+	}
+	
+	@Override
+	public void setNavigation(Navigation navigation) {
+		this.navigation = navigation;
+	}
+	
+	@Override
+	public String getStringResource(int resource) {
+		return getString(resource);
+	}
+}
