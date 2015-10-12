@@ -6,10 +6,13 @@ import java.util.Set;
 public class ViewModel {
 
 	private ViewModelListener listener;
-	private HashMap<String, Object> map;
+
+	private HashMap<String, Object> current;
+	private HashMap<String, Object> updated;
 
 	public ViewModel() {
-		map = new HashMap<String, Object>();
+		current = new HashMap<String, Object>();
+		updated = new HashMap<String, Object>();
 	}
 
 	public ViewModel set(String key) {
@@ -17,43 +20,54 @@ public class ViewModel {
 	}
 
 	public ViewModel set(String key, Object value) {
-		map.put(key, value);
+
+		if (!current.containsKey(key) || current.get(key) != value) {
+			current.put(key, value);
+			updated.put(key, value);
+		}
+
 		return this;
 	}
 
 	public Set<String> getKeys() {
-		return map.keySet();
+		return updated.keySet();
 	}
 
 	public Object getValue(String key) {
-		return map.get(key);
+		return (updated.containsKey(key)) ? updated.get(key) : current.get(key);
 	}
 
 	public void register(ViewModelListener listener) {
-		
+
 		synchronized (this) {
 			this.listener = listener;
 		}
 	}
 
-	public void notifyListener() {
+	public void notifyView() {
 
 		synchronized (this) {
-			listener.onChanged(this);
-			map.clear();
+			if (!updated.isEmpty()) {
+				listener.onModelUpdated(this);
+				updated.clear();
+			}
 		}
 	}
 
 	public void unregister() {
-		
+
 		synchronized (this) {
 			this.listener = null;
 		}
 	}
-	
+
+	public boolean hasUpdates() {
+		return !updated.isEmpty();
+	}
+
 	@Override
 	public String toString() {
-		return map.toString();
+		return updated.toString();
 	}
 
 	public boolean hasListener() {

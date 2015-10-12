@@ -1,39 +1,33 @@
 package lib.morkim.mfw.ui;
 
 import lib.morkim.mfw.adapters.Transition;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
 public abstract class Navigation {
 
-	protected Context context;
-
-	public Navigation(Context context) {
-		this.context = context;
-	}
-
 	public abstract void navigate(MView source, String destination);
 
-	protected void navigateTo(Class<?> cls) {
-		navigateTo(cls, Transition.NONE);
+	public static void to(Context context, Class<?> cls) {
+		to(context, cls, Transition.NONE);
 	}
 
-	private void navigateTo(Class<?> cls, Transition transition) {
-	
+	public static void to(Context context, Class<?> cls, Transition transition) {
+
 		Intent intent = new Intent(context, cls);
 		intent.putExtra(Screen.KEY_SCREEN_TRANSITION, transition.ordinal());
 		context.startActivity(intent);
 	}
 
-	protected void navigateToGooglePlay() {
+	public static void toGooglePlay(Context context) {
 		context.startActivity(new Intent(Intent.ACTION_VIEW, Uri
 				.parse(googlePlayBaseUrl()
 						+ context.getPackageName())));
 	}
 
-	protected void showSharingList(CharSequence title) {
-		
+	public static void showSharingList(Context context, CharSequence title) {
 		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 		sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		sharingIntent.setType("text/plain");
@@ -48,9 +42,9 @@ public abstract class Navigation {
 		return "https://play.google.com/store/apps/details?id=";
 	}
 
-//	protected void reloadScreen(Transition transition) {
-//		navigateTo(view.getClass(), transition);
-//		view.finish();
-//	}
+	public static void reload(Context context, Transition transition) {
+		to(context, context.getClass(), transition);
+		((Activity) context).finish();
+	}
 
 }

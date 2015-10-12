@@ -2,7 +2,6 @@ package lib.morkim.mfw.adapters;
 
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.ui.MView;
-import lib.morkim.mfw.ui.ViewModel;
 import lib.morkim.mfw.ui.lists.ListItemModel;
 
 public abstract class ListController extends Controller {
@@ -10,9 +9,6 @@ public abstract class ListController extends Controller {
 	public ListController(AppContext context, MView view) {
 		super(context, view);
 	}
-	
-	@Override
-	protected void buildInitializationModel(ViewModel viewModel) {}
 
 	/**
 	 * Gets the list elements info to be displayed

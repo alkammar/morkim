@@ -4,13 +4,13 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.repo.gateway.EmptyGateway;
 import lib.morkim.mfw.repo.gateway.Gateway;
 
-public abstract class RepositoryImp implements Repository {
+public abstract class MorkimRepository implements Repository {
 
 	protected MorkimApp context;
 
 	protected abstract int version();
 
-	public RepositoryImp(MorkimApp application) {
+	public MorkimRepository(MorkimApp application) {
 		this.context = application;
 
 		RepoVersion repoVersion = createVersionGateway();

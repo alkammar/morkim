@@ -2,8 +2,10 @@ package lib.morkim.mfw.ui;
 
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.adapters.Controller;
+import lib.morkim.mfw.adapters.Presenter;
 import lib.morkim.mfw.adapters.Transition;
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -14,6 +16,7 @@ public abstract class Screen extends Activity implements MView {
 	
 	protected Navigation navigation;
 	protected Controller controller;
+	protected Presenter presenter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public abstract class Screen extends Activity implements MView {
 
 		navigation = ((MorkimApp) getApplication()).acquireNavigation();
 		controller = ((MorkimApp) getApplication()).acquireController(this);
+		presenter = ((MorkimApp) getApplication()).createPresenter(this);
 
 		controller.attach(this, savedInstanceState);
 
@@ -50,14 +54,14 @@ public abstract class Screen extends Activity implements MView {
 	protected void onResume() {
 		super.onResume();
 
-		controller.bindViewModel();
+		presenter.bindViewModel();
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 
-		controller.unbindViewModel();
+		presenter.unbindViewModel();
 	}
 
 	protected void setCustomTilteBar() {
@@ -94,5 +98,10 @@ public abstract class Screen extends Activity implements MView {
 	@Override
 	public String getStringResource(int resource) {
 		return getString(resource);
+	}
+	
+	@Override
+	public UseCaseStateListener getUseCaseListener() {
+		return presenter;
 	}
 }

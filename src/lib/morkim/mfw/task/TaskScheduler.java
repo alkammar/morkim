@@ -6,7 +6,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.app.Scheduler;
-import lib.morkim.mfw.usecase.UseCaseFactory;
 
 public class TaskScheduler {
 

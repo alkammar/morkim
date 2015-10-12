@@ -4,8 +4,10 @@ import java.util.HashMap;
 
 import lib.morkim.mfw.adapters.Controller;
 import lib.morkim.mfw.adapters.EmptyController;
+import lib.morkim.mfw.adapters.Presenter;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
+import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.gateway.Gateway;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.task.ScheduledTask;
@@ -14,6 +16,7 @@ import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.MView;
 import lib.morkim.mfw.ui.Navigation;
 import lib.morkim.mfw.usecase.UseCaseAbstractFactory;
+import lib.morkim.mfw.usecase.UseCaseFactory;
 import android.app.Application;
 
 /**
@@ -44,11 +47,15 @@ public abstract class MorkimApp extends Application implements AppContext,
 		createFactories();
 
 		repo = createRepo();
+		if (repo == null) 
+			throw new Error(String.format("createRepo() method in %s must return a non-null implementation", this.getClass()));
 
 		analytics = createAnalytics();
 		analytics.initialize();
 
 		model = createModel();
+		if (model == null) 
+			throw new Error(String.format("createModel() method in %s must return a non-null implementation", this.getClass()));
 
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
 
@@ -73,18 +80,18 @@ public abstract class MorkimApp extends Application implements AppContext,
 	/**
 	 * Create the data repository for your application. This repository has the
 	 * knowledge of all needed data {@link Gateway} to be created on request
-	 * from the application. See more details in the {@link Repository}
+	 * from the application. See more details in the {@link MorkimRepository}
 	 * interface on how to create data gateways.
 	 * 
 	 * @return Repository interface
 	 */
-	protected abstract Repository createRepo();
+	protected abstract MorkimRepository createRepo();
 
 	/**
 	 * Create the application data model container {@link Model} should contain
 	 * all your business entity hierarchy.
 	 * 
-	 * @return
+	 * @return Application data model
 	 */
 	protected abstract Model createModel();
 
@@ -92,7 +99,8 @@ public abstract class MorkimApp extends Application implements AppContext,
 	 * Create scheduled tasks factory. The tasks are background threads that run
 	 * at specific intervals and you can schedule/unschedule them at any point
 	 * in your application life time. You can also register and unregister to
-	 * updates from those tasks. For more info take a look at {@link ScheduledTask} abstract class.
+	 * updates from those tasks. For more info take a look at
+	 * {@link ScheduledTask} abstract class.
 	 * 
 	 * @return Scheduled tasks factory
 	 */
@@ -122,6 +130,8 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 		return controller;
 	}
+	
+	public abstract Presenter createPresenter(MView view);
 
 	public Navigation acquireNavigation() {
 		return navigation;
@@ -151,12 +161,21 @@ public abstract class MorkimApp extends Application implements AppContext,
 		return taskScheduler;
 	}
 
-	protected abstract Analytics createAnalytics();
+	protected Analytics createAnalytics() {
+		return new DummyAnalytics(this);
+	}
 
 	protected abstract Navigation createNavigation();
 
 	protected abstract Controller createController(MView view);
 
+	/**
+	 * Create a factory of {@link UseCaseFactory} factories. At some point you might
+	 * need to group related use case which need their own factory. Hence this
+	 * is a factory of factories is useful.
+	 * 
+	 * @return Use case abstract factory
+	 */
 	protected abstract UseCaseAbstractFactory createUseCaseAbstractFactory();
 
 	public UseCaseAbstractFactory getUseCaseAbstractFactory() {
@@ -165,7 +184,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	public void destroyController(Controller controller) {
 		controllers.remove(controller);
-		controller.destroy();
 	}
 
 	@Override
