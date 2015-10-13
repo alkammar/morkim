@@ -15,6 +15,7 @@ public abstract class SyncUseCase extends BaseUseCase implements UseCaseStateLis
 		
 		onPrepare();
 		onExecute();
+		onReportProgress();
 		onSaveModel();
 	}
 	
