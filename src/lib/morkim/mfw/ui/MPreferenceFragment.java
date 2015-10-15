@@ -49,6 +49,11 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	}
 	
 	@Override
+	public void notifyOnUiThread(Runnable runnable) {
+		getActivity().runOnUiThread(runnable);
+	}
+	
+	@Override
 	public void configureUiElements() {}
 	
 	@Override

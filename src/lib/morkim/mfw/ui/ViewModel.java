@@ -6,6 +6,7 @@ import java.util.Set;
 public class ViewModel {
 
 	private ViewModelListener listener;
+	private static ViewModelListener emptyListener = new EmptyListener();
 
 	private HashMap<String, Object> current;
 	private HashMap<String, Object> updated;
@@ -13,6 +14,8 @@ public class ViewModel {
 	public ViewModel() {
 		current = new HashMap<String, Object>();
 		updated = new HashMap<String, Object>();
+
+		listener = emptyListener;
 	}
 
 	public ViewModel set(String key) {
@@ -54,10 +57,29 @@ public class ViewModel {
 		}
 	}
 
+	public void notifyUiView() {
+
+		synchronized (this) {
+			listener.notifyOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+
+					synchronized (ViewModel.this) {
+						if (!updated.isEmpty()) {
+							listener.onModelUpdated(ViewModel.this);
+							updated.clear();
+						}
+					}
+				}
+			});
+		}
+	}
+
 	public void unregister() {
 
 		synchronized (this) {
-			this.listener = null;
+			this.listener = emptyListener;
 		}
 	}
 
@@ -71,6 +93,6 @@ public class ViewModel {
 	}
 
 	public boolean hasListener() {
-		return (listener != null);
+		return (listener != emptyListener);
 	}
 }

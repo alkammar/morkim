@@ -23,6 +23,8 @@ public abstract class Screen extends Activity implements MView {
 		super.onCreate(savedInstanceState);
 
 		setCustomTilteBar();
+		
+		setContentView(layoutId());
 
 		navigation = ((MorkimApp) getApplication()).acquireNavigation();
 		controller = ((MorkimApp) getApplication()).acquireController(this);
@@ -34,6 +36,8 @@ public abstract class Screen extends Activity implements MView {
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
 	}
+	
+	protected abstract int layoutId();
 	
 	public void configureUiElements() {};
 
@@ -88,6 +92,11 @@ public abstract class Screen extends Activity implements MView {
 		super.finish();
 
 		((MorkimApp) getApplication()).destroyController(controller);
+	}
+	
+	@Override
+	public void notifyOnUiThread(Runnable runnable) {
+		this.runOnUiThread(runnable);
 	}
 	
 	@Override
