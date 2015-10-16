@@ -8,6 +8,7 @@ import lib.morkim.mfw.ui.MView;
 import lib.morkim.mfw.ui.ViewListener;
 import lib.morkim.mfw.usecase.UseCaseAbstractFactory;
 import lib.morkim.mfw.usecase.UseCaseFactory;
+import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.os.Bundle;
 
 public abstract class Controller {
@@ -17,6 +18,8 @@ public abstract class Controller {
 
 	private UseCaseAbstractFactory useCaseAbstractFactory;
 	private UseCaseFactory useCaseFactory;
+	
+	protected UseCaseStateListener useCaseListener;
 
 	public Controller(AppContext appContext, MView view) {
 
@@ -32,6 +35,8 @@ public abstract class Controller {
 		this.view = view;
 		this.view.bindUiElements();
 		this.view.assignListeners(getListeners());
+		
+		this.useCaseListener = view.getUseCaseListener();
 
 		fetchExtraData(dataToRestore);
 	}

@@ -27,8 +27,8 @@ public abstract class Screen extends Activity implements MView {
 		setContentView(layoutId());
 
 		navigation = ((MorkimApp) getApplication()).acquireNavigation();
-		controller = ((MorkimApp) getApplication()).acquireController(this);
 		presenter = ((MorkimApp) getApplication()).createPresenter(this);
+		controller = ((MorkimApp) getApplication()).acquireController(this);
 
 		controller.attach(this, savedInstanceState);
 
