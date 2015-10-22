@@ -13,18 +13,20 @@ import android.view.WindowManager;
 public abstract class Screen extends Activity implements MView {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
-	
+
 	protected Navigation navigation;
 	protected Controller controller;
 	protected Presenter presenter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setCustomTilteBar();
-		
-		setContentView(layoutId());
+
+		int layoutId = layoutId();
+		if (layoutId > 0)
+			setContentView(layoutId);
 
 		navigation = ((MorkimApp) getApplication()).acquireNavigation();
 		presenter = ((MorkimApp) getApplication()).createPresenter(this);
@@ -36,9 +38,11 @@ public abstract class Screen extends Activity implements MView {
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
 	}
-	
-	protected abstract int layoutId();
-	
+
+	protected int layoutId() {
+		return 0;
+	}
+
 	public void configureUiElements() {};
 
 	private void animateTransition(Transition transition) {
@@ -53,64 +57,72 @@ public abstract class Screen extends Activity implements MView {
 			break;
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 
+		keepScreenOn(keepScreenOn());
+
 		presenter.bindViewModel();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 
 		presenter.unbindViewModel();
+
+		keepScreenOn(false);
 	}
 
 	protected void setCustomTilteBar() {
 
 	}
 
-	public void keepScreenOn(boolean keepOn) {
+	private void keepScreenOn(boolean keepOn) {
 
 		if (keepOn) 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		else
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		
+
 		((MorkimApp) getApplication()).destroyController(controller);
 	}
-	
+
 	@Override
 	public void finish() {
 		super.finish();
 
 		((MorkimApp) getApplication()).destroyController(controller);
 	}
-	
+
 	@Override
 	public void notifyOnUiThread(Runnable runnable) {
 		this.runOnUiThread(runnable);
 	}
-	
+
 	@Override
 	public void setNavigation(Navigation navigation) {
 		this.navigation = navigation;
 	}
-	
+
 	@Override
 	public String getStringResource(int resource) {
 		return getString(resource);
 	}
-	
+
 	@Override
 	public UseCaseStateListener getUseCaseListener() {
 		return presenter;
+	}
+
+	protected boolean keepScreenOn() {
+		return false;
 	}
 }

@@ -79,7 +79,7 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 		synchronized (this) {
 			onUpdate(observable, data, viewModel);
 			if (viewModel.hasListener())
-				view.onModelUpdated(viewModel);
+				viewModel.notifyUiView();
 		}
 	}
 
