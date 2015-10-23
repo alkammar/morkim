@@ -5,7 +5,7 @@ import java.util.Map;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.content.Intent;
 
-public interface MView extends ViewModelListener {
+public interface Viewable extends ViewModelListener {
 	
 	/**
 	 * Positive button dialog event

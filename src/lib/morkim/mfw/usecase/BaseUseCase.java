@@ -19,46 +19,60 @@ public abstract class BaseUseCase extends Observable implements UseCase {
 	public BaseUseCase(AppContext appContext) {
 
 		this.appContext = appContext;
-		this.model = ((MorkimApp) appContext).getModel();
+		this.model = ((AppContext) appContext).getModel();
 		this.repos = ((MorkimApp) appContext).getRepos();
 	}
 
 	protected void onPrepare() {
-		if (request != null)
-			listener = request.listener;
+
 	}
 
 	protected abstract void reportProgress();
 
 	protected abstract void onExecute();
+
 	protected abstract void onReportProgress();
+
 	protected abstract void onSaveModel();
 
 	public AppContext getAppContext() {
 		return appContext;
 	}
+
 	public void setAppContext(AppContext appContext) {
 		this.appContext = appContext;
 	}
+
 	public Model getModel() {
 		return model;
 	}
+
 	public void setModel(Model model) {
 		this.model = model;
 	}
+
 	public UseCaseRequest getRequest() {
 		return request;
 	}
+
 	public void setRequest(UseCaseRequest request) {
 		this.request = request;
 	}
+
 	public Repository getRepos() {
 		return repos;
 	}
+
 	public void setRepos(Repository repos) {
 		this.repos = repos;
 	}
+
 	public UseCaseStateListener getListener() {
 		return listener;
+	}
+
+	@Override
+	public void setListener(UseCaseStateListener listener) {
+		this.listener = listener;
 	}
 }

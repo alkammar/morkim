@@ -4,27 +4,26 @@ import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.app.AppContext;
-import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.ui.MView;
+import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.ui.ViewModel;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
 public abstract class Presenter implements Observer, UseCaseStateListener {
 
 	private AppContext appContext;
-	protected MView view;
+	protected Viewable viewable;
 
 	private Model dataModel;
 	private boolean isBindedToDataModel;
 	private ViewModel viewModel;
 
-	public Presenter(AppContext appContext, MView view) {
-		this.view = view;
+	public Presenter(AppContext appContext, Viewable viewable) {
+		this.viewable = viewable;
 
 		this.appContext = appContext;
 
-		this.dataModel = ((MorkimApp) appContext).getModel();
+		this.dataModel = ((AppContext) appContext).getModel();
 		viewModel = new ViewModel();
 	}
 
@@ -70,7 +69,7 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	public void bindViewModel() {
 
 		buildInitializationModel(viewModel);
-		viewModel.register(view);
+		viewModel.register(viewable);
 		viewModel.notifyView();
 	}
 
@@ -109,6 +108,6 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	}
 
 	protected String string(int resource) {
-		return view.getStringResource(resource);
+		return viewable.getStringResource(resource);
 	}
 }

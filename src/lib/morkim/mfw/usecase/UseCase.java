@@ -9,4 +9,5 @@ public interface UseCase {
 	
 	public void executeSync(UseCaseRequest request);
 	public void executeSync();
+	public abstract void setListener(UseCaseStateListener listener);
 }

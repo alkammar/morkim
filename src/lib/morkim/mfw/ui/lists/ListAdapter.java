@@ -60,7 +60,7 @@ public abstract class ListAdapter extends BaseAdapter {
 			holder = (ListItemHolder) convertView.getTag();
 		}
 
-		// bind data to view holder
+		// bind data to viewable holder
 		bindView(convertView, holder, position);
 
 		return convertView;
@@ -76,7 +76,7 @@ public abstract class ListAdapter extends BaseAdapter {
 	protected void bindView(View convertView, ListItemHolder holder,
 			int position) {
 
-		// bind data to view holder
+		// bind data to viewable holder
 		bindView(holder, position);
 	}
 

@@ -3,40 +3,37 @@ package lib.morkim.mfw.adapters;
 import java.util.Map;
 
 import lib.morkim.mfw.app.AppContext;
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.ui.MView;
 import lib.morkim.mfw.ui.ViewListener;
-import lib.morkim.mfw.usecase.UseCaseAbstractFactory;
+import lib.morkim.mfw.ui.Viewable;
+import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseFactory;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.os.Bundle;
 
 public abstract class Controller {
 
-	private AppContext appContext;
-	protected MView view;
+	protected Viewable viewable;
 
-	private UseCaseAbstractFactory useCaseAbstractFactory;
+	private AppContext appContext;
 	private UseCaseFactory useCaseFactory;
 	
-	protected UseCaseStateListener useCaseListener;
+	private UseCaseStateListener useCaseListener;
 
-	public Controller(AppContext appContext, MView view) {
+	public Controller(AppContext appContext, Viewable viewable) {
 
 		this.appContext = appContext;
-
-		this.useCaseAbstractFactory = ((MorkimApp) appContext).getUseCaseAbstractFactory();
 	}
 
-	public void attach(MView view, Bundle dataToRestore) {
+	public void attach(Viewable viewable, Bundle dataToRestore) {
 
 //		bindDataModel();
 
-		this.view = view;
-		this.view.bindUiElements();
-		this.view.assignListeners(getListeners());
+		this.viewable = viewable;
+		this.viewable.bindUiElements();
+		this.viewable.assignListeners(getListeners());
 		
-		this.useCaseListener = view.getUseCaseListener();
+		this.useCaseListener = viewable.getUseCaseListener();
+		this.useCaseFactory = appContext.getUseCaseFactory();
 
 		fetchExtraData(dataToRestore);
 	}
@@ -49,16 +46,18 @@ public abstract class Controller {
 		return (AppContext) appContext;
 	}
 
-	public UseCaseAbstractFactory getUseCaseAbstractFactory() {
-		return useCaseAbstractFactory;
-	}
-
 	public UseCaseFactory getUseCaseFactory() {
 		return useCaseFactory;
 	}
 
 	public void setUseCaseFactory(UseCaseFactory useCaseFactory) {
 		this.useCaseFactory = useCaseFactory;
+	}
+	
+	public UseCase createUseCase(String name) {
+		UseCase useCase = useCaseFactory.createUseCase(name);
+		useCase.setListener(useCaseListener);
+		return useCase;
 	}
 
 	protected abstract Map<String, ViewListener> getListeners();

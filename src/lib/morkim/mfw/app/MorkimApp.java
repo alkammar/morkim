@@ -6,16 +6,15 @@ import lib.morkim.mfw.adapters.Controller;
 import lib.morkim.mfw.adapters.EmptyController;
 import lib.morkim.mfw.adapters.Presenter;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.MorkimRepository;
+import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.Gateway;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
-import lib.morkim.mfw.ui.MView;
 import lib.morkim.mfw.ui.Navigation;
-import lib.morkim.mfw.usecase.UseCaseAbstractFactory;
+import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.usecase.UseCaseFactory;
 import android.app.Application;
 
@@ -30,7 +29,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 		RepoAccess {
 
 	private Repository repo;
-	private UseCaseAbstractFactory useCaseAbstractFactory;
 
 	private Analytics analytics;
 
@@ -39,6 +37,8 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	private Model model;
 	private TaskScheduler taskScheduler;
+
+	private UseCaseFactory useCaseFactory;
 
 	@Override
 	public void onCreate() {
@@ -67,7 +67,7 @@ public abstract class MorkimApp extends Application implements AppContext,
 			e.printStackTrace();
 		}
 
-		useCaseAbstractFactory = createUseCaseAbstractFactory();
+		useCaseFactory = createUseCaseFactory();
 	}
 
 	/**
@@ -111,11 +111,11 @@ public abstract class MorkimApp extends Application implements AppContext,
 	 * otherwise it will create this controller if the screen is mapped to an
 	 * existing controller class
 	 * 
-	 * @param view
+	 * @param viewable
 	 *            Screen coupled with the desired controller
 	 * @return The mapped controller or null of no mapping exists
 	 */
-	public Controller acquireController(MView view) {
+	public Controller acquireController(Viewable view) {
 
 		String name = view.getClass().getName();
 		Controller controller = controllers.get(name);
@@ -131,7 +131,7 @@ public abstract class MorkimApp extends Application implements AppContext,
 		return controller;
 	}
 	
-	public abstract Presenter createPresenter(MView view);
+	public abstract Presenter createPresenter(Viewable view);
 
 	public Navigation acquireNavigation() {
 		return navigation;
@@ -167,7 +167,7 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	protected abstract Navigation createNavigation();
 
-	protected abstract Controller createController(MView view);
+	protected abstract Controller createController(Viewable view);
 
 	/**
 	 * Create a factory of {@link UseCaseFactory} factories. At some point you might
@@ -176,10 +176,11 @@ public abstract class MorkimApp extends Application implements AppContext,
 	 * 
 	 * @return Use case abstract factory
 	 */
-	protected abstract UseCaseAbstractFactory createUseCaseAbstractFactory();
+	protected abstract UseCaseFactory createUseCaseFactory();
 
-	public UseCaseAbstractFactory getUseCaseAbstractFactory() {
-		return useCaseAbstractFactory;
+	@Override
+	public UseCaseFactory getUseCaseFactory() {
+		return useCaseFactory;
 	}
 
 	public void destroyController(Controller controller) {

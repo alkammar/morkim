@@ -45,4 +45,7 @@ public abstract class AsyncUseCase extends BaseUseCase implements UseCase {
 	protected void reportProgress() {
 		asycnTask.reportProgress();
 	}
+
+	public void setListener(UseCaseStateListener listener) {
+	}
 }

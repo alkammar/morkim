@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 @SuppressLint("NewApi")
-public abstract class MPreferenceFragment extends PreferenceFragment implements MView {
+public abstract class MPreferenceFragment extends PreferenceFragment implements Viewable {
 
 	protected Navigation navigation;
 	protected Controller controller;

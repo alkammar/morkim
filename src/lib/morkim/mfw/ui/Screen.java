@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-public abstract class Screen extends Activity implements MView {
+public abstract class Screen extends Activity implements Viewable {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 

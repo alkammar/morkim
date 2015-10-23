@@ -8,7 +8,7 @@ import android.net.Uri;
 
 public abstract class Navigation {
 
-	public abstract void navigate(MView source, String destination);
+	public abstract void navigate(Viewable source, String destination);
 
 	public static void to(Context context, Class<?> cls) {
 		to(context, cls, Transition.NONE);

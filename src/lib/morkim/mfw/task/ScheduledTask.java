@@ -20,7 +20,7 @@ public abstract class ScheduledTask extends Observable implements Runnable {
 		
 		this.appContext = appContext;
 		
-		this.model = ((MorkimApp) appContext).getModel();
+		this.model = ((AppContext) appContext).getModel();
 		this.repos = ((MorkimApp) appContext).getRepos();
 	}
 
