@@ -25,8 +25,6 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 		viewModel = new ViewModel();
 	}
 
-	protected void buildConfigurationModel(ViewModel viewModel) {}
-
 	protected abstract void buildInitializationModel(ViewModel viewModel);
 
 	public void unbindViewModel() {

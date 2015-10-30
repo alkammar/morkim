@@ -54,9 +54,6 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	}
 	
 	@Override
-	public void configureUiElements() {}
-	
-	@Override
 	public void setNavigation(Navigation navigation) {
 		this.navigation = navigation;
 	}

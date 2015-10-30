@@ -27,7 +27,6 @@ public interface Viewable extends ViewModelListener {
 	public void bindUiElements();
 	
 	public void assignListeners(Map<String, ViewListener> listeners);
-	public void configureUiElements();
 	public void setNavigation(Navigation navigation);
 	
 	public String getStringResource(int resource);

@@ -42,8 +42,6 @@ public abstract class Screen extends Activity implements Viewable {
 		return 0;
 	}
 
-	public void configureUiElements() {};
-
 	private void animateTransition(Transition transition) {
 		switch (transition) {
 		case RIGHT:
