@@ -1,4 +1,4 @@
-package lib.morkim.mfw.adapters;
+package lib.morkim.mfw.ui;
 
 public enum Transition {
 	NONE, RIGHT, LEFT;

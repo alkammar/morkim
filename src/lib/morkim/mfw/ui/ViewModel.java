@@ -6,7 +6,7 @@ import java.util.Set;
 public class ViewModel {
 
 	private ViewModelListener listener;
-	private static ViewModelListener emptyListener = new EmptyListener();
+	private static ViewModelListener emptyListener = new EmptyViewModelListener();
 
 	private HashMap<String, Object> current;
 	private HashMap<String, Object> updated;

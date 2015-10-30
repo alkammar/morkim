@@ -1,6 +1,5 @@
 package lib.morkim.mfw.ui;
 
-import lib.morkim.mfw.adapters.Transition;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

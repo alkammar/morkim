@@ -1,11 +1,9 @@
-package lib.morkim.mfw.adapters;
+package lib.morkim.mfw.ui;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import lib.morkim.mfw.app.AppContext;
-import lib.morkim.mfw.ui.Viewable;
-import lib.morkim.mfw.ui.ViewListener;
 
 public class EmptyController extends Controller {
 

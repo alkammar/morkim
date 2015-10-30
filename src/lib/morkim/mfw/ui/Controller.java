@@ -1,10 +1,8 @@
-package lib.morkim.mfw.adapters;
+package lib.morkim.mfw.ui;
 
 import java.util.Map;
 
 import lib.morkim.mfw.app.AppContext;
-import lib.morkim.mfw.ui.ViewListener;
-import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseFactory;
 import lib.morkim.mfw.usecase.UseCaseStateListener;

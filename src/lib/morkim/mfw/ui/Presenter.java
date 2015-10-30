@@ -1,12 +1,10 @@
-package lib.morkim.mfw.adapters;
+package lib.morkim.mfw.ui;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.ui.Viewable;
-import lib.morkim.mfw.ui.ViewModel;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
 public abstract class Presenter implements Observer, UseCaseStateListener {

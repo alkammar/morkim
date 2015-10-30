@@ -1,8 +1,6 @@
-package lib.morkim.mfw.adapters;
+package lib.morkim.mfw.ui;
 
 import lib.morkim.mfw.app.AppContext;
-import lib.morkim.mfw.ui.Viewable;
-import lib.morkim.mfw.ui.ViewModel;
 import lib.morkim.mfw.usecase.UseCaseResult;
 
 public class EmptyPresenter extends Presenter {

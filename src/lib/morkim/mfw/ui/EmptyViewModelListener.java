@@ -1,6 +1,6 @@
 package lib.morkim.mfw.ui;
 
-public class EmptyListener implements ViewModelListener {
+public class EmptyViewModelListener implements ViewModelListener {
 
 	@Override
 	public void onModelUpdated(ViewModel viewModel) {}

@@ -1,9 +1,8 @@
 package lib.morkim.mfw.ui;
 
+import java.util.Observer;
+
 import lib.morkim.mfw.R;
-import lib.morkim.mfw.adapters.Controller;
-import lib.morkim.mfw.adapters.Presenter;
-import lib.morkim.mfw.adapters.Transition;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.app.Activity;
@@ -119,6 +118,11 @@ public abstract class Screen extends Activity implements Viewable {
 
 	@Override
 	public UseCaseStateListener getUseCaseListener() {
+		return presenter;
+	}
+	
+	@Override
+	public Observer getTaskListener() {
 		return presenter;
 	}
 

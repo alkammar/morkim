@@ -2,9 +2,6 @@ package lib.morkim.mfw.app;
 
 import java.util.HashMap;
 
-import lib.morkim.mfw.adapters.Controller;
-import lib.morkim.mfw.adapters.EmptyController;
-import lib.morkim.mfw.adapters.Presenter;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.Repository;
@@ -13,7 +10,10 @@ import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
+import lib.morkim.mfw.ui.Controller;
+import lib.morkim.mfw.ui.EmptyController;
 import lib.morkim.mfw.ui.Navigation;
+import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.usecase.UseCaseFactory;
 import android.app.Application;
