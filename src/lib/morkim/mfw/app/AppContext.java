@@ -14,4 +14,5 @@ public interface AppContext {
 	
 	public TaskScheduler getTaskScheduler();
 	public abstract UseCaseFactory getUseCaseFactory();
+	public abstract Analytics getAnalytics();
 }

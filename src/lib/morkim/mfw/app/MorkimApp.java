@@ -147,6 +147,7 @@ public abstract class MorkimApp extends Application implements AppContext,
 		this.repo = repos;
 	}
 
+	@Override
 	public Analytics getAnalytics() {
 		return analytics;
 	}

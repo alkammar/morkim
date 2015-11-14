@@ -1,6 +1,7 @@
 package lib.morkim.mfw.app;
 
 import android.content.Context;
+import android.util.Log;
 
 
 public class DummyAnalytics implements Analytics {
@@ -16,13 +17,12 @@ public class DummyAnalytics implements Analytics {
 
 	@Override
 	public void sendEvent(String category, String action) {
-		
+		Log.i("DummyAnalytics", "category: " + category + ", action: " + action);
 	}
 
 	@Override
 	public void sendEvent(String category, String action, long value) {
-		// TODO Auto-generated method stub
-		
+		Log.i("DummyAnalytics", "category: " + category + ", action: " + action + ", value: " + value);
 	}
 
 }
