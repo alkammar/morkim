@@ -1,6 +1,7 @@
 package lib.morkim.mfw.ui;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class ViewModel {
@@ -24,7 +25,9 @@ public class ViewModel {
 
 	public ViewModel set(String key, Object value) {
 
-		if (!current.containsKey(key) || current.get(key) != value) {
+		if (!current.containsKey(key) 
+				|| current.get(key) != value
+				|| current.get(key) instanceof List<?>) {
 			current.put(key, value);
 			updated.put(key, value);
 		}

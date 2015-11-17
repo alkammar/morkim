@@ -18,6 +18,7 @@ public class MTimer {
 	public static final long UNINITIALIZED_TIMESTAMP = -1L;
 	
 	private static long nowTest;
+	private static boolean test;
 
 	private Timer timer;
 	private int period;
@@ -55,7 +56,7 @@ public class MTimer {
 
 	public static long now() {
 
-		return System.currentTimeMillis();
+		return (test) ? nowTest : System.currentTimeMillis();
 	}
 	
 	public static void setNowTest(long now) {
@@ -64,10 +65,6 @@ public class MTimer {
 	
 	public static void addNowTest(long added) {
 		MTimer.nowTest += added;
-	}
-	
-	public static long nowTest() {
-		return nowTest;
 	}
 
 	public static String getRelativeDayName(long time) {
@@ -150,5 +147,10 @@ public class MTimer {
 
 	public static int getMinutes(long duration) {
 		return (int) (duration % ONE_HOUR / ONE_MINUTE);
+	}
+	
+	public static void test(boolean test) {
+		MTimer.test = test;
+		nowTest = System.currentTimeMillis();
 	}
 }
