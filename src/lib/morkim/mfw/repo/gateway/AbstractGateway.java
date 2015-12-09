@@ -15,7 +15,7 @@ public abstract class AbstractGateway implements Gateway {
 		return 0;
 	}
 
-	public String id() {
+	public String source() {
 		return null;
 	}
 }

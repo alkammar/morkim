@@ -185,6 +185,8 @@ public abstract class MorkimApp extends Application implements AppContext,
 	}
 
 	public void destroyController(Controller controller) {
+		
+		controller.onDestroy();
 		controllers.remove(controller);
 	}
 

@@ -30,11 +30,11 @@ public abstract class MorkimRepository implements Repository {
 	}
 
 	@Override
-	public Gateway get(int gatewayId) {
-		return createGateway(gatewayId);
+	public Gateway get(Class<?> cls) {
+		return createGateway(cls);
 	}
 
-	protected Gateway createGateway(int gatewayId) {
+	protected Gateway createGateway(Class<?> cls) {
 		return new EmptyGateway(context);
 	}
 

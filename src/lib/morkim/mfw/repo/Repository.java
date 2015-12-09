@@ -5,5 +5,5 @@ import lib.morkim.mfw.repo.gateway.Gateway;
 
 public interface Repository {
 	
-	public Gateway get(int gatwayId);
+	public Gateway get(Class<?> cls);
 }

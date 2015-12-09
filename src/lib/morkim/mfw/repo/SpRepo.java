@@ -2,6 +2,7 @@ package lib.morkim.mfw.repo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import android.content.Context;
@@ -19,12 +20,12 @@ public class SpRepo {
 		this.context = context;
 	}
 
-	public Map<String, Object> read(String id, Map<String, Object> keysAndDefaults) {
+	public Map<String, Object> read(String source, Map<String, Object> keysAndDefaults) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		if (id != null && keysAndDefaults != null) {
-			SharedPreferences sp = getSharedPreferences(id);
+		if (source != null && keysAndDefaults != null) {
+			SharedPreferences sp = getSharedPreferences(source);
 
 			Map<String, ?> allValues = sp.getAll();
 
@@ -41,11 +42,18 @@ public class SpRepo {
 		return map;
 	}
 
-	public void write(String id, Map<String, Object> mapToWrite) {
+	public Map<String, ?> read(String source) {
+
+		SharedPreferences sp = getSharedPreferences(source);
+
+		return sp.getAll();
+	}
+
+	public void write(String source, Map<String, Object> mapToWrite) {
 
 		if (mapToWrite != null) {
 
-			SharedPreferences sp = getSharedPreferences(id);
+			SharedPreferences sp = getSharedPreferences(source);
 			Editor editor = sp.edit();
 
 			for (Entry<String, Object> entry : mapToWrite.entrySet()) {
@@ -69,29 +77,41 @@ public class SpRepo {
 		}
 	}
 
-	public void delete(String id, String ... keys) {
+	public void write(String source, UUID uuid, String serialized) {
 
-		if (keys.length > 0) {
-
-			SharedPreferences sp = getSharedPreferences(id);
+		if (source != null && uuid != null) {
+			SharedPreferences sp = getSharedPreferences(source);
 			Editor editor = sp.edit();
 
-			for (String key : keys)
-				editor.remove(key);
-			
+			editor.putString(uuid.toString(), serialized);
+
 			editor.commit();
 		}
 	}
 
-	private SharedPreferences getSharedPreferences(String id) {
-		if (!isDefaultSharedPreferences(id))
-			return context.getSharedPreferences(id, Context.MODE_PRIVATE);
+	public void delete(String source, String ... keys) {
+
+		if (keys.length > 0) {
+
+			SharedPreferences sp = getSharedPreferences(source);
+			Editor editor = sp.edit();
+
+			for (String key : keys)
+				editor.remove(key);
+
+			editor.commit();
+		}
+	}
+
+	private SharedPreferences getSharedPreferences(String source) {
+		if (!isDefaultSharedPreferences(source))
+			return context.getSharedPreferences(source, Context.MODE_PRIVATE);
 		else {
 			return PreferenceManager.getDefaultSharedPreferences(context);
 		}
 	}
 
-	private boolean isDefaultSharedPreferences(String id) {
-		return SP_DEFAULT.equals(id);
+	private boolean isDefaultSharedPreferences(String source) {
+		return SP_DEFAULT.equals(source);
 	}
 }

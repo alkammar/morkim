@@ -59,4 +59,6 @@ public abstract class Controller {
 	}
 
 	protected abstract Map<String, ViewListener> getListeners();
+
+	public void onDestroy() {}
 }

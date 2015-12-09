@@ -24,7 +24,7 @@ public abstract class SpGateway extends AbstractGateway {
 
 	@Override
 	public void persist(Entity entity) {
-		spRepo.write(id(), mapValues(entity));
+		spRepo.write(source(), mapValues(entity));
 	}
 
 	protected abstract Map<String, Object> mapValues(Entity entity);
@@ -32,7 +32,7 @@ public abstract class SpGateway extends AbstractGateway {
 
 	@Override
 	public Entity retrieve() {
-		return createEntity(spRepo.read(id(), keysAndDefaults()));
+		return createEntity(spRepo.read(source(), keysAndDefaults()));
 	}
 
 	protected abstract Entity createEntity(Map<String, ?> map);
@@ -53,7 +53,7 @@ public abstract class SpGateway extends AbstractGateway {
 	}
 
 	@Override
-	public String id() {
+	public String source() {
 		return SP_DEFAULT;
 	}
 }

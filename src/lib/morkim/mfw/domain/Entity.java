@@ -2,6 +2,7 @@ package lib.morkim.mfw.domain;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
 
 import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
@@ -16,7 +17,7 @@ public abstract class Entity extends Observable {
 	public static final int NO_LOCAL_ID = -1;
 	public static final int NO_PERSISTANCE = -1;
 
-	private Object sysId;
+	private UUID sysId;
 	private int localId = NO_LOCAL_ID;
 
 	public Entity() {
@@ -44,7 +45,7 @@ public abstract class Entity extends Observable {
 		}
 	}
 
-	public void setSysId(Object id) {
+	public void setSysId(UUID id) {
 		this.sysId = id;
 	}
 
@@ -53,7 +54,7 @@ public abstract class Entity extends Observable {
 	 * 
 	 * @return
 	 */
-	public Object getSysId() {
+	public UUID getSysId() {
 		return sysId;
 	}
 
@@ -90,7 +91,7 @@ public abstract class Entity extends Observable {
 	 * @throws GatewayPersistException
 	 */
 	public void save(Repository repos) throws GatewayPersistException {
-		repos.get(persistenceId()).persist(this);
+		repos.get(this.getClass()).persist(this);
 	}
 
 	/**
@@ -102,7 +103,7 @@ public abstract class Entity extends Observable {
 
 		if (localId != NO_LOCAL_ID) {
 
-			Object data = repos.get(persistenceId()).retrieve(localId);
+			Object data = repos.get(this.getClass()).retrieve(localId);
 			set((Entity) data);
 		}
 	}
