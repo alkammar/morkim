@@ -148,6 +148,14 @@ public class MTimer {
 	public static int getMinutes(long duration) {
 		return (int) (duration % ONE_HOUR / ONE_MINUTE);
 	}
+
+	public static int getSeconds(long duration) {
+		return (int) (duration % ONE_MINUTE / ONE_SECOND);
+	}
+
+	public static int getMilliSeconds(long duration) {
+		return (int) (duration % ONE_SECOND);
+	}
 	
 	public static void test(boolean test) {
 		MTimer.test = test;
