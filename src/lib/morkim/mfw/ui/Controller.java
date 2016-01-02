@@ -1,42 +1,61 @@
 package lib.morkim.mfw.ui;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseFactory;
-import lib.morkim.mfw.usecase.UseCaseStateListener;
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 
-public abstract class Controller {
+public abstract class Controller extends Fragment implements Observer {
 
 	protected Viewable viewable;
 
 	private AppContext appContext;
 	private UseCaseFactory useCaseFactory;
-	
-	private UseCaseStateListener useCaseListener;
 
-	public Controller(AppContext appContext, Viewable viewable) {
+	protected Presenter presenter;
 
-		this.appContext = appContext;
+	public Controller() {
+		this.presenter = createPresenter();
 	}
 
-	public void attach(Viewable viewable, Bundle dataToRestore) {
+	protected abstract Presenter createPresenter();
 
-//		bindDataModel();
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
-		this.viewable = viewable;
+		this.viewable = (Viewable) activity;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setRetainInstance(true);
+
+		appContext = (AppContext) getActivity().getApplicationContext();
+		useCaseFactory = appContext.getUseCaseFactory();
+		presenter.initialize(appContext);
+		executeInitializationTask();
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
 		this.viewable.bindUiElements();
-		this.viewable.assignListeners(getListeners());
-		
-		this.useCaseListener = viewable.getUseCaseListener();
-		this.useCaseFactory = appContext.getUseCaseFactory();
-
-		fetchExtraData(dataToRestore);
+		this.viewable.assignListeners(addListeners(new HashMap<String, ViewListener>()));
 	}
 
-	protected void fetchExtraData(Bundle dataToRestore) {
+	protected void executeInitializationTask() {
 
 	}
 
@@ -54,11 +73,24 @@ public abstract class Controller {
 	
 	public UseCase createUseCase(String name) {
 		UseCase useCase = useCaseFactory.createUseCase(name);
-		useCase.setListener(useCaseListener);
+		useCase.setListener(presenter);
 		return useCase;
 	}
 
-	protected abstract Map<String, ViewListener> getListeners();
+	protected abstract Map<String, ViewListener> addListeners(HashMap<String, ViewListener> listeners);
 
-	public void onDestroy() {}
+	public void registerUpdates() {
+		presenter.bindViewModel(viewable);
+	}
+
+	public void unregisterUpdates() {
+		presenter.unbindViewModel();
+	}
+	
+	protected Model getModel() {
+		return appContext.getModel();
+	}
+	
+	@Override
+	public void update(Observable observable, Object data) {}
 }

@@ -1,7 +1,6 @@
 package lib.morkim.mfw.ui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 public class ViewModel {
@@ -9,12 +8,10 @@ public class ViewModel {
 	private ViewModelListener listener;
 	private static ViewModelListener emptyListener = new EmptyViewModelListener();
 
-	private HashMap<String, Object> current;
-	private HashMap<String, Object> updated;
+	private HashMap<String, Object> map;
 
 	public ViewModel() {
-		current = new HashMap<String, Object>();
-		updated = new HashMap<String, Object>();
+		map = new HashMap<String, Object>();
 
 		listener = emptyListener;
 	}
@@ -25,22 +22,12 @@ public class ViewModel {
 
 	public ViewModel set(String key, Object value) {
 
-		if (!current.containsKey(key) 
-				|| current.get(key) != value
-				|| current.get(key) instanceof List<?>) {
-			current.put(key, value);
-			updated.put(key, value);
-		}
-
+		map.put(key, value);
 		return this;
 	}
 
-	public Set<String> getKeys() {
-		return updated.keySet();
-	}
-
 	public Object getValue(String key) {
-		return (updated.containsKey(key)) ? updated.get(key) : current.get(key);
+		return map.get(key);
 	}
 
 	public void register(ViewModelListener listener) {
@@ -53,10 +40,7 @@ public class ViewModel {
 	public void notifyView() {
 
 		synchronized (this) {
-			if (!updated.isEmpty()) {
-				listener.onModelUpdated(this);
-				updated.clear();
-			}
+			listener.onModelUpdated(this);
 		}
 	}
 
@@ -69,10 +53,7 @@ public class ViewModel {
 				public void run() {
 
 					synchronized (ViewModel.this) {
-						if (!updated.isEmpty()) {
-							listener.onModelUpdated(ViewModel.this);
-							updated.clear();
-						}
+						listener.onModelUpdated(ViewModel.this);
 					}
 				}
 			});
@@ -86,16 +67,16 @@ public class ViewModel {
 		}
 	}
 
-	public boolean hasUpdates() {
-		return !updated.isEmpty();
-	}
-
 	@Override
 	public String toString() {
-		return updated.toString();
+		return map.toString();
 	}
 
 	public boolean hasListener() {
 		return (listener != emptyListener);
+	}
+
+	public Set<String> getKeys() {
+		return map.keySet();
 	}
 }

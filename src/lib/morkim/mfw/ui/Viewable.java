@@ -1,9 +1,7 @@
 package lib.morkim.mfw.ui;
 
 import java.util.Map;
-import java.util.Observer;
 
-import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.content.Intent;
 
 public interface Viewable extends ViewModelListener {
@@ -30,7 +28,4 @@ public interface Viewable extends ViewModelListener {
 	public void setNavigation(Navigation navigation);
 	
 	public String getStringResource(int resource);
-	
-	public UseCaseStateListener getUseCaseListener();
-	public Observer getTaskListener();
 }

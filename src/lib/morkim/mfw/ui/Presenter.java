@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
@@ -12,59 +13,30 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	private AppContext appContext;
 	protected Viewable viewable;
 
-	private Model dataModel;
-	private boolean isBindedToDataModel;
 	private ViewModel viewModel;
 
-	public Presenter(AppContext appContext, Viewable viewable) {
+	public Presenter(Viewable viewable) {
+		
 		this.viewable = viewable;
+		viewModel = new ViewModel();
+	}
+	
+	void initialize(AppContext appContext) {
 
 		this.appContext = appContext;
 
-		this.dataModel = ((AppContext) appContext).getModel();
-		viewModel = new ViewModel();
+		initializeViewModel(viewModel);
 	}
 
-	protected abstract void buildInitializationModel(ViewModel viewModel);
+	protected abstract void initializeViewModel(ViewModel viewModel);
 
 	public void unbindViewModel() {
 
 		viewModel.unregister();
 	}
 
-	public void destroy() {
-		unbindDataModel();
-	}
-
-	private void bindDataModel() {
-		synchronized (this) {
-			if (!isBindedToDataModel) {
-				onBindDataModel();
-				isBindedToDataModel = true;
-			}
-		}
-	}
-
-	private void unbindDataModel() {
-		synchronized (this) {
-			if (isBindedToDataModel) {
-				onUnbindDataModel();
-				isBindedToDataModel = false;
-			}
-		}
-	}
-
-	protected void onBindDataModel() {
-		this.dataModel.addObserver(this);
-	}
-
-	protected void onUnbindDataModel() {
-		this.dataModel.deleteObserver(this);
-	}
-
-	public void bindViewModel() {
-
-		buildInitializationModel(viewModel);
+	public void bindViewModel(Viewable viewable) {
+		
 		viewModel.register(viewable);
 		viewModel.notifyView();
 	}
@@ -80,11 +52,6 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 
 	protected void onUpdate(Observable observable, Object data,
 			ViewModel viewModel) {
-
-	}
-
-	public Model getModel() {
-		return dataModel;
 	}
 
 	public ViewModel getViewModel() {
@@ -104,6 +71,10 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	}
 
 	protected String string(int resource) {
-		return viewable.getStringResource(resource);
+		return ((MorkimApp) appContext).getString(resource);
+	}
+	
+	protected Model getModel() {
+		return appContext.getModel();
 	}
 }

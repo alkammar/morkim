@@ -1,16 +1,15 @@
 package lib.morkim.mfw.ui;
 
-import java.util.Observer;
-
 import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Bundle;
+import android.app.FragmentManager;
 import android.preference.PreferenceFragment;
 
 @SuppressLint("NewApi")
 public abstract class MPreferenceFragment extends PreferenceFragment implements Viewable {
+	
+	private static final String TAG_CONTROLLER_FRAGMENT = "controller.fragment.tag";
 
 	protected Navigation navigation;
 	protected Controller controller;
@@ -23,29 +22,30 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 		MorkimApp morkimApp = (MorkimApp) activity.getApplication();
 		
 		navigation = morkimApp.acquireNavigation();
-		controller = morkimApp.acquireController(this);
-		presenter = morkimApp.createPresenter(this);
+		
+		FragmentManager fm = getFragmentManager();
+		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
+		if (controller == null) {
+			controller = createController();
+
+			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
+		}
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		controller.attach(this, null);
-	}
+	protected abstract Controller createController();
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		presenter.bindViewModel();
+		controller.registerUpdates();
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		
-		presenter.unbindViewModel();
+
+		controller.unregisterUpdates();
 	}
 	
 	@Override
@@ -56,15 +56,5 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	@Override
 	public void setNavigation(Navigation navigation) {
 		this.navigation = navigation;
-	}
-	
-	@Override
-	public UseCaseStateListener getUseCaseListener() {
-		return presenter;
-	}
-	
-	@Override
-	public Observer getTaskListener() {
-		return presenter;
 	}
 }

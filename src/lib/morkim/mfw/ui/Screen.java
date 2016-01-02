@@ -1,21 +1,19 @@
 package lib.morkim.mfw.ui;
 
-import java.util.Observer;
-
 import lib.morkim.mfw.R;
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 public abstract class Screen extends Activity implements Viewable {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
+	
+	private static final String TAG_CONTROLLER_FRAGMENT = "controller.fragment.tag";
 
 	protected Navigation navigation;
 	protected Controller controller;
-	protected Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,17 +24,21 @@ public abstract class Screen extends Activity implements Viewable {
 		int layoutId = layoutId();
 		if (layoutId > 0)
 			setContentView(layoutId);
+		
+		FragmentManager fm = getFragmentManager();
+		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
+		if (controller == null) {
+			controller = createController();
 
-		navigation = ((MorkimApp) getApplication()).acquireNavigation();
-		presenter = ((MorkimApp) getApplication()).createPresenter(this);
-		controller = ((MorkimApp) getApplication()).acquireController(this);
-
-		controller.attach(this, savedInstanceState);
+			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
+		}
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
 	}
+	
+	protected abstract Controller createController();
 
 	protected int layoutId() {
 		return 0;
@@ -61,14 +63,14 @@ public abstract class Screen extends Activity implements Viewable {
 
 		keepScreenOn(keepScreenOn());
 
-		presenter.bindViewModel();
+		controller.registerUpdates();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 
-		presenter.unbindViewModel();
+		controller.unregisterUpdates();
 
 		keepScreenOn(false);
 	}
@@ -86,20 +88,6 @@ public abstract class Screen extends Activity implements Viewable {
 	}
 
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-
-		((MorkimApp) getApplication()).destroyController(controller);
-	}
-
-	@Override
-	public void finish() {
-		super.finish();
-
-		((MorkimApp) getApplication()).destroyController(controller);
-	}
-
-	@Override
 	public void notifyOnUiThread(Runnable runnable) {
 		this.runOnUiThread(runnable);
 	}
@@ -112,16 +100,6 @@ public abstract class Screen extends Activity implements Viewable {
 	@Override
 	public String getStringResource(int resource) {
 		return getString(resource);
-	}
-
-	@Override
-	public UseCaseStateListener getUseCaseListener() {
-		return presenter;
-	}
-	
-	@Override
-	public Observer getTaskListener() {
-		return presenter;
 	}
 
 	protected boolean keepScreenOn() {
