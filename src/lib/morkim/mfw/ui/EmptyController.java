@@ -7,7 +7,7 @@ public class EmptyController extends Controller {
 
 	@Override
 	protected Map<String, ViewListener> addListeners(HashMap<String, ViewListener> listeners) {
-		return null;
+		return new HashMap<>();
 	}
 
 	@Override

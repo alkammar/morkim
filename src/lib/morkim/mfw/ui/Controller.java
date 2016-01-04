@@ -32,7 +32,8 @@ public abstract class Controller extends Fragment implements Observer {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		this.viewable = (Viewable) activity;
+		if (viewable == null)
+			this.viewable = (Viewable) activity;
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public abstract class Controller extends Fragment implements Observer {
 	public void setUseCaseFactory(UseCaseFactory useCaseFactory) {
 		this.useCaseFactory = useCaseFactory;
 	}
-	
+
 	public UseCase createUseCase(String name) {
 		UseCase useCase = useCaseFactory.createUseCase(name);
 		useCase.setListener(presenter);
@@ -86,11 +87,11 @@ public abstract class Controller extends Fragment implements Observer {
 	public void unregisterUpdates() {
 		presenter.unbindViewModel();
 	}
-	
+
 	protected Model getModel() {
 		return appContext.getModel();
 	}
-	
+
 	@Override
 	public void update(Observable observable, Object data) {}
 }

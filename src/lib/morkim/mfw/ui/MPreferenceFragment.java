@@ -9,11 +9,10 @@ import android.preference.PreferenceFragment;
 @SuppressLint("NewApi")
 public abstract class MPreferenceFragment extends PreferenceFragment implements Viewable {
 	
-	private static final String TAG_CONTROLLER_FRAGMENT = "controller.fragment.tag";
+	private static final String TAG_CONTROLLER_FRAGMENT = "fragment.controller.fragment.tag";
 
 	protected Navigation navigation;
 	protected Controller controller;
-	protected Presenter presenter;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -27,6 +26,7 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
 		if (controller == null) {
 			controller = createController();
+			controller.viewable = this;
 
 			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
 		}

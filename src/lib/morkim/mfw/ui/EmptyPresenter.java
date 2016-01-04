@@ -1,6 +1,8 @@
 package lib.morkim.mfw.ui;
 
+import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseResult;
+import lib.morkim.mfw.usecase.UseCaseProgress;
 
 public class EmptyPresenter extends Presenter {
 
@@ -9,9 +11,18 @@ public class EmptyPresenter extends Presenter {
 	}
 
 	@Override
+	protected void initializeViewModel(ViewModel viewModel) {}
+
+	@Override
+	public void onUseCaseStart(UseCase useCase) {}
+
+	@Override
+	public void onUseCaseUpdate(UseCaseProgress response) {}
+
+	@Override
 	public void onUseCaseComplete(UseCaseResult response) {}
 
 	@Override
-	protected void initializeViewModel(ViewModel viewModel) {}
+	public void onUseCaseCancel() {}
 
 }

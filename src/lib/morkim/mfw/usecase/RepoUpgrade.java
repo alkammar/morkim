@@ -2,7 +2,7 @@ package lib.morkim.mfw.usecase;
 
 import lib.morkim.mfw.app.AppContext;
 
-public abstract class RepoUpgrade extends SyncUseCase {
+public abstract class RepoUpgrade extends UseCase {
 
 //	private int versionCode;
 
@@ -18,7 +18,7 @@ public abstract class RepoUpgrade extends SyncUseCase {
 	}
 
 	@Override
-	protected void onExecute() {
+	protected UseCaseResult onExecute() {
 		
 //		Gateway gateway = getRepos().get(ThunderRepo.DATA_SOURCE_STATE);
 //		int currentVersion = gateway.getVersion();
@@ -34,12 +34,8 @@ public abstract class RepoUpgrade extends SyncUseCase {
 //	            // update failed, or cancelled
 //	        }
 //	    }
-	}
-
-	@Override
-	protected void onReportProgress() {
-		// TODO Auto-generated method stub
-
+		
+		return null;
 	}
 	
 	@Override
