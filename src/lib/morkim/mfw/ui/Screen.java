@@ -29,6 +29,7 @@ public abstract class Screen extends Activity implements Viewable {
 		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
 		if (controller == null) {
 			controller = createController();
+			controller.viewable = this;
 
 			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
 		}
@@ -36,6 +37,8 @@ public abstract class Screen extends Activity implements Viewable {
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
+		
+		controller.onViewableCreated(this);
 	}
 	
 	protected abstract Controller createController();

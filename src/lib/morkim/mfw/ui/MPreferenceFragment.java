@@ -4,6 +4,7 @@ import lib.morkim.mfw.app.MorkimApp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 @SuppressLint("NewApi")
@@ -26,14 +27,18 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
 		if (controller == null) {
 			controller = createController();
-			controller.viewable = this;
 
 			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
 		}
 	}
-
-	protected abstract Controller createController();
 	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		controller.onViewableCreated(this);
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -57,4 +62,8 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	public void setNavigation(Navigation navigation) {
 		this.navigation = navigation;
 	}
+
+
+
+	protected abstract Controller createController();
 }

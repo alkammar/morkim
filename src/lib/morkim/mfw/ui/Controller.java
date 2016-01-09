@@ -9,11 +9,13 @@ import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseFactory;
-import android.app.Activity;
+import lib.morkim.mfw.usecase.UseCaseProgress;
+import lib.morkim.mfw.usecase.UseCaseResult;
+import lib.morkim.mfw.usecase.UseCaseStateListener;
 import android.app.Fragment;
 import android.os.Bundle;
 
-public abstract class Controller extends Fragment implements Observer {
+public abstract class Controller extends Fragment implements Observer, UseCaseStateListener {
 
 	protected Viewable viewable;
 
@@ -22,19 +24,13 @@ public abstract class Controller extends Fragment implements Observer {
 
 	protected Presenter presenter;
 
+	private boolean isRegisteredToBackgroundData;
+
 	public Controller() {
 		this.presenter = createPresenter();
 	}
 
 	protected abstract Presenter createPresenter();
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		if (viewable == null)
-			this.viewable = (Viewable) activity;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,18 +43,15 @@ public abstract class Controller extends Fragment implements Observer {
 		presenter.initialize(appContext);
 		executeInitializationTask();
 	}
+	
+	void onViewableCreated(Viewable viewable) {
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
+		this.viewable = viewable;
 		this.viewable.bindUiElements();
 		this.viewable.assignListeners(addListeners(new HashMap<String, ViewListener>()));
 	}
 
-	protected void executeInitializationTask() {
-
-	}
+	protected void executeInitializationTask() {}
 
 	protected AppContext getAppContext() {
 		return (AppContext) appContext;
@@ -81,12 +74,23 @@ public abstract class Controller extends Fragment implements Observer {
 	protected abstract Map<String, ViewListener> addListeners(HashMap<String, ViewListener> listeners);
 
 	public void registerUpdates() {
+
+		if (isRegisteredToBackgroundData)
+			unregisterBackgroundData();
+
 		presenter.bindViewModel(viewable);
 	}
 
 	public void unregisterUpdates() {
 		presenter.unbindViewModel();
+
+		registerBackgroundData();
+
+		isRegisteredToBackgroundData = true;
 	}
+
+	protected void registerBackgroundData() {}
+	protected void unregisterBackgroundData() {}
 
 	protected Model getModel() {
 		return appContext.getModel();
@@ -94,4 +98,27 @@ public abstract class Controller extends Fragment implements Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {}
+
+	@Override
+	public void onUseCaseStart(UseCase useCase) {}
+
+	@Override
+	public void onUseCaseUpdate(UseCaseProgress response) {}
+
+	@Override
+	public void onUseCaseComplete(UseCaseResult response) {}
+
+	@Override
+	public void onUseCaseCancel() {}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		unregisterBackgroundData();
+	}
+
+	protected void finish() {
+		viewable.finish();
+	}
 }

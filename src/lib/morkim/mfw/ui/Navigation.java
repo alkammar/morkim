@@ -1,7 +1,5 @@
 package lib.morkim.mfw.ui;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -9,41 +7,41 @@ public abstract class Navigation {
 
 	public abstract void navigate(Viewable source, String destination);
 
-	public static void to(Context context, Class<?> cls) {
-		to(context, cls, Transition.NONE);
+	public static void to(Controller controller, Class<?> cls) {
+		to(controller, cls, Transition.NONE);
 	}
 
-	public static void to(Context context, Class<?> cls, Transition transition) {
+	public static void to(Controller controller, Class<?> cls, Transition transition) {
 
-		Intent intent = new Intent(context, cls);
+		Intent intent = new Intent(controller.getActivity(), cls);
 		intent.putExtra(Screen.KEY_SCREEN_TRANSITION, transition.ordinal());
-		context.startActivity(intent);
+		controller.startActivity(intent);
 	}
 
-	public static void toGooglePlay(Context context) {
-		context.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+	public static void toGooglePlay(Controller controller) {
+		controller.startActivity(new Intent(Intent.ACTION_VIEW, Uri
 				.parse(googlePlayBaseUrl()
-						+ context.getPackageName())));
+						+ controller.getActivity().getPackageName())));
 	}
 
-	public static void showSharingList(Context context, CharSequence title) {
+	public static void showSharingList(Controller controller, CharSequence title) {
 		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 		sharingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		sharingIntent.setType("text/plain");
 		sharingIntent.putExtra(
 				Intent.EXTRA_TEXT,
 				Uri.parse(googlePlayBaseUrl()
-						+ context.getPackageName()).toString());
-		context.startActivity(Intent.createChooser(sharingIntent, title));
+						+ controller.getActivity().getPackageName()).toString());
+		controller.startActivity(Intent.createChooser(sharingIntent, title));
 	}
 
 	private static String googlePlayBaseUrl() {
 		return "https://play.google.com/store/apps/details?id=";
 	}
 
-	public static void reload(Context context, Transition transition) {
-		to(context, context.getClass(), transition);
-		((Activity) context).finish();
+	public static void reload(Controller controller, Transition transition) {
+		to(controller, controller.getActivity().getClass(), transition);
+		controller.getActivity().finish();
 	}
 
 }
