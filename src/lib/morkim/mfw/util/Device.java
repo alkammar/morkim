@@ -4,7 +4,7 @@ import android.os.Build;
 
 public final class Device {
 
-	private final static String [] TEST_DEVICE_SERIAL = {"TA9300GL9E"}; 
+	private final static String [] TEST_DEVICE_SERIAL = {"TA9300GL9E", "083c51f101898064"}; 
 	
 	public static boolean isTestDevice() {
 		for (String serial : TEST_DEVICE_SERIAL) {

@@ -32,10 +32,11 @@ public abstract class SpGateway extends AbstractGateway {
 
 	@Override
 	public Entity retrieve() {
-		return createEntity(spRepo.read(source(), keysAndDefaults()));
+		return getEntity(spRepo.read(source(), keysAndDefaults()));
 	}
 
-	protected abstract Entity createEntity(Map<String, ?> map);
+	protected abstract Entity getEntity(Map<String, ?> map);
+	protected abstract Entity createEntity();
 
 	@Override
 	public Entity retrieve(int id) {
