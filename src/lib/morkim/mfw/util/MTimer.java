@@ -58,6 +58,13 @@ public class MTimer {
 
 		return (test) ? nowTest : System.currentTimeMillis();
 	}
+
+	public static long nowLocal() {
+		
+		long now = now();
+
+		return now + Calendar.getInstance().getTimeZone().getOffset(now);
+	}
 	
 	public static void setNowTest(long now) {
 		MTimer.nowTest = now;
