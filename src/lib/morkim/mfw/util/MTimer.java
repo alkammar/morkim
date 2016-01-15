@@ -63,7 +63,7 @@ public class MTimer {
 		
 		long now = now();
 
-		return now + Calendar.getInstance().getTimeZone().getOffset(now);
+		return now - Calendar.getInstance().getTimeZone().getOffset(now);
 	}
 	
 	public static void setNowTest(long now) {

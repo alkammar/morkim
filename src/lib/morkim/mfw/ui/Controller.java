@@ -38,10 +38,14 @@ public abstract class Controller extends Fragment implements Observer, UseCaseSt
 
 		setRetainInstance(true);
 
-		appContext = (AppContext) getActivity().getApplicationContext();
+		appContext = createContext();
 		useCaseFactory = appContext.getUseCaseFactory();
 		presenter.initialize(appContext);
 		executeInitializationTask();
+	}
+
+	protected AppContext createContext() {
+		return (AppContext) getActivity().getApplicationContext();
 	}
 	
 	void onViewableCreated(Viewable viewable) {

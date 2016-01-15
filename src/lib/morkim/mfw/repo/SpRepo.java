@@ -102,6 +102,16 @@ public class SpRepo {
 			editor.commit();
 		}
 	}
+	
+	public void delete(String source) {
+		
+		SharedPreferences sp = getSharedPreferences(source);
+		Editor editor = sp.edit();
+		
+		editor.clear();
+		
+		editor.commit();
+	}
 
 	private SharedPreferences getSharedPreferences(String source) {
 		if (!isDefaultSharedPreferences(source))
