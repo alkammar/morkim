@@ -12,8 +12,10 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 	private UseCaseRequest request;
 	private UseCaseStateListener listener;
 
-	public UseCase(AppContext appContext) {
+	public UseCase(AppContext appContext, UseCaseStateListener listener) {
 		this.appContext = appContext;
+		
+		if (listener == null)
 		this.listener = new UseCaseStateListener() {
 
 			@Override
@@ -28,6 +30,8 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 			@Override
 			public void onUseCaseCancel() {}
 		};
+		else
+			this.listener = listener;
 	}
 
 	@Override

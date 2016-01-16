@@ -6,8 +6,8 @@ public abstract class RepoUpgrade extends UseCase {
 
 //	private int versionCode;
 
-	public RepoUpgrade(AppContext appContext) {
-		super(appContext);
+	public RepoUpgrade(AppContext appContext, UseCaseStateListener listener) {
+		super(appContext, listener);
 	}
 	
 	@Override

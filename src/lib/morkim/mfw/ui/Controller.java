@@ -8,7 +8,6 @@ import java.util.Observer;
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
-import lib.morkim.mfw.usecase.UseCaseFactory;
 import lib.morkim.mfw.usecase.UseCaseProgress;
 import lib.morkim.mfw.usecase.UseCaseResult;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
@@ -20,7 +19,6 @@ public abstract class Controller extends Fragment implements Observer, UseCaseSt
 	protected Viewable viewable;
 
 	private AppContext appContext;
-	private UseCaseFactory useCaseFactory;
 
 	protected Presenter presenter;
 
@@ -39,7 +37,6 @@ public abstract class Controller extends Fragment implements Observer, UseCaseSt
 		setRetainInstance(true);
 
 		appContext = createContext();
-		useCaseFactory = appContext.getUseCaseFactory();
 		presenter.initialize(appContext);
 		executeInitializationTask();
 	}
@@ -59,20 +56,6 @@ public abstract class Controller extends Fragment implements Observer, UseCaseSt
 
 	protected AppContext getAppContext() {
 		return (AppContext) appContext;
-	}
-
-	public UseCaseFactory getUseCaseFactory() {
-		return useCaseFactory;
-	}
-
-	public void setUseCaseFactory(UseCaseFactory useCaseFactory) {
-		this.useCaseFactory = useCaseFactory;
-	}
-
-	public UseCase createUseCase(String name) {
-		UseCase useCase = useCaseFactory.createUseCase(name);
-		useCase.setListener(presenter);
-		return useCase;
 	}
 
 	protected abstract Map<String, ViewListener> addListeners(HashMap<String, ViewListener> listeners);

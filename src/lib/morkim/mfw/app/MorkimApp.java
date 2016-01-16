@@ -9,7 +9,6 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Navigation;
-import lib.morkim.mfw.usecase.UseCaseFactory;
 import android.app.Application;
 
 /**
@@ -30,8 +29,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	private Model model;
 	private TaskScheduler taskScheduler;
-
-	private UseCaseFactory useCaseFactory;
 
 
 	@Override
@@ -60,8 +57,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 		} catch (GatewayRetrieveException e) {
 			e.printStackTrace();
 		}
-
-		useCaseFactory = createUseCaseFactory();
 	}
 
 	/**
@@ -134,20 +129,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 	}
 
 	protected abstract Navigation createNavigation();
-
-	/**
-	 * Create a factory of {@link UseCaseFactory} factories. At some point you might
-	 * need to group related use case which need their own factory. Hence this
-	 * is a factory of factories is useful.
-	 * 
-	 * @return Use case abstract factory
-	 */
-	protected abstract UseCaseFactory createUseCaseFactory();
-
-	@Override
-	public UseCaseFactory getUseCaseFactory() {
-		return useCaseFactory;
-	}
 
 	@Override
 	public MorkimApp getContext() {
