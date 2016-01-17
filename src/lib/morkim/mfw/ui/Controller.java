@@ -108,4 +108,8 @@ public abstract class Controller extends Fragment implements Observer, UseCaseSt
 	protected void finish() {
 		viewable.finish();
 	}
+	
+	protected void keepScreenOn(boolean keepOn) {
+		((Screen) getActivity()).keepScreenOn(keepOn);
+	}
 }

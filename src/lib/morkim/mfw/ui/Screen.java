@@ -64,8 +64,6 @@ public abstract class Screen extends Activity implements Viewable {
 	protected void onResume() {
 		super.onResume();
 
-		keepScreenOn(keepScreenOn());
-
 		controller.registerUpdates();
 	}
 
@@ -82,7 +80,7 @@ public abstract class Screen extends Activity implements Viewable {
 
 	}
 
-	private void keepScreenOn(boolean keepOn) {
+	void keepScreenOn(boolean keepOn) {
 
 		if (keepOn) 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -103,9 +101,5 @@ public abstract class Screen extends Activity implements Viewable {
 	@Override
 	public String getStringResource(int resource) {
 		return getString(resource);
-	}
-
-	protected boolean keepScreenOn() {
-		return false;
 	}
 }

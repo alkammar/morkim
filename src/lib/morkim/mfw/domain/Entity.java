@@ -34,6 +34,8 @@ public abstract class Entity extends Observable {
 		if (entity != null) {
 			if (entity.localId != NO_LOCAL_ID)
 				this.localId = entity.localId;
+			
+			this.sysId = entity.sysId;
 		}
 	}
 
