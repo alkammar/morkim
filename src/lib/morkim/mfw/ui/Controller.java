@@ -112,4 +112,12 @@ public abstract class Controller extends Fragment implements Observer, UseCaseSt
 	protected void keepScreenOn(boolean keepOn) {
 		((Screen) getActivity()).keepScreenOn(keepOn);
 	}
+	
+	public void onDialogPositive(String tag) {
+		
+	}
+	
+	public void onDialogNegative(String tag) {
+		
+	}
 }

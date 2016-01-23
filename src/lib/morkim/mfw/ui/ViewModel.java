@@ -26,6 +26,10 @@ public class ViewModel {
 		return this;
 	}
 
+	public void remove(String tag) {
+		map.remove(tag);
+	}
+
 	public Object getValue(String key) {
 		return map.get(key);
 	}

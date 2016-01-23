@@ -76,6 +76,10 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	protected String string(int resource) {
 		return ((MorkimApp) appContext).getString(resource);
 	}
+
+	protected String string(int resource, Object ... args) {
+		return ((MorkimApp) appContext).getString(resource, args);
+	}
 	
 	protected Model getModel() {
 		return appContext.getModel();

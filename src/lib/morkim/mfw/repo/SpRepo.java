@@ -48,7 +48,7 @@ public class SpRepo {
 
 		return sp.getAll();
 	}
-
+	
 	public void write(String source, Map<String, Object> mapToWrite) {
 
 		if (mapToWrite != null) {
@@ -123,5 +123,19 @@ public class SpRepo {
 
 	private boolean isDefaultSharedPreferences(String source) {
 		return SP_DEFAULT.equals(source);
+	}
+
+	public static Long readLong(Context context, String key, long defaultValue) {
+	
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return sharedPreferences.getLong(key, defaultValue);
+	}
+
+	public static void writeLong(Context context, String key, long value) {
+	
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = sharedPreferences.edit();
+		editor.putLong(key, value);
+		editor.commit();
 	}
 }

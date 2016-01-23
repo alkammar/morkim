@@ -102,4 +102,8 @@ public abstract class Screen extends Activity implements Viewable {
 	public String getStringResource(int resource) {
 		return getString(resource);
 	}
+	
+	public Controller getController() {
+		return controller;
+	}
 }
