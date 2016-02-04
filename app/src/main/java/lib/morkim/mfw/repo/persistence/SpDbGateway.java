@@ -3,6 +3,7 @@ package lib.morkim.mfw.repo.persistence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.domain.Entity;
@@ -53,7 +54,9 @@ public abstract class SpDbGateway extends AbstractGateway {
 		List<Entity> list = new ArrayList<Entity>();
 		for (String key : pairs.keySet())
 			try {
-				list.add(deserialize((String) pairs.get(key)));
+				Entity entity = deserialize((String) pairs.get(key));
+				entity.setSysId(UUID.fromString(key));
+				list.add(entity);
 			} catch (JSONException e) {
 				throw new GatewayRetrieveException();
 			}
