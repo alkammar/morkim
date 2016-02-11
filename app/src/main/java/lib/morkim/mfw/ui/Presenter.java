@@ -16,40 +16,38 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	private AppContext appContext;
 	protected Viewable viewable;
 
-	private ViewModel viewModel;
-
 	public Presenter(Viewable viewable) {
 		
 		this.viewable = viewable;
-		viewModel = new ViewModel();
+//		viewModel = new ViewModel();
 	}
 	
 	void initialize(AppContext appContext) {
 
 		this.appContext = appContext;
 
-		initializeViewModel(viewModel);
+//		initializeViewModel(viewModel);
 	}
 
 	protected abstract void initializeViewModel(ViewModel viewModel);
 
 	public void unbindViewModel() {
 
-		viewModel.unregister();
+//		viewModel.unregister();
 	}
 
 	public void bindViewModel(Viewable viewable) {
-		
-		viewModel.register(viewable);
-		viewModel.notifyView();
+
+//		viewModel.register(viewable);
+//		viewModel.notifyView();
 	}
 
 	@Override
 	public void update(Observable observable, Object data) {
 		synchronized (this) {
-			onUpdate(observable, data, viewModel);
-			if (viewModel.hasListener())
-				viewModel.notifyUiView();
+//			onUpdate(observable, data, viewModel);
+//			if (viewModel.hasListener())
+//				viewModel.notifyUiView();
 		}
 	}
 
@@ -57,13 +55,13 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 			ViewModel viewModel) {
 	}
 
-	public ViewModel getViewModel() {
-		return viewModel;
-	}
-
-	public void setViewModel(ViewModel viewModel) {
-		this.viewModel = viewModel;
-	}
+//	public ViewModel getViewModel() {
+//		return viewModel;
+//	}
+//
+//	public void setViewModel(ViewModel viewModel) {
+//		this.viewModel = viewModel;
+//	}
 
 	public AppContext getAppContext() {
 		return appContext;
