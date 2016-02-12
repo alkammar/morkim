@@ -25,8 +25,8 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 		
 		navigation = morkimApp.acquireNavigation();
 
-		controller = morkimApp.createController(this);
-		presenter = morkimApp.createPresenter(this);
+		controller = morkimApp.acquireController(this);
+		presenter = morkimApp.acquirePresenter(this);
 	}
 	
 	@Override

@@ -2,6 +2,9 @@ package lib.morkim.mfw.app;
 
 import android.app.Application;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.Repository;
@@ -31,11 +34,14 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	private Navigation navigation;
 
+    private Map<Viewable, Controller> controllers;
+    private Map<Viewable, Presenter> presenters;
+
 	private Model model;
 	private TaskScheduler taskScheduler;
 
 
-	@Override
+    @Override
 	public void onCreate() {
 		super.onCreate();
 
@@ -47,6 +53,9 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 		analytics = createAnalytics();
 		analytics.initialize();
+
+        controllers = new HashMap<>();
+        presenters = new HashMap<>();
 
 		model = createModel();
 		if (model == null) 
@@ -63,8 +72,32 @@ public abstract class MorkimApp extends Application implements AppContext,
 		}
 	}
 
-	public abstract Controller createController(Viewable viewable);
-    public abstract Presenter createPresenter(Viewable viewable);
+    public Controller acquireController(Viewable viewable) {
+
+        Controller controller = controllers.get(viewable);
+
+        return (controller == null) ? createController(viewable) : controller;
+    }
+
+    public Presenter acquirePresenter(Viewable viewable) {
+
+        Presenter presenter = presenters.get(viewable);
+
+        return (presenter == null) ? createPresenter(viewable) : presenter;
+    }
+
+	protected abstract Controller createController(Viewable viewable);
+    protected abstract Presenter createPresenter(Viewable viewable);
+
+    public void destroyController(Viewable viewable) {
+
+        controllers.remove(viewable);
+    }
+
+    public void destroyPresenter(Viewable viewable) {
+
+        presenters.remove(viewable);
+    }
 
 	/**
 	 * Create specific application factories. The factories created here are not
