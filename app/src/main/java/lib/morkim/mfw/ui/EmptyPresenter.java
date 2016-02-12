@@ -11,9 +11,6 @@ public class EmptyPresenter extends Presenter {
 	}
 
 	@Override
-	protected void initializeViewModel(ViewModel viewModel) {}
-
-	@Override
 	public void onUseCaseStart(UseCase useCase) {}
 
 	@Override
