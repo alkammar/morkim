@@ -28,8 +28,8 @@ public abstract class Screen extends Activity implements Viewable {
 		if (layoutId > 0)
 			setContentView(layoutId);
 
-		controller = ((MorkimApp) getApplicationContext()).acquireController(this);
-		presenter = ((MorkimApp) getApplicationContext()).acquirePresenter(this);
+		controller = ((MorkimApp) getApplication()).acquireController(this);
+		presenter = ((MorkimApp) getApplication()).acquirePresenter(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
@@ -66,6 +66,16 @@ public abstract class Screen extends Activity implements Viewable {
 		super.onPause();
 
 		keepScreenOn(false);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		if (isFinishing()) {
+			((MorkimApp) getApplication()).destroyController(this);
+			((MorkimApp) getApplication()).destroyPresenter(this);
+		}
 	}
 
 	protected void setCustomTilteBar() {
