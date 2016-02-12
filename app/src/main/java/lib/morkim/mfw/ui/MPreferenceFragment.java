@@ -43,18 +43,6 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	public void onPause() {
 		super.onPause();
 	}
-	
-	@Override
-	public void notifyOnUiThread(Runnable runnable) {
-		getActivity().runOnUiThread(runnable);
-	}
-	
-	@Override
-	public void setNavigation(Navigation navigation) {
-		this.navigation = navigation;
-	}
-
-
 
 	protected abstract Controller createController();
 }

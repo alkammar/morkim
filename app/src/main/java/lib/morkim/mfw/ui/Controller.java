@@ -62,7 +62,7 @@ public abstract class Controller implements Observer, UseCaseStateListener {
 	}
 	
 	protected void keepScreenOn(boolean keepOn) {
-		((Screen) viewable).keepScreenOn(keepOn);
+		viewable.keepScreenOn(keepOn);
 	}
 	
 	public void onDialogPositive(String tag) {

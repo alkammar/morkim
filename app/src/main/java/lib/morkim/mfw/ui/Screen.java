@@ -72,27 +72,13 @@ public abstract class Screen extends Activity implements Viewable {
 
 	}
 
-	void keepScreenOn(boolean keepOn) {
+	@Override
+	public void keepScreenOn(boolean keepOn) {
 
 		if (keepOn) 
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		else
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-	}
-
-	@Override
-	public void notifyOnUiThread(Runnable runnable) {
-		this.runOnUiThread(runnable);
-	}
-
-	@Override
-	public void setNavigation(Navigation navigation) {
-		this.navigation = navigation;
-	}
-
-	@Override
-	public String getStringResource(int resource) {
-		return getString(resource);
 	}
 	
 	public Controller getController() {
