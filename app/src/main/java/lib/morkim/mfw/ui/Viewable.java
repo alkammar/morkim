@@ -1,8 +1,11 @@
 package lib.morkim.mfw.ui;
 
+import android.content.Context;
+import android.content.Intent;
+
 import java.util.Map;
 
-import android.content.Intent;
+import lib.morkim.mfw.app.AppContext;
 
 public interface Viewable extends ViewModelListener {
 	
@@ -28,4 +31,8 @@ public interface Viewable extends ViewModelListener {
 	public void setNavigation(Navigation navigation);
 	
 	public String getStringResource(int resource);
+
+	AppContext getMorkimContext();
+
+	Context getContext();
 }

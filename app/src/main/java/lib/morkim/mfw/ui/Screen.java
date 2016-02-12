@@ -1,10 +1,12 @@
 package lib.morkim.mfw.ui;
 
-import lib.morkim.mfw.R;
 import android.app.Activity;
-import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.WindowManager;
+
+import lib.morkim.mfw.R;
+import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class Screen extends Activity implements Viewable {
 
@@ -14,6 +16,7 @@ public abstract class Screen extends Activity implements Viewable {
 
 	protected Navigation navigation;
 	protected Controller controller;
+	protected Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,24 +27,17 @@ public abstract class Screen extends Activity implements Viewable {
 		int layoutId = layoutId();
 		if (layoutId > 0)
 			setContentView(layoutId);
-		
-		FragmentManager fm = getFragmentManager();
-		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
-		if (controller == null) {
-			controller = createController();
-			controller.viewable = this;
 
-			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
-		}
+		controller = ((MorkimApp) getApplicationContext()).createController(this);
+		presenter = ((MorkimApp) getApplicationContext()).createPresenter(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
-		
-		controller.onViewableCreated(this);
 	}
 	
 	protected abstract Controller createController();
+	protected abstract Presenter createPresenter();
 
 	protected int layoutId() {
 		return 0;
@@ -63,15 +59,11 @@ public abstract class Screen extends Activity implements Viewable {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		controller.registerUpdates();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-
-		controller.unregisterUpdates();
 
 		keepScreenOn(false);
 	}
@@ -105,5 +97,10 @@ public abstract class Screen extends Activity implements Viewable {
 	
 	public Controller getController() {
 		return controller;
+	}
+
+	@Override
+	public Context getContext() {
+		return this;
 	}
 }

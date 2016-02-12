@@ -1,5 +1,7 @@
 package lib.morkim.mfw.app;
 
+import android.app.Application;
+
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.Repository;
@@ -8,8 +10,10 @@ import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
+import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.Navigation;
-import android.app.Application;
+import lib.morkim.mfw.ui.Presenter;
+import lib.morkim.mfw.ui.Viewable;
 
 /**
  * Holds application configuration. You should create here your concrete
@@ -58,6 +62,9 @@ public abstract class MorkimApp extends Application implements AppContext,
 			e.printStackTrace();
 		}
 	}
+
+	public abstract Controller createController(Viewable viewable);
+    public abstract Presenter createPresenter(Viewable viewable);
 
 	/**
 	 * Create specific application factories. The factories created here are not

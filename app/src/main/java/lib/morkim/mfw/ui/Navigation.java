@@ -13,15 +13,15 @@ public abstract class Navigation {
 
 	public static void to(Controller controller, Class<?> cls, Transition transition) {
 
-		Intent intent = new Intent(controller.getActivity(), cls);
+		Intent intent = new Intent(controller.getContext(), cls);
 		intent.putExtra(Screen.KEY_SCREEN_TRANSITION, transition.ordinal());
-		controller.startActivity(intent);
+		controller.getContext().startActivity(intent);
 	}
 
 	public static void toGooglePlay(Controller controller) {
-		controller.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+		controller.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri
 				.parse(googlePlayBaseUrl()
-						+ controller.getActivity().getPackageName())));
+						+ controller.getContext().getPackageName())));
 	}
 
 	public static void showSharingList(Controller controller, CharSequence title) {
@@ -31,8 +31,8 @@ public abstract class Navigation {
 		sharingIntent.putExtra(
 				Intent.EXTRA_TEXT,
 				Uri.parse(googlePlayBaseUrl()
-						+ controller.getActivity().getPackageName()).toString());
-		controller.startActivity(Intent.createChooser(sharingIntent, title));
+						+ controller.getContext().getPackageName()).toString());
+		controller.getContext().startActivity(Intent.createChooser(sharingIntent, title));
 	}
 
 	private static String googlePlayBaseUrl() {
@@ -40,8 +40,8 @@ public abstract class Navigation {
 	}
 
 	public static void reload(Controller controller, Transition transition) {
-		to(controller, controller.getActivity().getClass(), transition);
-		controller.getActivity().finish();
+		to(controller, controller.getContext().getClass(), transition);
+//		controller.getActivity().finish();
 	}
 
 }

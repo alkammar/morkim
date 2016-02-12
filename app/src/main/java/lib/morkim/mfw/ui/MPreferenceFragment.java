@@ -1,11 +1,11 @@
 package lib.morkim.mfw.ui;
 
-import lib.morkim.mfw.app.MorkimApp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import lib.morkim.mfw.app.MorkimApp;
 
 @SuppressLint("NewApi")
 public abstract class MPreferenceFragment extends PreferenceFragment implements Viewable {
@@ -13,7 +13,9 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	private static final String TAG_CONTROLLER_FRAGMENT = "fragment.controller.fragment.tag";
 
 	protected Navigation navigation;
+
 	protected Controller controller;
+	private Presenter presenter;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -22,35 +24,24 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 		MorkimApp morkimApp = (MorkimApp) activity.getApplication();
 		
 		navigation = morkimApp.acquireNavigation();
-		
-		FragmentManager fm = getFragmentManager();
-		controller = (Controller) fm.findFragmentByTag(TAG_CONTROLLER_FRAGMENT);
-		if (controller == null) {
-			controller = createController();
 
-			fm.beginTransaction().add(controller, TAG_CONTROLLER_FRAGMENT).commit();
-		}
+		controller = morkimApp.createController(this);
+		presenter = morkimApp.createPresenter(this);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		controller.onViewableCreated(this);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		controller.registerUpdates();
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-
-		controller.unregisterUpdates();
 	}
 	
 	@Override
