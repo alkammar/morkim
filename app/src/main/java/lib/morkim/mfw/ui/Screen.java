@@ -15,8 +15,9 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 	private static final String TAG_CONTROLLER_FRAGMENT = "controller.fragment.tag";
 
 	protected Navigation navigation;
-	protected Controller controller;
-	protected Presenter presenter;
+
+	private Controller controller;
+	private Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,6 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
 	}
-	
-	protected abstract Controller createController();
-	protected abstract Presenter createPresenter();
 
 	protected int layoutId() {
 		return 0;
@@ -90,13 +88,17 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 		else
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
-	
-	public Controller getController() {
-		return controller;
-	}
 
 	@Override
 	public Context getContext() {
 		return this;
+	}
+
+	protected Controller getController() {
+		return controller;
+	}
+
+	protected Presenter getPresenter() {
+		return presenter;
 	}
 }
