@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import lib.morkim.mfw.R;
+import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class Screen extends AppCompatActivity implements Viewable {
@@ -87,6 +88,11 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		else
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+
+	@Override
+	public AppContext getMorkimContext() {
+		return (AppContext) getApplication();
 	}
 
 	@Override
