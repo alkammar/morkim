@@ -19,17 +19,12 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	public Presenter(Viewable viewable) {
 		
 		this.viewable = viewable;
-//		viewModel = new ViewModel();
 	}
 	
 	void initialize(AppContext appContext) {
 
 		this.appContext = appContext;
-
-//		initializeViewModel(viewModel);
 	}
-
-	protected abstract void initializeViewModel(ViewModel viewModel);
 
 	public void unbindViewModel() {
 
