@@ -19,11 +19,7 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 	public Presenter(Viewable viewable) {
 		
 		this.viewable = viewable;
-	}
-	
-	void initialize(AppContext appContext) {
-
-		this.appContext = appContext;
+		this.appContext = viewable.getMorkimContext();
 	}
 
 	public void unbindViewModel() {
