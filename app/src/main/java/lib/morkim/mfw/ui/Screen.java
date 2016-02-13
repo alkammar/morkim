@@ -100,7 +100,8 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 		return this;
 	}
 
-	protected Controller getController() {
+	@Override
+	public Controller getController() {
 		return controller;
 	}
 

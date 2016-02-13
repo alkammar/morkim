@@ -58,6 +58,10 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 //		this.viewModel = viewModel;
 //	}
 
+	protected Controller getController() {
+		return viewable.getController();
+	}
+
 	public AppContext getAppContext() {
 		return appContext;
 	}

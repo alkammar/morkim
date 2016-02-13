@@ -8,10 +8,11 @@ import lib.morkim.mfw.app.AppContext;
 
 public interface Viewable extends Observer {
 
+	Context getContext();
+	Controller getController();
+
 	public void finish();
 	AppContext getMorkimContext();
 
 	void keepScreenOn(boolean keepOn);
-
-	Context getContext();
 }
