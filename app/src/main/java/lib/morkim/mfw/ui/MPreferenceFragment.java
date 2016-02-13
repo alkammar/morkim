@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 @SuppressLint("NewApi")
@@ -45,4 +46,14 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	}
 
 	protected abstract Controller createController();
+
+	@Override
+	public AppContext getMorkimContext() {
+		return ((Screen) getActivity()).getMorkimContext();
+	}
+
+	@Override
+	public void keepScreenOn(boolean keepOn) {
+		((Screen) getActivity()).keepScreenOn(keepOn);
+	}
 }
