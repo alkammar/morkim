@@ -77,7 +77,7 @@ public abstract class Controller implements Observer, UseCaseStateListener {
         return viewable;
     }
 
-    Context getContext() {
+    protected Context getContext() {
         return viewable.getContext();
     }
 }
