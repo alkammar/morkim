@@ -45,8 +45,6 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 		super.onPause();
 	}
 
-	protected abstract Controller createController();
-
 	@Override
 	public AppContext getMorkimContext() {
 		return ((Screen) getActivity()).getMorkimContext();
@@ -55,5 +53,10 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	@Override
 	public void keepScreenOn(boolean keepOn) {
 		((Screen) getActivity()).keepScreenOn(keepOn);
+	}
+
+	@Override
+	public void finish() {
+
 	}
 }
