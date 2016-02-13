@@ -59,4 +59,8 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	public void finish() {
 
 	}
+
+	protected Presenter getPresenter() {
+		return presenter;
+	}
 }
