@@ -84,4 +84,11 @@ public abstract class Controller extends Observable implements Observer, UseCase
 	protected Presenter getPresenter() {
 		return viewable.getPresenter();
 	}
+
+	@Override
+	public void addObserver(Observer observer) {
+		super.addObserver(observer);
+
+		observer.update(this, null);
+	}
 }

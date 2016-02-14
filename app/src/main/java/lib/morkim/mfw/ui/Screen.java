@@ -59,6 +59,8 @@ public abstract class Screen extends Activity implements Viewable {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		controller.addObserver(this);
 	}
 
 	@Override
