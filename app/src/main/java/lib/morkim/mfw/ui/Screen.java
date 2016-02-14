@@ -31,8 +31,8 @@ public abstract class Screen extends Activity implements Viewable {
 		if (layoutId > 0)
 			setContentView(layoutId);
 
-		controller = ((MorkimApp) getApplication()).acquireController(this);
 		presenter = ((MorkimApp) getApplication()).acquirePresenter(this);
+		controller = ((MorkimApp) getApplication()).acquireController(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
