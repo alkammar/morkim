@@ -60,12 +60,18 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 
 	}
 
-	protected Presenter getPresenter() {
+	@Override
+	public Presenter getPresenter() {
 		return presenter;
 	}
 
 	@Override
 	public Controller getController() {
 		return controller;
+	}
+
+	@Override
+	public void showShortMessage(String message) {
+		((Screen) getActivity()).showShortMessage(message);
 	}
 }

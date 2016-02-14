@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.AppContext;
@@ -105,7 +106,13 @@ public abstract class Screen extends Activity implements Viewable {
 		return controller;
 	}
 
-	protected Presenter getPresenter() {
+	@Override
+	public Presenter getPresenter() {
 		return presenter;
+	}
+
+	@Override
+	public void showShortMessage(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 }

@@ -80,4 +80,8 @@ public abstract class Controller extends Observable implements Observer, UseCase
     protected Context getContext() {
         return viewable.getContext();
     }
+
+	protected Presenter getPresenter() {
+		return viewable.getPresenter();
+	}
 }
