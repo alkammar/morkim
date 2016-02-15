@@ -1,13 +1,15 @@
 package lib.morkim.mfw.ui.lists;
 
-import java.util.ArrayList;
-
-import lib.morkim.mfw.ui.helper.ViewHelper;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lib.morkim.mfw.ui.helper.ViewHelper;
 
 public abstract class ListAdapter extends BaseAdapter {
 
@@ -17,9 +19,9 @@ public abstract class ListAdapter extends BaseAdapter {
 
 	protected ViewHelper textViewHelper;
 
-	protected ArrayList<ListItemModel> listModel;
+	protected List<ListItemModel> listModel;
 
-	public ListAdapter(Context context, ArrayList<ListItemModel> listModel) {
+	public ListAdapter(Context context, List<ListItemModel> listModel) {
 
 		this.context = context;
 		this.listModel = listModel;
