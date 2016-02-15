@@ -111,6 +111,11 @@ public abstract class Screen extends Activity implements Viewable {
 	}
 
 	@Override
+	public Screen getScreen() {
+		return this;
+	}
+
+	@Override
 	public Controller getController() {
 		return controller;
 	}

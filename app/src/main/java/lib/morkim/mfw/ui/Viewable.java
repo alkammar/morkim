@@ -10,6 +10,7 @@ public interface Viewable extends Observer {
 
 	Context getContext();
 
+	Screen getScreen();
 	Controller getController();
 	Presenter getPresenter();
 

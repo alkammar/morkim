@@ -65,6 +65,11 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	}
 
 	@Override
+	public Screen getScreen() {
+		return (Screen) getActivity();
+	}
+
+	@Override
 	public Presenter getPresenter() {
 		return presenter;
 	}
