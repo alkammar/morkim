@@ -36,13 +36,17 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
+
+		controller.addObserver(this);
 	}
-	
+
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onStop() {
+		super.onStop();
+
+		controller.deleteObserver(this);
 	}
 
 	@Override

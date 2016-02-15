@@ -57,8 +57,8 @@ public abstract class Screen extends Activity implements Viewable {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 
 		controller.addObserver(this);
 	}
@@ -68,6 +68,13 @@ public abstract class Screen extends Activity implements Viewable {
 		super.onPause();
 
 		keepScreenOn(false);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		controller.deleteObserver(this);
 	}
 
 	@Override
