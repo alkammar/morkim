@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lib.morkim.mfw.ui.helper.ViewHelper;
@@ -87,7 +86,7 @@ public abstract class ListAdapter extends BaseAdapter {
 		textViewHelper = new ViewHelper(context, view);
 	}
 
-	public void updateData(ArrayList<ListItemModel> listModel) {
+	public void updateData(List<ListItemModel> listModel) {
 
 		this.listModel = listModel;
 
