@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
@@ -54,6 +55,11 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     }
 
     @Override
+    public Screen getScreen() {
+        return (Screen) getActivity();
+    }
+
+    @Override
     public Controller getController() {
         return controller;
     }
@@ -61,5 +67,20 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     @Override
     public Presenter getPresenter() {
         return presenter;
+    }
+
+    @Override
+    public void showShortMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void keepScreenOn(boolean keepOn) {
+        ((Screen) getActivity()).keepScreenOn(keepOn);
+    }
+
+    @Override
+    public void finish() {
+
     }
 }
