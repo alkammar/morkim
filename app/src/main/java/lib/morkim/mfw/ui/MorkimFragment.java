@@ -24,6 +24,14 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
+        controller = ((MorkimApp) getMorkimContext()).acquireController(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -37,11 +45,17 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onStart() {
+        super.onStart();
 
-        presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-        controller = ((MorkimApp) getMorkimContext()).acquireController(this);
+        controller.addObserver(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        controller.deleteObserver(this);
     }
 
     @Override
