@@ -3,6 +3,7 @@ package lib.morkim.mfw.ui;
 import android.content.Context;
 
 import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.domain.Model;
 
 public abstract class Presenter {
 
@@ -29,5 +30,9 @@ public abstract class Presenter {
 
 	public void setAppContext(AppContext appContext) {
 		this.appContext = appContext;
+	}
+
+	protected Model getModel() {
+		return appContext.getModel();
 	}
 }
