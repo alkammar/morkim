@@ -6,7 +6,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.app.AppContext;
-import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseProgress;
@@ -70,14 +69,6 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 
 	public void setAppContext(AppContext appContext) {
 		this.appContext = appContext;
-	}
-
-	protected String string(int resource) {
-		return ((MorkimApp) appContext).getString(resource);
-	}
-
-	protected String string(int resource, Object ... args) {
-		return ((MorkimApp) appContext).getString(resource, args);
 	}
 	
 	protected Model getModel() {
