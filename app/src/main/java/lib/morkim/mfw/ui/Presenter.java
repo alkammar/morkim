@@ -1,5 +1,7 @@
 package lib.morkim.mfw.ui;
 
+import android.content.Context;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -60,6 +62,10 @@ public abstract class Presenter implements Observer, UseCaseStateListener {
 
 	public AppContext getAppContext() {
 		return appContext;
+	}
+
+	protected Context getContext() {
+		return viewable.getContext();
 	}
 
 	public void setAppContext(AppContext appContext) {
