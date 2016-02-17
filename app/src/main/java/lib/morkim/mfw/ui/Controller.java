@@ -23,7 +23,14 @@ public abstract class Controller extends Observable implements Observer, UseCase
 		this.viewable = viewable;
 
         appContext = createContext();
+
+		onExtractExtraData();
+
         executeInitializationTask();
+	}
+
+	protected void onExtractExtraData() {
+
 	}
 
 	protected AppContext createContext() {
