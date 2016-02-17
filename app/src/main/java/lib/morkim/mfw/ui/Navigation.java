@@ -18,6 +18,10 @@ public abstract class Navigation {
 		controller.getContext().startActivity(intent);
 	}
 
+	public static void to(Controller controller, Intent intent) {
+		controller.getContext().startActivity(intent);
+	}
+
 	public static void toGooglePlay(Controller controller) {
 		controller.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri
 				.parse(googlePlayBaseUrl()
