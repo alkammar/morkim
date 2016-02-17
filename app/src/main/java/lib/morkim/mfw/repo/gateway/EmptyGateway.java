@@ -36,4 +36,9 @@ public class EmptyGateway extends AbstractGateway {
 		return null;
 	}
 
+	@Override
+	public void delete(Entity data) {
+
+	}
+
 }
