@@ -17,5 +17,7 @@ public interface Gateway {
 	public List<Entity> retrieveAll() throws GatewayRetrieveException;
 	public List<Entity> retrieve(Filter filter) throws GatewayRetrieveException;
 
+	public void delete(Entity data);
+
 	public int getVersion();
 }

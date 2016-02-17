@@ -54,6 +54,11 @@ public abstract class SpGateway extends AbstractGateway {
 	}
 
 	@Override
+	public void delete(Entity data) {
+
+	}
+
+	@Override
 	public String source() {
 		return SP_DEFAULT;
 	}

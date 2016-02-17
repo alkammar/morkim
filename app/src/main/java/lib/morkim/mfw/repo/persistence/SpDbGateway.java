@@ -1,5 +1,7 @@
 package lib.morkim.mfw.repo.persistence;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +14,6 @@ import lib.morkim.mfw.repo.SpRepo;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
-
-import org.json.JSONException;
 
 public abstract class SpDbGateway extends AbstractGateway {
 
@@ -68,7 +68,12 @@ public abstract class SpDbGateway extends AbstractGateway {
 	public List<Entity> retrieve(Filter filter) {
 		return null;
 	}
-	
+
+	@Override
+	public void delete(Entity data) {
+		spRepo.delete(source(), data.getSysId().toString());
+	}
+
 	protected abstract String serialize(Entity entity) throws JSONException;
 	protected abstract Entity deserialize(String string) throws JSONException;
 
