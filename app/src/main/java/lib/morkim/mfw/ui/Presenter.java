@@ -5,10 +5,10 @@ import android.content.Context;
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class Presenter {
+public abstract class Presenter<C extends  Controller> {
 
 	private AppContext appContext;
-	protected Viewable viewable;
+	protected Viewable<C, ? extends Presenter> viewable;
 
 	public Presenter(Viewable viewable) {
 		

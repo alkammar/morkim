@@ -7,15 +7,15 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.AppContext;
 
-public interface Viewable extends Observer {
+public interface Viewable<C, P> extends Observer {
 
 	static final String VIEWABLE_ID = "viewable.id";
 
 	Context getContext();
 
 	Screen getScreen();
-	Controller getController();
-	Presenter getPresenter();
+	C getController();
+	P getPresenter();
 
 	public void finish();
 	AppContext getMorkimContext();

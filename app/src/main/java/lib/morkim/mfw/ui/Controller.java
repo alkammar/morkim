@@ -12,9 +12,9 @@ import lib.morkim.mfw.usecase.UseCaseProgress;
 import lib.morkim.mfw.usecase.UseCaseResult;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
-public abstract class Controller extends Observable implements Observer, UseCaseStateListener {
+public abstract class Controller<P extends Presenter> extends Observable implements Observer, UseCaseStateListener {
 
-	protected Viewable viewable;
+	protected Viewable<? extends Controller, P> viewable;
 	private AppContext appContext;
 
 	private boolean isRegisteredToBackgroundData;
@@ -88,7 +88,7 @@ public abstract class Controller extends Observable implements Observer, UseCase
         return viewable.getContext();
     }
 
-	protected Presenter getPresenter() {
+	protected P getPresenter() {
 		return viewable.getPresenter();
 	}
 
