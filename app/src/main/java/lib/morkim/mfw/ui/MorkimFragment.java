@@ -30,11 +30,18 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        id = (savedInstanceState == null) ? UUID.randomUUID() : (UUID) savedInstanceState.get(VIEWABLE_ID);
+        id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
         presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
         controller = ((MorkimApp) getMorkimContext()).acquireController(this);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(VIEWABLE_ID, id.toString());
     }
 
     @Override
