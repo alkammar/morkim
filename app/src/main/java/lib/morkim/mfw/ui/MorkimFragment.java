@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
@@ -18,22 +20,20 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
 
     private Controller controller;
     private Presenter presenter;
+    private UUID id;
 
     protected int layoutId() {
         return 0;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        id = (savedInstanceState == null) ? UUID.randomUUID() : (UUID) savedInstanceState.get(VIEWABLE_ID);
 
         presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
         controller = ((MorkimApp) getMorkimContext()).acquireController(this);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
     }
 
@@ -96,5 +96,10 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     @Override
     public void finish() {
 
+    }
+
+    @Override
+    public UUID getInstanceId() {
+        return id;
     }
 }

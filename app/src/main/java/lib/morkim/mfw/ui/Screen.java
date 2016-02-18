@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
@@ -13,10 +15,8 @@ import lib.morkim.mfw.app.MorkimApp;
 public abstract class Screen extends AppCompatActivity implements Viewable {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
-	
-	private static final String TAG_CONTROLLER_FRAGMENT = "controller.fragment.tag";
 
-	protected Navigation navigation;
+	private UUID id;
 
 	private Controller controller;
 	private Presenter presenter;
@@ -24,6 +24,8 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		id = (savedInstanceState == null) ? UUID.randomUUID() : (UUID) savedInstanceState.get(VIEWABLE_ID);
 
 		setCustomTilteBar();
 
@@ -128,5 +130,10 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 	@Override
 	public void showShortMessage(String message) {
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public UUID getInstanceId() {
+		return id;
 	}
 }

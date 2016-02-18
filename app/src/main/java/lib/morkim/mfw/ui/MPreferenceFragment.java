@@ -1,35 +1,32 @@
 package lib.morkim.mfw.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import java.util.UUID;
 
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 @SuppressLint("NewApi")
 public abstract class MPreferenceFragment extends PreferenceFragment implements Viewable {
-	
-	private static final String TAG_CONTROLLER_FRAGMENT = "fragment.controller.fragment.tag";
-
-	protected Navigation navigation;
 
 	protected Controller controller;
 	private Presenter presenter;
+	private UUID id;
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-	
-		MorkimApp morkimApp = (MorkimApp) activity.getApplication();
-		
-		navigation = morkimApp.acquireNavigation();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-		presenter = morkimApp.acquirePresenter(this);
-		controller = morkimApp.acquireController(this);
+		id = (savedInstanceState == null) ? UUID.randomUUID() : (UUID) savedInstanceState.get(VIEWABLE_ID);
+
+		presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
+		controller = ((MorkimApp) getMorkimContext()).acquireController(this);
+
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -82,5 +79,10 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	@Override
 	public void showShortMessage(String message) {
 		((Screen) getActivity()).showShortMessage(message);
+	}
+
+	@Override
+	public UUID getInstanceId() {
+		return id;
 	}
 }

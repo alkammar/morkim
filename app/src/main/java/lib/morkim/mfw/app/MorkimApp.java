@@ -4,6 +4,7 @@ import android.app.Application;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;
@@ -34,8 +35,8 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	private Navigation navigation;
 
-    private Map<Viewable, Controller> controllers;
-    private Map<Viewable, Presenter> presenters;
+    private Map<UUID, Controller> controllers;
+    private Map<UUID, Presenter> presenters;
 
 	private Model model;
 	private TaskScheduler taskScheduler;
@@ -74,13 +75,13 @@ public abstract class MorkimApp extends Application implements AppContext,
 
     public Controller acquireController(Viewable viewable) {
 
-        Controller controller = controllers.get(viewable);
+        Controller controller = controllers.get(viewable.getInstanceId());
         return (controller == null) ? createController(viewable) : controller;
     }
 
     public Presenter acquirePresenter(Viewable viewable) {
 
-        Presenter presenter = presenters.get(viewable);
+        Presenter presenter = presenters.get(viewable.getInstanceId());
         return (presenter == null) ? createPresenter(viewable) : presenter;
     }
 
@@ -88,11 +89,11 @@ public abstract class MorkimApp extends Application implements AppContext,
     protected abstract Presenter createPresenter(Viewable viewable);
 
     public void destroyController(Viewable viewable) {
-        controllers.remove(viewable);
+        controllers.remove(viewable.getInstanceId());
     }
 
     public void destroyPresenter(Viewable viewable) {
-        presenters.remove(viewable);
+        presenters.remove(viewable.getInstanceId());
     }
 
 	/**
