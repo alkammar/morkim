@@ -76,13 +76,19 @@ public abstract class MorkimApp extends Application implements AppContext,
     public Controller acquireController(Viewable viewable) {
 
         Controller controller = controllers.get(viewable.getInstanceId());
-        return (controller == null) ? createController(viewable) : controller;
+        controller = (controller == null) ? createController(viewable) : controller;
+		controllers.put(viewable.getInstanceId(), controller);
+
+		return controller;
     }
 
     public Presenter acquirePresenter(Viewable viewable) {
 
         Presenter presenter = presenters.get(viewable.getInstanceId());
-        return (presenter == null) ? createPresenter(viewable) : presenter;
+        presenter = (presenter == null) ? createPresenter(viewable) : presenter;
+		presenters.put(viewable.getInstanceId(), presenter);
+
+		return presenter;
     }
 
 	protected abstract Controller createController(Viewable viewable);
