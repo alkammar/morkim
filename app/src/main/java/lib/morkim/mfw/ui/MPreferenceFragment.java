@@ -10,10 +10,10 @@ import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 @SuppressLint("NewApi")
-public abstract class MPreferenceFragment extends PreferenceFragment implements Viewable {
+public abstract class MPreferenceFragment<C extends Controller, P extends Presenter> extends PreferenceFragment implements Viewable<C, P> {
 
-	protected Controller controller;
-	private Presenter presenter;
+	protected C controller;
+	private P presenter;
 	private UUID id;
 
 	@Override
@@ -22,8 +22,8 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-		controller = ((MorkimApp) getMorkimContext()).acquireController(this);
+		presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
+		controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
 
 	}
 
@@ -69,12 +69,12 @@ public abstract class MPreferenceFragment extends PreferenceFragment implements 
 	}
 
 	@Override
-	public Presenter getPresenter() {
+	public P getPresenter() {
 		return presenter;
 	}
 
 	@Override
-	public Controller getController() {
+	public C getController() {
 		return controller;
 	}
 

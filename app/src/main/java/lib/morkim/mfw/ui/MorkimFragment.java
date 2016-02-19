@@ -2,7 +2,7 @@ package lib.morkim.mfw.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +16,10 @@ import lib.morkim.mfw.app.MorkimApp;
 /**
  * Created by Kammar on 2/16/2016.
  */
-public abstract class MorkimFragment extends Fragment implements Viewable {
+public abstract class MorkimFragment<C extends Controller, P extends Presenter> extends PreferenceFragment implements Viewable<C, P> {
 
-    private Controller controller;
-    private Presenter presenter;
+    private C controller;
+    private P presenter;
     private UUID id;
 
     protected int layoutId() {
@@ -32,8 +32,8 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        presenter = ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-        controller = ((MorkimApp) getMorkimContext()).acquireController(this);
+        presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
+        controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
 
     }
 
@@ -81,12 +81,12 @@ public abstract class MorkimFragment extends Fragment implements Viewable {
     }
 
     @Override
-    public Controller getController() {
+    public C getController() {
         return controller;
     }
 
     @Override
-    public Presenter getPresenter() {
+    public P getPresenter() {
         return presenter;
     }
 

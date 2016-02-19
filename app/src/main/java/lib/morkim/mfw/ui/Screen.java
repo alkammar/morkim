@@ -33,8 +33,8 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 		if (layoutId > 0)
 			setContentView(layoutId);
 
-		presenter = createPresenter();
-		controller = createController();
+		presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
+		controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
