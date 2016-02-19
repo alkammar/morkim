@@ -8,15 +8,15 @@ import lib.morkim.mfw.domain.Model;
 public abstract class Presenter<C extends  Controller> {
 
 	private AppContext appContext;
-	protected Viewable<C, ? extends Presenter> viewable;
+	protected Viewable<C, ?> viewable;
 
-	public Presenter(Viewable viewable) {
+	public Presenter(Viewable<C, ?> viewable) {
 		
 		this.viewable = viewable;
 		this.appContext = viewable.getMorkimContext();
 	}
 
-	protected Controller getController() {
+	protected C getController() {
 		return viewable.getController();
 	}
 

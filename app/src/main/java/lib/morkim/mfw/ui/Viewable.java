@@ -7,11 +7,14 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.AppContext;
 
-public interface Viewable<C, P> extends Observer {
+public interface Viewable<C extends Controller, P extends Presenter> extends Observer {
 
 	static final String VIEWABLE_ID = "viewable.id";
 
 	Context getContext();
+
+	C createController();
+	P createPresenter();
 
 	Screen getScreen();
 	C getController();

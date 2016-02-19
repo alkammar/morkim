@@ -76,7 +76,7 @@ public abstract class MorkimApp extends Application implements AppContext,
     public Controller acquireController(Viewable viewable) {
 
         Controller controller = controllers.get(viewable.getInstanceId());
-        controller = (controller == null) ? createController(viewable) : controller;
+        controller = (controller == null) ? viewable.createController() : controller;
 		controllers.put(viewable.getInstanceId(), controller);
 
 		return controller;
@@ -85,14 +85,11 @@ public abstract class MorkimApp extends Application implements AppContext,
     public Presenter acquirePresenter(Viewable viewable) {
 
         Presenter presenter = presenters.get(viewable.getInstanceId());
-        presenter = (presenter == null) ? createPresenter(viewable) : presenter;
+        presenter = (presenter == null) ? viewable.createPresenter() : presenter;
 		presenters.put(viewable.getInstanceId(), presenter);
 
 		return presenter;
     }
-
-	protected abstract Controller createController(Viewable viewable);
-    protected abstract Presenter createPresenter(Viewable viewable);
 
     public void destroyController(Viewable viewable) {
         controllers.remove(viewable.getInstanceId());

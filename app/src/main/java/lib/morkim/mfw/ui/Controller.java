@@ -14,12 +14,12 @@ import lib.morkim.mfw.usecase.UseCaseStateListener;
 
 public abstract class Controller<P extends Presenter> extends Observable implements Observer, UseCaseStateListener {
 
-	protected Viewable<? extends Controller, P> viewable;
+	protected Viewable<?, P> viewable;
 	private AppContext appContext;
 
 	private boolean isRegisteredToBackgroundData;
 
-	public Controller(Viewable viewable) {
+	public Controller(Viewable<?, P> viewable) {
 		this.viewable = viewable;
 
         appContext = createContext();
@@ -80,7 +80,7 @@ public abstract class Controller<P extends Presenter> extends Observable impleme
 		
 	}
 
-    Viewable getViewable() {
+    Viewable<?, P> getViewable() {
         return viewable;
     }
 

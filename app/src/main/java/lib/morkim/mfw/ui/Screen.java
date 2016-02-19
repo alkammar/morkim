@@ -12,14 +12,14 @@ import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class Screen extends AppCompatActivity implements Viewable {
+public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity implements Viewable<C, P> {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 
 	private UUID id;
 
-	private Controller controller;
-	private Presenter presenter;
+	protected C controller;
+	protected P presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,8 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 		if (layoutId > 0)
 			setContentView(layoutId);
 
-		presenter = ((MorkimApp) getApplication()).acquirePresenter(this);
-		controller = ((MorkimApp) getApplication()).acquireController(this);
+		presenter = createPresenter();
+		controller = createController();
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
@@ -125,12 +125,12 @@ public abstract class Screen extends AppCompatActivity implements Viewable {
 	}
 
 	@Override
-	public Controller getController() {
+	public C getController() {
 		return controller;
 	}
 
 	@Override
-	public Presenter getPresenter() {
+	public P getPresenter() {
 		return presenter;
 	}
 
