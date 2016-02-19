@@ -13,7 +13,7 @@ import lib.morkim.mfw.usecase.UseCaseResponse;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
 public abstract class Controller<P extends Presenter> extends Observable
-		implements Observer, UseCaseStateListener<UseCaseProgress, UseCaseResponse> {
+		implements Observer, UseCaseStateListener<UseCaseResponse> {
 
 	protected Viewable<?, P> viewable;
 	private AppContext appContext;
