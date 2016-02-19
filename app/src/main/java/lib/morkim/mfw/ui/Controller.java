@@ -9,10 +9,11 @@ import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseProgress;
-import lib.morkim.mfw.usecase.UseCaseResult;
+import lib.morkim.mfw.usecase.UseCaseResponse;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
-public abstract class Controller<P extends Presenter> extends Observable implements Observer, UseCaseStateListener {
+public abstract class Controller<P extends Presenter> extends Observable
+		implements Observer, UseCaseStateListener<UseCaseProgress, UseCaseResponse> {
 
 	protected Viewable<?, P> viewable;
 	private AppContext appContext;
@@ -59,7 +60,7 @@ public abstract class Controller<P extends Presenter> extends Observable impleme
 	public void onUseCaseUpdate(UseCaseProgress response) {}
 
 	@Override
-	public void onUseCaseComplete(UseCaseResult response) {}
+	public void onUseCaseComplete(UseCaseResponse response) {}
 
 	@Override
 	public void onUseCaseCancel() {}

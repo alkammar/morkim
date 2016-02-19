@@ -1,15 +1,17 @@
 package lib.morkim.mfw.usecase;
 
+import android.os.AsyncTask;
+
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
-import android.os.AsyncTask;
 
-public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse, Void> {
+public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseResponse>
+		extends AsyncTask<Req, Res, Void> {
 
 	private AppContext appContext;
-	private UseCaseRequest request;
+	private Req request;
 	private UseCaseStateListener listener;
 
 	public UseCase(AppContext appContext, UseCaseStateListener listener) {
@@ -17,18 +19,25 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 		
 		if (listener == null)
 		this.listener = new UseCaseStateListener() {
+			@Override
+			public void onUseCaseStart(UseCase useCase) {
+
+			}
 
 			@Override
-			public void onUseCaseStart(UseCase useCase) {}
+			public void onUseCaseUpdate(UseCaseProgress response) {
+
+			}
 
 			@Override
-			public void onUseCaseUpdate(UseCaseProgress response) {}
+			public void onUseCaseComplete(UseCaseResponse response) {
+
+			}
 
 			@Override
-			public void onUseCaseComplete(UseCaseResult response) {}
+			public void onUseCaseCancel() {
 
-			@Override
-			public void onUseCaseCancel() {}
+			}
 		};
 		else
 			this.listener = listener;
@@ -42,7 +51,7 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 	}
 
 	@Override
-	protected Void doInBackground(UseCaseRequest... params) {
+	protected Void doInBackground(Req... params) {
 
 		if (params.length > 0)
 			setRequest(params[0]);
@@ -59,14 +68,14 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 		onSaveModel();
 	}
 
-	public void executeSync(UseCaseRequest request) {
+	public void executeSync(Req request) {
 
 		setRequest(request);
 
 		executeSync();
 	}
 
-	protected void reportProgress(UseCaseProgress result) {
+	protected void reportProgress(Res result) {
 		publishProgress(result);
 	}
 
@@ -90,7 +99,7 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 
 	protected void onPrepare() {}
 
-	protected abstract UseCaseResult onExecute();
+	protected abstract Res onExecute();
 	protected void onSaveModel() {}
 
 	public AppContext getAppContext() {
@@ -101,11 +110,11 @@ public abstract class UseCase extends AsyncTask<UseCaseRequest, UseCaseResponse,
 		this.appContext = appContext;
 	}
 
-	public UseCaseRequest getRequest() {
+	public Req getRequest() {
 		return request;
 	}
 
-	public void setRequest(UseCaseRequest request) {
+	public void setRequest(Req request) {
 		this.request = request;
 	}
 
