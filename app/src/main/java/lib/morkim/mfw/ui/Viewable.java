@@ -16,7 +16,7 @@ public interface Viewable<C extends Controller, P extends Presenter> extends Obs
 	C createController();
 	P createPresenter();
 
-	Screen getScreen();
+	Screen<C, P> getScreen();
 	C getController();
 	P getPresenter();
 
