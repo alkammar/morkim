@@ -92,6 +92,7 @@ public abstract class MorkimApp extends Application implements AppContext,
     }
 
     public void destroyController(Viewable viewable) {
+		controllers.get(viewable.getInstanceId()).destroy();
         controllers.remove(viewable.getInstanceId());
     }
 

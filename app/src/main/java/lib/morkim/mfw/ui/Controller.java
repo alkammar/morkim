@@ -98,4 +98,8 @@ public abstract class Controller<P extends Presenter> extends Observable impleme
 
 		observer.update(this, null);
 	}
+
+	public void destroy() {
+
+	}
 }
