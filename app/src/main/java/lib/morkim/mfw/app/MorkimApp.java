@@ -15,7 +15,6 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
-import lib.morkim.mfw.ui.Navigation;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 
@@ -43,8 +42,6 @@ public abstract class MorkimApp extends Application implements AppContext,
     @Override
 	public void onCreate() {
 		super.onCreate();
-
-		createFactories();
 
 		repo = createRepo();
 		if (repo == null) 
@@ -95,13 +92,6 @@ public abstract class MorkimApp extends Application implements AppContext,
     public void destroyPresenter(Viewable viewable) {
         presenters.remove(viewable.getInstanceId());
     }
-
-	/**
-	 * Create specific application factories. The factories created here are not
-	 * used by Morkim framework. You can just you this for creating the
-	 * factories at an early initialization state of the application.
-	 */
-	protected abstract void createFactories();
 
 	/**
 	 * Create the data repository for your application. This repository has the
@@ -160,8 +150,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 	protected Analytics createAnalytics() {
 		return new DummyAnalytics(this);
 	}
-
-	protected abstract Navigation createNavigation();
 
 	@Override
 	public MorkimApp getContext() {
