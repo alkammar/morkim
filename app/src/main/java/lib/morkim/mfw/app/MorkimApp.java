@@ -33,8 +33,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 
 	private Analytics analytics;
 
-	private Navigation navigation;
-
     private Map<UUID, Controller> controllers;
     private Map<UUID, Presenter> presenters;
 
@@ -63,8 +61,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 			throw new Error(String.format("createModel() method in %s must return a non-null implementation", this.getClass()));
 
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
-
-		navigation = createNavigation();
 
 		try {
 			model.load();
@@ -135,10 +131,6 @@ public abstract class MorkimApp extends Application implements AppContext,
 	 * @return Scheduled tasks factory
 	 */
 	protected abstract TaskFactory createScheduledTaskFactory();
-
-	public Navigation acquireNavigation() {
-		return navigation;
-	}
 
 	@Override
 	public Repository getRepos() {
