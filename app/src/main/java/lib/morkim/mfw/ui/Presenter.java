@@ -35,4 +35,8 @@ public abstract class Presenter<C extends  Controller, M extends Model, A extend
 	protected M getModel() {
 		return morkimApp.getModel();
 	}
+
+	public void attachViewable(Viewable viewable) {
+		this.viewable = viewable;
+	}
 }

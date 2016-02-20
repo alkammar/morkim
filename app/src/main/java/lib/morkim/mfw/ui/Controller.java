@@ -30,6 +30,10 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
         executeInitializationTask();
 	}
 
+	public void attachViewable(Viewable viewable) {
+		this.viewable = viewable;
+	}
+
 	protected void onExtractExtraData() {
 
 	}

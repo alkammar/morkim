@@ -71,6 +71,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
         Controller controller = controllers.get(viewable.getInstanceId());
         controller = (controller == null) ? viewable.createController() : controller;
+		controller.attachViewable(viewable);
 		controllers.put(viewable.getInstanceId(), controller);
 
 		return controller;
@@ -80,6 +81,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
         Presenter presenter = presenters.get(viewable.getInstanceId());
         presenter = (presenter == null) ? viewable.createPresenter() : presenter;
+		presenter.attachViewable(viewable);
 		presenters.put(viewable.getInstanceId(), presenter);
 
 		return presenter;
