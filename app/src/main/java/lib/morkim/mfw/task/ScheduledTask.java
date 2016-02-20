@@ -1,26 +1,27 @@
 package lib.morkim.mfw.task;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.Observable;
 
 import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
-import android.os.Handler;
-import android.os.Looper;
 
-public abstract class ScheduledTask extends Observable implements Runnable {
+public abstract class ScheduledTask<M extends Model> extends Observable implements Runnable {
 
 	private AppContext appContext;
 	
-	private Model model;
+	private M model;
 	private Repository repos;
 
-	public ScheduledTask(AppContext appContext) {
+	public ScheduledTask(AppContext<M> appContext) {
 		
 		this.appContext = appContext;
 		
-		this.model = ((AppContext) appContext).getModel();
+		this.model = appContext.getModel();
 		this.repos = ((MorkimApp) appContext).getRepos();
 	}
 
@@ -59,11 +60,11 @@ public abstract class ScheduledTask extends Observable implements Runnable {
 		this.appContext = appContext;
 	}
 
-	public Model getModel() {
+	public M getModel() {
 		return model;
 	}
 
-	public void setModel(Model model) {
+	public void setModel(M model) {
 		this.model = model;
 	}
 
