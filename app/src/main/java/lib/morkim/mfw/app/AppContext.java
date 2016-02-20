@@ -1,15 +1,15 @@
 package lib.morkim.mfw.app;
 
-import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.task.TaskScheduler;
 import android.content.Context;
 
-public interface AppContext {
+import lib.morkim.mfw.task.TaskScheduler;
+
+public interface AppContext<M> {
 
 	public Context getContext();
 	public String getString(int id);
 	
-	public Model getModel();
+	public M getModel();
 	
 	public TaskScheduler getTaskScheduler();
 	public abstract Analytics getAnalytics();

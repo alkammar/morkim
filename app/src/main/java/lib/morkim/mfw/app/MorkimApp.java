@@ -25,7 +25,7 @@ import lib.morkim.mfw.ui.Viewable;
  * extends this class you should add it in the manifest file in
  * {@code android:name} property under {@code application} tag.
  */
-public abstract class MorkimApp<M extends Model, R extends MorkimRepository> extends Application implements AppContext,
+public abstract class MorkimApp<M extends Model, R extends MorkimRepository> extends Application implements AppContext<M>,
 		RepoAccess {
 
 	private Repository repo;

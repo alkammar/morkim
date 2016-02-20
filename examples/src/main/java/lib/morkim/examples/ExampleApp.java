@@ -6,7 +6,6 @@ import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.task.TaskFactory;
-import lib.morkim.mfw.ui.Navigation;
 
 /**
  * Created by Kammar on 2/19/2016.
@@ -50,11 +49,6 @@ public class ExampleApp extends MorkimApp {
 
     @Override
     protected TaskFactory createScheduledTaskFactory() {
-        return null;
-    }
-
-    @Override
-    protected Navigation createNavigation() {
         return null;
     }
 }
