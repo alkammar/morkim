@@ -2,7 +2,6 @@ package lib.morkim.mfw.domain;
 
 import java.util.Observable;
 
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
@@ -10,23 +9,23 @@ import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
 public abstract class Model extends Observable {
 
-	private AppContext appContext;
+	private MorkimApp appContext;
 	private Repository repository;
 
-	public Model(AppContext appContext) {
-		
-		this.appContext = appContext;
-		setRepository(((MorkimApp) appContext).getRepos());
+	public Model(MorkimApp morkimApp) {
+
+		this.appContext = morkimApp;
+		setRepository(((MorkimApp) morkimApp).getRepos());
 	}
 	
 	public abstract void load() throws GatewayRetrieveException ;
 	public abstract void save() throws GatewayPersistException;
 
-	public AppContext getAppContext() {
+	public MorkimApp getAppContext() {
 		return appContext;
 	}
 
-	public void setAppContext(AppContext appContext) {
+	public void setAppContext(MorkimApp appContext) {
 		this.appContext = appContext;
 	}
 

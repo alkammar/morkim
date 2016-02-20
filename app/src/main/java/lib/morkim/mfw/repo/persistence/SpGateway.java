@@ -3,7 +3,7 @@ package lib.morkim.mfw.repo.persistence;
 import java.util.List;
 import java.util.Map;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.SpRepo;
@@ -16,10 +16,10 @@ public abstract class SpGateway extends AbstractGateway {
 	
 	private SpRepo spRepo;
 
-	public SpGateway(AppContext appContext) {
-		super(appContext);
+	public SpGateway(MorkimApp morkimApp) {
+		super(morkimApp);
 		
-		spRepo = new SpRepo(appContext.getContext());
+		spRepo = new SpRepo(morkimApp.getContext());
 	}
 
 	@Override

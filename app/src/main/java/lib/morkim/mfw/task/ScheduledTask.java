@@ -5,19 +5,19 @@ import android.os.Looper;
 
 import java.util.Observable;
 
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
+import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.Repository;
 
 public abstract class ScheduledTask<M extends Model> extends Observable implements Runnable {
 
-	private AppContext appContext;
+	private MorkimApp appContext;
 	
 	private M model;
 	private Repository repos;
 
-	public ScheduledTask(AppContext<M> appContext) {
+	public ScheduledTask(MorkimApp<M, MorkimRepository> appContext) {
 		
 		this.appContext = appContext;
 		
@@ -52,11 +52,11 @@ public abstract class ScheduledTask<M extends Model> extends Observable implemen
 		super.notifyObservers(data);
 	}
 
-	public AppContext getAppContext() {
+	public MorkimApp getAppContext() {
 		return appContext;
 	}
 
-	public void setAppContext(AppContext appContext) {
+	public void setAppContext(MorkimApp appContext) {
 		this.appContext = appContext;
 	}
 

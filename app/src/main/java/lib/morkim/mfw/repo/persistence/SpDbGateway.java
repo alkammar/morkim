@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.SpRepo;
@@ -21,10 +21,10 @@ public abstract class SpDbGateway extends AbstractGateway {
 	
 	private SpRepo spRepo;
 
-	public SpDbGateway(AppContext appContext) {
-		super(appContext);
+	public SpDbGateway(MorkimApp morkimApp) {
+		super(morkimApp);
 		
-		spRepo = new SpRepo(appContext.getContext());
+		spRepo = new SpRepo(morkimApp.getContext());
 	}
 
 	@Override

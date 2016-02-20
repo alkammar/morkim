@@ -2,7 +2,6 @@ package lib.morkim.mfw.usecase;
 
 import android.os.AsyncTask;
 
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
@@ -10,12 +9,12 @@ import lib.morkim.mfw.repo.Repository;
 public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseResponse>
 		extends AsyncTask<Req, Res, Void> {
 
-	private AppContext appContext;
+	private MorkimApp appContext;
 	private Req request;
 	private UseCaseStateListener listener;
 
-	public UseCase(AppContext appContext, UseCaseStateListener listener) {
-		this.appContext = appContext;
+	public UseCase(MorkimApp morkimApp, UseCaseStateListener listener) {
+		this.appContext = morkimApp;
 		
 		if (listener == null)
 		this.listener = new UseCaseStateListener() {
@@ -102,11 +101,11 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 	protected abstract Res onExecute();
 	protected void onSaveModel() {}
 
-	public AppContext getAppContext() {
+	public MorkimApp getAppContext() {
 		return appContext;
 	}
 
-	public void setAppContext(AppContext appContext) {
+	public void setAppContext(MorkimApp appContext) {
 		this.appContext = appContext;
 	}
 

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import java.util.UUID;
 
 import lib.morkim.mfw.R;
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 /**
@@ -39,8 +38,8 @@ public abstract class ToolbarScreen<C extends Controller, P extends Presenter> e
         if (layoutId > 0)
             setContentView(layoutId);
 
-        presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-        controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
+        presenter = (P) getMorkimContext().acquirePresenter(this);
+        controller = (C) getMorkimContext().acquireController(this);
 
         int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
         Transition transition = Transition.values()[transitionOrdinal];
@@ -119,8 +118,8 @@ public abstract class ToolbarScreen<C extends Controller, P extends Presenter> e
     }
 
     @Override
-    public AppContext getMorkimContext() {
-        return (AppContext) getApplication();
+    public MorkimApp getMorkimContext() {
+        return (MorkimApp) getApplication();
     }
 
     @Override

@@ -2,14 +2,14 @@ package lib.morkim.mfw.repo.gateway;
 
 import java.util.List;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 
 public class EmptyGateway extends AbstractGateway {
 
-	public EmptyGateway(AppContext appContext) {
-		super(appContext);
+	public EmptyGateway(MorkimApp morkimApp) {
+		super(morkimApp);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.Observer;
 import java.util.UUID;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 
 public interface Viewable<C extends Controller, P extends Presenter> extends Observer {
 
@@ -21,7 +21,7 @@ public interface Viewable<C extends Controller, P extends Presenter> extends Obs
 	P getPresenter();
 
 	public void finish();
-	AppContext getMorkimContext();
+	MorkimApp getMorkimContext();
 
 	void keepScreenOn(boolean keepOn);
 

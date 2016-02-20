@@ -2,12 +2,12 @@ package lib.morkim.mfw.ui;
 
 import android.content.Context;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
 public abstract class Presenter<C extends  Controller> {
 
-	private AppContext appContext;
+	private MorkimApp appContext;
 	protected Viewable<C, ?> viewable;
 
 	public Presenter(Viewable<C, ?> viewable) {
@@ -20,7 +20,7 @@ public abstract class Presenter<C extends  Controller> {
 		return viewable.getController();
 	}
 
-	public AppContext getAppContext() {
+	public MorkimApp getAppContext() {
 		return appContext;
 	}
 
@@ -28,7 +28,7 @@ public abstract class Presenter<C extends  Controller> {
 		return viewable.getContext();
 	}
 
-	public void setAppContext(AppContext appContext) {
+	public void setAppContext(MorkimApp appContext) {
 		this.appContext = appContext;
 	}
 

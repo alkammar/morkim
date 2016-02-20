@@ -1,13 +1,13 @@
 package lib.morkim.mfw.repo.gateway;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class AbstractGateway implements Gateway {
 	
-	protected AppContext appContext;
+	protected MorkimApp morkimApp;
 	
-	public AbstractGateway(AppContext appContext) {
-		this.appContext = appContext;
+	public AbstractGateway(MorkimApp morkimApp) {
+		this.morkimApp = morkimApp;
 	}
 
 	@Override

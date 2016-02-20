@@ -1,20 +1,21 @@
 package lib.morkim.mfw.repo.persistence;
 
+import android.util.SparseArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
-import android.util.SparseArray;
 
 public abstract class InmemoryRepo extends AbstractGateway {
 	
 	protected SparseArray<Entity> entities;
 
-	public InmemoryRepo(AppContext appContext) {
-		super(appContext);
+	public InmemoryRepo(MorkimApp morkimApp) {
+		super(morkimApp);
 
 		entities = new SparseArray<>();
 	}

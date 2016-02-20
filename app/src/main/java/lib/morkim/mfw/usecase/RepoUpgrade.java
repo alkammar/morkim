@@ -1,13 +1,13 @@
 package lib.morkim.mfw.usecase;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class RepoUpgrade extends UseCase {
 
 //	private int versionCode;
 
-	public RepoUpgrade(AppContext appContext, UseCaseStateListener listener) {
-		super(appContext, listener);
+	public RepoUpgrade(MorkimApp morkimApp, UseCaseStateListener listener) {
+		super(morkimApp, listener);
 	}
 	
 	@Override

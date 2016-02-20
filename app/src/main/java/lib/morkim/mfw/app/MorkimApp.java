@@ -25,8 +25,7 @@ import lib.morkim.mfw.ui.Viewable;
  * extends this class you should add it in the manifest file in
  * {@code android:name} property under {@code application} tag.
  */
-public abstract class MorkimApp<M extends Model, R extends MorkimRepository> extends Application implements AppContext<M>,
-		RepoAccess {
+public abstract class MorkimApp<M extends Model, R extends MorkimRepository> extends Application {
 
 	private Repository repo;
 
@@ -131,27 +130,22 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 */
 	protected abstract TaskFactory createScheduledTaskFactory();
 
-	@Override
 	public Repository getRepos() {
 		return repo;
 	}
 
-	@Override
 	public void setRepos(Repository repos) {
 		this.repo = repos;
 	}
 
-	@Override
 	public Analytics getAnalytics() {
 		return analytics;
 	}
 
-	@Override
 	public M getModel() {
 		return model;
 	}
 
-	@Override
 	public TaskScheduler getTaskScheduler() {
 		return taskScheduler;
 	}
@@ -160,7 +154,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return new DummyAnalytics(this);
 	}
 
-	@Override
 	public MorkimApp getContext() {
 		return this;
 	}

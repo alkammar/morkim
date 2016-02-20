@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import java.util.UUID;
 
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 /**
@@ -32,8 +31,8 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-        controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
+        presenter = (P) getMorkimContext().acquirePresenter(this);
+        controller = (C) getMorkimContext().acquireController(this);
 
     }
 
@@ -66,8 +65,8 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     }
 
     @Override
-    public AppContext getMorkimContext() {
-        return (AppContext) getActivity().getApplication();
+    public MorkimApp getMorkimContext() {
+        return (MorkimApp) getActivity().getApplication();
     }
 
     @Override

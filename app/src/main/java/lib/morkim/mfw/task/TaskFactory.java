@@ -1,22 +1,22 @@
 package lib.morkim.mfw.task;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class TaskFactory {
 
-    private AppContext appContext;
+    private MorkimApp appContext;
 
-	public TaskFactory(AppContext appContext) {
+	public TaskFactory(MorkimApp appContext) {
         this.appContext = appContext;
     }
 
 	public abstract ScheduledTask createTask(String taskName);
 
-	public AppContext getAppContext() {
+	public MorkimApp getAppContext() {
 		return appContext;
 	}
 
-	public void setAppContext(AppContext appContext) {
+	public void setAppContext(MorkimApp appContext) {
 		this.appContext = appContext;
 	}
 

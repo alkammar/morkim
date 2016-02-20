@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.Observable;
 import java.util.Observer;
 
-import lib.morkim.mfw.app.AppContext;
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseProgress;
@@ -16,7 +16,7 @@ public abstract class Controller<P extends Presenter> extends Observable
 		implements Observer, UseCaseStateListener<UseCaseResponse> {
 
 	protected Viewable<?, P> viewable;
-	private AppContext appContext;
+	private MorkimApp appContext;
 
 	private boolean isRegisteredToBackgroundData;
 
@@ -34,13 +34,13 @@ public abstract class Controller<P extends Presenter> extends Observable
 
 	}
 
-	protected AppContext createContext() {
+	protected MorkimApp createContext() {
 		return viewable.getMorkimContext();
 	}
 
 	protected void executeInitializationTask() {}
 
-	protected AppContext getAppContext() {
+	protected MorkimApp getAppContext() {
 		return appContext;
 	}
 

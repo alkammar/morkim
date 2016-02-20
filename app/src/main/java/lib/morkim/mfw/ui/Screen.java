@@ -9,7 +9,6 @@ import android.widget.Toast;
 import java.util.UUID;
 
 import lib.morkim.mfw.R;
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class Screen<C extends Controller, P extends Presenter> extends Activity implements Viewable<C, P> {
@@ -33,8 +32,8 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 		if (layoutId > 0)
 			setContentView(layoutId);
 
-		presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-		controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
+		presenter = (P) getMorkimContext().acquirePresenter(this);
+		controller = (C) getMorkimContext().acquireController(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
@@ -110,8 +109,8 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	}
 
 	@Override
-	public AppContext getMorkimContext() {
-		return (AppContext) getApplication();
+	public MorkimApp getMorkimContext() {
+		return (MorkimApp) getApplication();
 	}
 
 	@Override

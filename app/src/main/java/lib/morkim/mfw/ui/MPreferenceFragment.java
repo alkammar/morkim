@@ -6,7 +6,6 @@ import android.preference.PreferenceFragment;
 
 import java.util.UUID;
 
-import lib.morkim.mfw.app.AppContext;
 import lib.morkim.mfw.app.MorkimApp;
 
 @SuppressLint("NewApi")
@@ -22,8 +21,8 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		presenter = (P) ((MorkimApp) getMorkimContext()).acquirePresenter(this);
-		controller = (C) ((MorkimApp) getMorkimContext()).acquireController(this);
+		presenter = (P) getMorkimContext().acquirePresenter(this);
+		controller = (C) getMorkimContext().acquireController(this);
 
 	}
 
@@ -49,7 +48,7 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 	}
 
 	@Override
-	public AppContext getMorkimContext() {
+	public MorkimApp getMorkimContext() {
 		return ((Screen) getActivity()).getMorkimContext();
 	}
 
