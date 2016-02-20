@@ -43,6 +43,8 @@ public abstract class MorkimApp extends Application implements AppContext,
 	public void onCreate() {
 		super.onCreate();
 
+		createFactories();
+
 		repo = createRepo();
 		if (repo == null) 
 			throw new Error(String.format("createRepo() method in %s must return a non-null implementation", this.getClass()));
@@ -94,6 +96,13 @@ public abstract class MorkimApp extends Application implements AppContext,
     }
 
 	/**
+	 * Create specific application factories. The factories created here are not
+	 * used by Morkim framework. You can just you this for creating the
+	 * factories at an early initialization state of the application.
+	 */
+	protected abstract void createFactories();
+
+	/**
 	 * Create the data repository for your application. This repository has the
 	 * knowledge of all needed data {@link Gateway} to be created on request
 	 * from the application. See more details in the {@link MorkimRepository}
@@ -117,7 +126,7 @@ public abstract class MorkimApp extends Application implements AppContext,
 	 * in your application life time. You can also register and unregister to
 	 * updates from those tasks. For more info take a look at
 	 * {@link ScheduledTask} abstract class.
-	 * 
+	 *
 	 * @return Scheduled tasks factory
 	 */
 	protected abstract TaskFactory createScheduledTaskFactory();
