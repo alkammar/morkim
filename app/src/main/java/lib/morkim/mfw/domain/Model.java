@@ -9,12 +9,12 @@ import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
 public abstract class Model extends Observable {
 
-	private MorkimApp appContext;
+	private MorkimApp morkimApp;
 	private Repository repository;
 
 	public Model(MorkimApp morkimApp) {
 
-		this.appContext = morkimApp;
+		this.morkimApp = morkimApp;
 		setRepository(((MorkimApp) morkimApp).getRepos());
 	}
 	
@@ -22,11 +22,11 @@ public abstract class Model extends Observable {
 	public abstract void save() throws GatewayPersistException;
 
 	public MorkimApp getAppContext() {
-		return appContext;
+		return morkimApp;
 	}
 
-	public void setAppContext(MorkimApp appContext) {
-		this.appContext = appContext;
+	public void setAppContext(MorkimApp morkimApp) {
+		this.morkimApp = morkimApp;
 	}
 
 	public Repository getRepo() {

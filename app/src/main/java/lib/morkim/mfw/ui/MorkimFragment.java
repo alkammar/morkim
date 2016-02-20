@@ -15,7 +15,7 @@ import lib.morkim.mfw.app.MorkimApp;
 /**
  * Created by Kammar on 2/16/2016.
  */
-public abstract class MorkimFragment<C extends Controller, P extends Presenter> extends PreferenceFragment implements Viewable<C, P> {
+public abstract class MorkimFragment<C extends Controller, P extends Presenter> extends PreferenceFragment implements Viewable<MorkimApp, C, P> {
 
     private C controller;
     private P presenter;

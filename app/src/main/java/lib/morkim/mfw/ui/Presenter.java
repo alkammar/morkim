@@ -5,15 +5,15 @@ import android.content.Context;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class Presenter<C extends  Controller> {
+public abstract class Presenter<C extends  Controller, M extends Model, A extends MorkimApp<M, ?>> {
 
-	private MorkimApp appContext;
-	protected Viewable<C, ?> viewable;
+	private A morkimApp;
+	protected Viewable<A, C, ?> viewable;
 
-	public Presenter(Viewable<C, ?> viewable) {
+	public Presenter(Viewable viewable) {
 		
 		this.viewable = viewable;
-		this.appContext = viewable.getMorkimContext();
+		this.morkimApp = (A) viewable.getMorkimContext();
 	}
 
 	protected C getController() {
@@ -21,18 +21,18 @@ public abstract class Presenter<C extends  Controller> {
 	}
 
 	public MorkimApp getAppContext() {
-		return appContext;
+		return morkimApp;
 	}
 
 	protected Context getContext() {
 		return viewable.getContext();
 	}
 
-	public void setAppContext(MorkimApp appContext) {
-		this.appContext = appContext;
+	public void setAppContext(A morkimApp) {
+		this.morkimApp = morkimApp;
 	}
 
-	protected Model getModel() {
-		return appContext.getModel();
+	protected M getModel() {
+		return morkimApp.getModel();
 	}
 }

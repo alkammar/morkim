@@ -11,7 +11,7 @@ import java.util.UUID;
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class Screen<C extends Controller, P extends Presenter> extends Activity implements Viewable<C, P> {
+public abstract class Screen<C extends Controller, P extends Presenter> extends Activity implements Viewable<MorkimApp, C, P> {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 

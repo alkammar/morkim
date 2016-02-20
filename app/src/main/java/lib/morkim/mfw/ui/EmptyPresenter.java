@@ -1,6 +1,9 @@
 package lib.morkim.mfw.ui;
 
-public class EmptyPresenter extends Presenter<EmptyController> {
+import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
+
+public class EmptyPresenter extends Presenter<EmptyController, Model, MorkimApp<Model, ?>> {
 
 	public EmptyPresenter(Viewable viewable) {
 		super(viewable);

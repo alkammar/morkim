@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public interface Viewable<C extends Controller, P extends Presenter> extends Observer {
+public interface Viewable<A extends MorkimApp, C extends Controller, P extends Presenter> extends Observer {
 
 	static final String VIEWABLE_ID = "viewable.id";
 
@@ -21,7 +21,7 @@ public interface Viewable<C extends Controller, P extends Presenter> extends Obs
 	P getPresenter();
 
 	public void finish();
-	MorkimApp getMorkimContext();
+	A getMorkimContext();
 
 	void keepScreenOn(boolean keepOn);
 
