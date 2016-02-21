@@ -6,6 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseProgress;
@@ -13,7 +14,7 @@ import lib.morkim.mfw.usecase.UseCaseResponse;
 import lib.morkim.mfw.usecase.UseCaseStateListener;
 
 public abstract class Controller<P extends Presenter, M extends Model, A extends MorkimApp<M, ?>> extends Observable
-		implements Observer, UseCaseStateListener<UseCaseResponse> {
+		implements UseCaseStateListener<UseCaseResponse> {
 
 	private A morkimApp;
 	protected Viewable<A, ?, P> viewable;
@@ -49,9 +50,6 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	protected M getModel() {
 		return morkimApp.getModel();
 	}
-
-	@Override
-	public void update(Observable observable, Object data) {}
 
 	@Override
 	public void onUseCaseStart(UseCase useCase) {}
@@ -91,6 +89,28 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	protected P getPresenter() {
 		return viewable.getPresenter();
+	}
+
+	private Observer modelObserver = new Observer() {
+		@Override
+		public void update(Observable observable, Object data) {
+
+			if (observable instanceof Entity)
+				viewable.getScreen().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						onModelUpdated();
+					}
+				});
+		}
+	};
+
+	protected void onModelUpdated() {
+
+	}
+
+	protected void observeModel(Observable observable) {
+		observable.addObserver(modelObserver);
 	}
 
 	void registerForUpdates(Observer observer) {
