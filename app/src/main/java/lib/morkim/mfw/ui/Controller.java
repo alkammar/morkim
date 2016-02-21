@@ -93,24 +93,26 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	private Observer modelObserver = new Observer() {
 		@Override
-		public void update(Observable observable, Object data) {
+		public void update(final Observable observable, final Object data) {
 
 			if (observable instanceof Entity)
 				viewable.getScreen().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						onModelUpdated();
+						onModelUpdated(observable, data);
 					}
 				});
 		}
 	};
 
-	protected void onModelUpdated() {
+	protected void onModelUpdated(Observable observable, Object data) {}
 
+	protected void watchModel(Observable observable) {
+		observable.addObserver(modelObserver);
 	}
 
-	protected void observeModel(Observable observable) {
-		observable.addObserver(modelObserver);
+	protected void unwatchModel(Observable observable) {
+		observable.deleteObserver(modelObserver);
 	}
 
 	void registerForUpdates(Observer observer) {
