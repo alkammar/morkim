@@ -132,11 +132,11 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 		notifyObservers();
 	}
 
-	protected void registerToTask(String task, Observer observer) {
+	protected void registerToTask(String task) {
 		morkimApp.getTaskScheduler().register(task, modelObserver);
 	}
 
-	protected void unregisterFromTask(String task, Observer observer) {
+	protected void unregisterFromTask(String task) {
 		morkimApp.getTaskScheduler().unregister(task, modelObserver);
 	}
 
