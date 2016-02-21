@@ -18,8 +18,6 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	private A morkimApp;
 	protected Viewable<A, ?, P> viewable;
 
-	private boolean isRegisteredToBackgroundData;
-
 	public Controller(Viewable viewable) {
 		this.viewable = viewable;
 
@@ -47,8 +45,6 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	protected A getAppContext() {
 		return morkimApp;
 	}
-
-	protected void unregisterBackgroundData() {}
 
 	protected M getModel() {
 		return morkimApp.getModel();
@@ -97,11 +93,21 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 		return viewable.getPresenter();
 	}
 
-	@Override
-	public void addObserver(Observer observer) {
-		super.addObserver(observer);
+	void registerForUpdates(Observer observer) {
 
+		addObserver(observer);
 		observer.update(this, null);
+	}
+
+	void unregisterFromUpdates(Observer observer) {
+		synchronized (this) {
+			deleteObserver(observer);
+		}
+	}
+
+	protected void notifyRegistered() {
+		setChanged();
+		notifyObservers();
 	}
 
 	public void destroy() {

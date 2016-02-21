@@ -37,14 +37,14 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 	public void onStart() {
 		super.onStart();
 
-		controller.addObserver(this);
+		controller.registerForUpdates(this);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
 
-		controller.deleteObserver(this);
+		controller.unregisterFromUpdates(this);
 	}
 
 	@Override

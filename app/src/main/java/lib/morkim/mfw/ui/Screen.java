@@ -68,7 +68,7 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	protected void onStart() {
 		super.onStart();
 
-		controller.addObserver(this);
+		controller.registerForUpdates(this);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	protected void onStop() {
 		super.onStop();
 
-		controller.deleteObserver(this);
+		controller.unregisterFromUpdates(this);
 	}
 
 	@Override

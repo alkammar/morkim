@@ -54,14 +54,14 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     public void onStart() {
         super.onStart();
 
-        controller.addObserver(this);
+        controller.registerForUpdates(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        controller.deleteObserver(this);
+        controller.unregisterFromUpdates(this);
     }
 
     @Override
