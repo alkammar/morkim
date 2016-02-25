@@ -10,7 +10,7 @@ import lib.morkim.mfw.repo.SpRepo;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
-public abstract class SpGateway extends AbstractGateway {
+public abstract class SpGateway<E extends Entity> extends AbstractGateway<E> {
 
 	protected static final String SP_DEFAULT = "sp.default";
 	
@@ -23,38 +23,38 @@ public abstract class SpGateway extends AbstractGateway {
 	}
 
 	@Override
-	public void persist(Entity entity) {
+	public void persist(E entity) {
 		spRepo.write(source(), mapValues(entity));
 	}
 
-	protected abstract Map<String, Object> mapValues(Entity entity);
+	protected abstract Map<String, Object> mapValues(E entity);
 	protected abstract Map<String, Object> keysAndDefaults();
 
 	@Override
-	public Entity retrieve() {
+	public E retrieve() {
 		return getEntity(spRepo.read(source(), keysAndDefaults()));
 	}
 
-	protected abstract Entity getEntity(Map<String, ?> map);
-	protected abstract Entity createEntity();
+	protected abstract E getEntity(Map<String, ?> map);
+	protected abstract E createEntity();
 
 	@Override
-	public Entity retrieve(int id) {
+	public E retrieve(int id) {
 		return null;
 	}
 
 	@Override
-	public List<Entity> retrieveAll() throws GatewayRetrieveException {
+	public List<E> retrieveAll() throws GatewayRetrieveException {
 		return null;
 	}
 
 	@Override
-	public List<Entity> retrieve(Filter filter) {
+	public List<E> retrieve(Filter filter) {
 		return null;
 	}
 
 	@Override
-	public void delete(Entity data) {
+	public void delete(E data) {
 
 	}
 

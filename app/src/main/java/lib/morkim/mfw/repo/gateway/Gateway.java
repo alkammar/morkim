@@ -6,18 +6,18 @@ import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 
 
-public interface Gateway {
+public interface Gateway<E extends Entity> {
 
 	public static final int ERROR_DATA_TYPE_NOT_FOUND = -101;
 	
-	public void persist(Entity data) throws GatewayPersistException;
+	public void persist(E data) throws GatewayPersistException;
 	
-	public Entity retrieve() throws GatewayRetrieveException;
-	public Entity retrieve(int id) throws GatewayRetrieveException;
-	public List<Entity> retrieveAll() throws GatewayRetrieveException;
-	public List<Entity> retrieve(Filter filter) throws GatewayRetrieveException;
+	public E retrieve() throws GatewayRetrieveException;
+	public E retrieve(int id) throws GatewayRetrieveException;
+	public List<E> retrieveAll() throws GatewayRetrieveException;
+	public List<E> retrieve(Filter filter) throws GatewayRetrieveException;
 
-	public void delete(Entity data);
+	public void delete(E data);
 
 	public int getVersion();
 }

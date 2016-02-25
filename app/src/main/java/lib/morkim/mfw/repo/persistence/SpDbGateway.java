@@ -15,7 +15,7 @@ import lib.morkim.mfw.repo.gateway.AbstractGateway;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
-public abstract class SpDbGateway extends AbstractGateway {
+public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 
 	protected static final String SP_DEFAULT = "sp.default";
 	
@@ -37,24 +37,24 @@ public abstract class SpDbGateway extends AbstractGateway {
 	}
 
 	@Override
-	public Entity retrieve() {
+	public E retrieve() {
 		return null;
 	}
 
 	@Override
-	public Entity retrieve(int source) {
+	public E retrieve(int source) {
 		return null;
 	}
 
 	@Override
-	public List<Entity> retrieveAll() throws GatewayRetrieveException {
+	public List<E> retrieveAll() throws GatewayRetrieveException {
 		
 		Map<String, ?> pairs = spRepo.read(source());
 		
-		List<Entity> list = new ArrayList<Entity>();
+		List<E> list = new ArrayList<>();
 		for (String key : pairs.keySet())
 			try {
-				Entity entity = deserialize((String) pairs.get(key));
+				E entity = deserialize((String) pairs.get(key));
 				entity.setSysId(UUID.fromString(key));
 				list.add(entity);
 			} catch (JSONException e) {
@@ -65,7 +65,7 @@ public abstract class SpDbGateway extends AbstractGateway {
 	}
 
 	@Override
-	public List<Entity> retrieve(Filter filter) {
+	public List<E> retrieve(Filter filter) {
 		return null;
 	}
 
@@ -75,7 +75,7 @@ public abstract class SpDbGateway extends AbstractGateway {
 	}
 
 	protected abstract String serialize(Entity entity) throws JSONException;
-	protected abstract Entity deserialize(String string) throws JSONException;
+	protected abstract E deserialize(String string) throws JSONException;
 
 	protected long asLong(Object object) {
 		return (object instanceof Integer) ? (Integer) object : (Long) object;

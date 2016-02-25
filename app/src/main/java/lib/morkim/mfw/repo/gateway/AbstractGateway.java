@@ -1,8 +1,9 @@
 package lib.morkim.mfw.repo.gateway;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Entity;
 
-public abstract class AbstractGateway implements Gateway {
+public abstract class AbstractGateway<E extends Entity> implements Gateway<E> {
 	
 	protected MorkimApp morkimApp;
 	

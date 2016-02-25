@@ -6,7 +6,7 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 
-public class EmptyGateway extends AbstractGateway {
+public class EmptyGateway extends AbstractGateway<Entity> {
 
 	public EmptyGateway(MorkimApp morkimApp) {
 		super(morkimApp);

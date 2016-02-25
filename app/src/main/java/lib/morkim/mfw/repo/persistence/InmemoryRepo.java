@@ -10,9 +10,9 @@ import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 
-public abstract class InmemoryRepo extends AbstractGateway {
+public abstract class InmemoryRepo<E extends Entity> extends AbstractGateway<E> {
 	
-	protected SparseArray<Entity> entities;
+	protected SparseArray<E> entities;
 
 	public InmemoryRepo(MorkimApp morkimApp) {
 		super(morkimApp);
@@ -21,27 +21,27 @@ public abstract class InmemoryRepo extends AbstractGateway {
 	}
 
 	@Override
-	public void persist(Entity entity) {
+	public void persist(E entity) {
 		this.entities.put(entity.getLocalId(), entity);;
 	}
 
 	@Override
-	public Entity retrieve() {
+	public E retrieve() {
 		return entities.get(0);
 	}
 
 	@Override
-	public Entity retrieve(int id) {
+	public E retrieve(int id) {
 		return entities.get(id);
 	}
 
 	@Override
-	public List<Entity> retrieveAll() {
+	public List<E> retrieveAll() {
 		return asList(entities);
 	}
 
 	@Override
-	public List<Entity> retrieve(Filter filter) {
+	public List<E> retrieve(Filter filter) {
 		return asList(entities);
 	}
 	
