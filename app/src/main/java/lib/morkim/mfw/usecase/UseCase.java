@@ -57,7 +57,7 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 
 		executeSync();
 
-		return (Void) null;
+		return null;
 	}
 
 	public void executeSync() {
