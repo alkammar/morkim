@@ -1,6 +1,7 @@
 package lib.morkim.mfw.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
@@ -50,6 +51,11 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 	@Override
 	public MorkimApp getMorkimContext() {
 		return ((Screen) getActivity()).getMorkimContext();
+	}
+
+	@Override
+	public Context getContext() {
+		return super.getContext();
 	}
 
 	@Override
