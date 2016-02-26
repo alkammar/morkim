@@ -55,7 +55,7 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 
 	@Override
 	public Context getContext() {
-		return super.getContext();
+		return getActivity();
 	}
 
 	@Override
