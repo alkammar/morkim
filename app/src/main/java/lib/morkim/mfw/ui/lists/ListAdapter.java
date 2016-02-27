@@ -39,7 +39,7 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 	@Override
 	public void onBindViewHolder(VH holder, int position) {
 
-		bindView(holder);
+		bindView(holder, position);
 		holder.position = position;
 	}
 
@@ -47,7 +47,7 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 
 	protected abstract VH holdView(View convertView, int position);
 
-	protected abstract void bindView(VH holder);
+	protected abstract void bindView(VH holder, int position);
 
 	public void updateData(List<M> listModel) {
 
