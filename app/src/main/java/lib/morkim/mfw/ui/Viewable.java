@@ -9,7 +9,7 @@ import lib.morkim.mfw.app.MorkimApp;
 
 public interface Viewable<A extends MorkimApp, C extends Controller, P extends Presenter> extends Observer {
 
-	static final String VIEWABLE_ID = "viewable.id";
+	static final String VIEWABLE_ID = "viewable.position";
 
 	Context getContext();
 

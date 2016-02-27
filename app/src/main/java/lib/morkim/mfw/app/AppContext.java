@@ -8,7 +8,7 @@
 //public interface AppContext<M extends Model> {
 //
 //	public Context getContext();
-//	public String getString(int id);
+//	public String getString(int position);
 //
 //	public M getModel();
 //

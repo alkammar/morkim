@@ -10,7 +10,7 @@ import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
 public abstract class Entity extends Observable {
 
-	public static final String ID = "id";
+	public static final String ID = "position";
 
 	public static final int EVENT_CHANGE = 0;
 
@@ -52,7 +52,7 @@ public abstract class Entity extends Observable {
 	}
 
 	/**
-	 * Get system id
+	 * Get system position
 	 * 
 	 * @return
 	 */
