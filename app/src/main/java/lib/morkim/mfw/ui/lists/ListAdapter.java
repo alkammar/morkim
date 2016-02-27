@@ -24,10 +24,14 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 	@Override
 	public VH onCreateViewHolder(final ViewGroup parent, int viewType) {
 
-		View v = LayoutInflater.from(parent.getContext()).inflate(layoutId(), parent, false);
-		v.setOnClickListener(onClickListener);
+		View view = LayoutInflater.from(parent.getContext()).inflate(layoutId(), parent, false);
+		view.setOnClickListener(onClickListener);
 
-		return holdView(v, 0);
+		VH holder = holdView(view, 0);
+
+		view.setTag(holder);
+
+		return holder;
 	}
 
 	@Override
