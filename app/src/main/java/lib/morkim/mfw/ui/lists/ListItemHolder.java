@@ -1,7 +1,14 @@
 package lib.morkim.mfw.ui.lists;
 
 
-public abstract class ListItemHolder {
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+public abstract class ListItemHolder extends RecyclerView.ViewHolder {
 
 	public String id;
+
+	public ListItemHolder(View itemView) {
+		super(itemView);
+	}
 }
