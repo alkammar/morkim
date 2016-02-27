@@ -12,6 +12,7 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 	protected List<M> listModel;
 
 	private View.OnClickListener onClickListener;
+	private View.OnLongClickListener onLongClickListener;
 
 	public ListAdapter() {
 
@@ -26,6 +27,7 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 
 		View view = LayoutInflater.from(parent.getContext()).inflate(layoutId(), parent, false);
 		view.setOnClickListener(onClickListener);
+		view.setOnLongClickListener(onLongClickListener);
 
 		VH holder = holdView(view, 0);
 
@@ -86,5 +88,9 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 
 	public void setOnClickListener(View.OnClickListener onClickListener) {
 		this.onClickListener = onClickListener;
+	}
+
+	public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
+		this.onLongClickListener = onLongClickListener;
 	}
 }
