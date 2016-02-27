@@ -39,14 +39,15 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 	@Override
 	public void onBindViewHolder(VH holder, int position) {
 
-		bindView(holder, position);
+		bindView(holder);
+		holder.position = position;
 	}
 
 	protected abstract int layoutId();
 
 	protected abstract VH holdView(View convertView, int position);
 
-	protected abstract void bindView(VH holder, int position);
+	protected abstract void bindView(VH holder);
 
 	public void updateData(List<M> listModel) {
 
