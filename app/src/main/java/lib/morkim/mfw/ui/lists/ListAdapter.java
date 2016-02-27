@@ -9,11 +9,9 @@ import java.util.List;
 
 public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
 
-	protected LayoutInflater layoutInflater;
-
-//	protected ViewHelper textViewHelper;
-
 	protected List<M> listModel;
+
+	private View.OnClickListener onClickListener;
 
 	public ListAdapter() {
 
@@ -24,9 +22,10 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 	}
 
 	@Override
-	public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+	public VH onCreateViewHolder(final ViewGroup parent, int viewType) {
 
 		View v = LayoutInflater.from(parent.getContext()).inflate(layoutId(), parent, false);
+		v.setOnClickListener(onClickListener);
 
 		return holdView(v, 0);
 	}
@@ -37,47 +36,11 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 		bindView(holder, position);
 	}
 
-//	@Override
-//	public View getView(int position, View convertView, ViewGroup parent) {
-//
-//		ListItemHolder holder = null;
-//
-//		// item = listModel.get(position);
-//
-//		if (convertView == null) {
-//
-//			convertView = inflateLayout(null, position);
-//			setViewHelper(convertView);
-//
-//			// init ui elements
-//			holder = holdView(convertView, position);
-//
-//			// save holder
-//			convertView.setTag(holder);
-//
-//		} else {
-//
-//			// use saved holder if already recycled
-//			holder = (ListItemHolder) convertView.getTag();
-//		}
-//
-//		// bind data to viewable holder
-//		bindView(convertView, holder, position);
-//
-//		return convertView;
-//	}
-
 	protected abstract int layoutId();
 
-	protected abstract VH holdView(View convertView,
-								   int position);
+	protected abstract VH holdView(View convertView, int position);
 
 	protected abstract void bindView(VH holder, int position);
-
-//	protected void setViewHelper(View view) {
-//
-//		textViewHelper = new ViewHelper(context, view);
-//	}
 
 	public void updateData(List<M> listModel) {
 
@@ -115,5 +78,9 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 			return listModel.get(position).isEnabled;
 
 		return false;
+	}
+
+	public void setOnClickListener(View.OnClickListener onClickListener) {
+		this.onClickListener = onClickListener;
 	}
 }
