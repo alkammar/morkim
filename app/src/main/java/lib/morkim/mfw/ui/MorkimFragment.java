@@ -71,7 +71,7 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
 
     @Override
     public Context getContext() {
-        return super.getContext();
+        return getActivity();
     }
 
     @Override
