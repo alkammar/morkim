@@ -6,8 +6,6 @@ import android.view.View;
 
 public abstract class ListItemHolder extends RecyclerView.ViewHolder {
 
-	public int position;
-
 	public ListItemHolder(View itemView) {
 		super(itemView);
 	}
