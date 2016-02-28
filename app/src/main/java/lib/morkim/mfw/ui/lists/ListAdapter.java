@@ -40,7 +40,6 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 	public void onBindViewHolder(VH holder, int position) {
 
 		bindView(holder, position);
-		holder.position = position;
 	}
 
 	protected abstract int layoutId();
