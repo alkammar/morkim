@@ -151,4 +151,9 @@ public abstract class ToolbarScreen<C extends Controller, P extends Presenter> e
     public UUID getInstanceId() {
         return id;
     }
+
+    @Override
+    public void runOnUi(Runnable runnable) {
+        runOnUiThread(runnable);
+    }
 }

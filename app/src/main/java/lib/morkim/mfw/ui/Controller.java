@@ -1,5 +1,6 @@
 package lib.morkim.mfw.ui;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.util.Observable;
@@ -96,7 +97,7 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 		public void update(final Observable observable, final Object data) {
 
 			if (observable instanceof Entity)
-				viewable.getScreen().runOnUiThread(new Runnable() {
+				((Activity) viewable).runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						onModelUpdated(observable, data);
