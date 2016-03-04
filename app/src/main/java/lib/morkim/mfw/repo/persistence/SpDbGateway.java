@@ -21,9 +21,9 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 	
 	private SpRepo spRepo;
 
-	public SpDbGateway(MorkimApp morkimApp) {
-		super(morkimApp);
-		
+	@Override
+	public void setMorkimApp(MorkimApp morkimApp) {
+		super.setMorkimApp(morkimApp);
 		spRepo = new SpRepo(morkimApp.getContext());
 	}
 

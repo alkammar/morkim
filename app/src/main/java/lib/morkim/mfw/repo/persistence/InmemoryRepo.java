@@ -5,7 +5,6 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
@@ -14,15 +13,13 @@ public abstract class InmemoryRepo<E extends Entity> extends AbstractGateway<E> 
 	
 	protected SparseArray<E> entities;
 
-	public InmemoryRepo(MorkimApp morkimApp) {
-		super(morkimApp);
-
+	public InmemoryRepo() {
 		entities = new SparseArray<>();
 	}
 
 	@Override
-	public void persist(Entity entity) {
-		this.entities.put(entity.getLocalId(), (E) entity);;
+	public void persist(E entity) {
+		this.entities.put(entity.getLocalId(), entity);
 	}
 
 	@Override
@@ -49,7 +46,7 @@ public abstract class InmemoryRepo<E extends Entity> extends AbstractGateway<E> 
 	    
 		if (sparseArray == null) return null;
 	    
-		List<C> arrayList = new ArrayList<C>(sparseArray.size());
+		List<C> arrayList = new ArrayList<>(sparseArray.size());
 	    
 		for (int i = 0; i < sparseArray.size(); i++)
 	        arrayList.add(sparseArray.valueAt(i));

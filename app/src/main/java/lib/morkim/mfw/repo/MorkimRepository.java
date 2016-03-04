@@ -50,7 +50,7 @@ public abstract class MorkimRepository implements Repository {
 			e.printStackTrace();
 		}
 
-		return new EmptyGateway<>(context);
+		return new EmptyGateway<>();
 	}
 
 	protected Class<? extends AbstractGateway> getGatewayClass(Class<?> cls) {
