@@ -4,6 +4,7 @@ import java.util.List;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
+import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.Viewable;
@@ -21,7 +22,10 @@ public class ExampleController extends Controller<ExamplePresenter, Model, Morki
         try {
             ExampleEntity entity = getAppContext().getRepos().get(ExampleEntity.class).retrieve();
             List<ExampleEntity> entities = getAppContext().getRepos().get(ExampleEntity.class).retrieveAll();
+            entity.save(getAppContext().getRepos().get(ExampleEntity.class));
         } catch (GatewayRetrieveException e) {
+            e.printStackTrace();
+        } catch (GatewayPersistException e) {
             e.printStackTrace();
         }
     }

@@ -21,8 +21,8 @@ public abstract class InmemoryRepo<E extends Entity> extends AbstractGateway<E> 
 	}
 
 	@Override
-	public void persist(E entity) {
-		this.entities.put(entity.getLocalId(), entity);;
+	public void persist(Entity entity) {
+		this.entities.put(entity.getLocalId(), (E) entity);;
 	}
 
 	@Override
