@@ -28,7 +28,7 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 	}
 
 	@Override
-	public void persist(Entity entity) throws GatewayPersistException {
+	public void persist(E entity) throws GatewayPersistException {
 		try {
 			spRepo.write(source(), entity.getSysId(), serialize(entity));
 		} catch (JSONException e) {

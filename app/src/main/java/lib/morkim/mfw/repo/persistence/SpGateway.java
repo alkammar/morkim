@@ -23,11 +23,11 @@ public abstract class SpGateway<E extends Entity> extends AbstractGateway<E> {
 	}
 
 	@Override
-	public void persist(Entity entity) {
+	public void persist(E entity) {
 		spRepo.write(source(), mapValues(entity));
 	}
 
-	protected abstract Map<String, Object> mapValues(Entity entity);
+	protected abstract Map<String, Object> mapValues(E entity);
 	protected abstract Map<String, Object> keysAndDefaults();
 
 	@Override

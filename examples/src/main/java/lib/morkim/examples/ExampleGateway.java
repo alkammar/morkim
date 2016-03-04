@@ -3,7 +3,6 @@ package lib.morkim.examples;
 import java.util.Map;
 
 import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.persistence.SpGateway;
 
 /**
@@ -16,7 +15,7 @@ public class ExampleGateway extends SpGateway<ExampleEntity> {
     }
 
     @Override
-    protected Map<String, Object> mapValues(Entity entity) {
+    protected Map<String, Object> mapValues(ExampleEntity entity) {
         return null;
     }
 
