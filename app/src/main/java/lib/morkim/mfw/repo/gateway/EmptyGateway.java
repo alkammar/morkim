@@ -6,7 +6,7 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 
-public class EmptyGateway extends AbstractGateway<Entity> {
+public class EmptyGateway<E extends Entity> extends AbstractGateway<E> {
 
 	public EmptyGateway(MorkimApp morkimApp) {
 		super(morkimApp);
@@ -17,22 +17,22 @@ public class EmptyGateway extends AbstractGateway<Entity> {
 	}
 
 	@Override
-	public Entity retrieve() throws GatewayRetrieveException {
+	public E retrieve() throws GatewayRetrieveException {
 		return null;
 	}
 
 	@Override
-	public Entity retrieve(int id) throws GatewayRetrieveException {
+	public E retrieve(int id) throws GatewayRetrieveException {
 		return null;
 	}
 
 	@Override
-	public List<Entity> retrieveAll() throws GatewayRetrieveException {
+	public List<E> retrieveAll() throws GatewayRetrieveException {
 		return null;
 	}
 
 	@Override
-	public List<Entity> retrieve(Filter filter) throws GatewayRetrieveException {
+	public List<E> retrieve(Filter filter) throws GatewayRetrieveException {
 		return null;
 	}
 

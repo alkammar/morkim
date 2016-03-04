@@ -19,17 +19,7 @@ public class ExampleApp extends MorkimApp {
 
     @Override
     protected MorkimRepository createRepo() {
-        return new MorkimRepository(this) {
-            @Override
-            protected int version() {
-                return 0;
-            }
-
-            @Override
-            protected void onUpgrade(int toVersion) {
-
-            }
-        };
+        return new ExampleRepository(this);
     }
 
     @Override
