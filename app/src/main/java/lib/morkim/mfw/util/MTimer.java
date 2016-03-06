@@ -139,14 +139,14 @@ public class MTimer {
 		return millisec;
 	}
 
-	// private static long getTimeZone() {
-	// TimeZone tz = TimeZone.getDefault();
-	//
-	// Date now = new Date();
-	// long offset = tz.getOffset(now.getTime());
-	//
-	// return offset;
-	// }
+	public static long getTimeZone() {
+		TimeZone tz = TimeZone.getDefault();
+
+		Date now = new Date();
+		long offset = tz.getOffset(now.getTime());
+
+		return offset;
+	}
 
 	public static int getHours(long duration) {
 		return (int) (duration % ONE_DAY / ONE_HOUR);
