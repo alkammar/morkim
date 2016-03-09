@@ -40,7 +40,7 @@ public abstract class Navigation {
 	}
 
 	private static String googlePlayBaseUrl() {
-		return "https://play.google.com/store/apps/details?position=";
+		return "https://play.google.com/store/apps/details?id=";
 	}
 
 	public static void reload(Controller controller, Transition transition) {
