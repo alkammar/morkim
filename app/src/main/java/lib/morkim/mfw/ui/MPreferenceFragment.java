@@ -50,7 +50,7 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 
 	@Override
 	public MorkimApp getMorkimContext() {
-		return ((Screen) getActivity()).getMorkimContext();
+		return (MorkimApp) getActivity().getApplicationContext();
 	}
 
 	@Override
