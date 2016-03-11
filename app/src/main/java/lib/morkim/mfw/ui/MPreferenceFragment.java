@@ -85,7 +85,7 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 
 	@Override
 	public void showShortMessage(String message) {
-		((Screen) getActivity()).showShortMessage(message);
+		((Viewable) getActivity()).showShortMessage(message);
 	}
 
 	@Override
