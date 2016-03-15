@@ -95,7 +95,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 			if (controller.getClass().equals(cls))
 				return controller;
 
-		return new EmptyController(null);
+		return null;
 	}
 
     public void destroyController(Viewable viewable) {
