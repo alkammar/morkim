@@ -3,6 +3,7 @@ package lib.morkim.mfw.app;
 import android.app.Application;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
+import lib.morkim.mfw.ui.EmptyController;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 
@@ -86,6 +88,15 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 		return presenter;
     }
+
+	protected Controller getController(Class<?> cls) {
+
+		for (Controller controller : controllers.values())
+			if (controller.getClass().equals(cls))
+				return controller;
+
+		return new EmptyController(null);
+	}
 
     public void destroyController(Viewable viewable) {
 		controllers.get(viewable.getInstanceId()).destroy();
