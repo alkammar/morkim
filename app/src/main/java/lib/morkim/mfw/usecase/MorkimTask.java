@@ -13,6 +13,10 @@ public abstract class MorkimTask<Req extends TaskRequest, Res extends TaskResult
 	private Req request;
 	private MorkimTaskListener<Res> listener;
 
+	public MorkimTask(MorkimApp appContext) {
+		this(appContext, null);
+	}
+
 	public MorkimTask(MorkimApp morkimApp, MorkimTaskListener<Res> listener) {
 		this.appContext = morkimApp;
 		
