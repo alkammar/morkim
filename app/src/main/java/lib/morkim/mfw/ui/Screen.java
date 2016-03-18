@@ -3,6 +3,7 @@ package lib.morkim.mfw.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class Screen<C extends Controller, P extends Presenter> extends Activity implements Viewable<MorkimApp, C, P> {
+public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity implements Viewable<MorkimApp, C, P> {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 
