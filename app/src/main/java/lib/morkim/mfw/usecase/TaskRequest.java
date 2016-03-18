@@ -7,7 +7,7 @@ public class TaskRequest {
 
 	}
 
-	protected interface Builder<Req> {
+	public interface Builder<Req> {
 		Req build();
 	}
 }
