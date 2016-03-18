@@ -1,6 +1,6 @@
 package lib.morkim.mfw.usecase;
 
 
-public class UseCaseRequest {
+public class TaskRequest {
 	
 }

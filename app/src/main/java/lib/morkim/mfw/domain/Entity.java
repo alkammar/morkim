@@ -110,4 +110,19 @@ public abstract class Entity extends Observable {
 			set((Entity) data);
 		}
 	}
+
+	public static boolean equals(Entity e1, Entity e2) {
+
+		if (e1 != null && e2 != null) {
+
+			UUID sysId1 = e1.getSysId();
+			UUID sysId2 = e2.getSysId();
+
+			return (sysId1 != null
+					&& sysId2 != null
+					&& sysId1.equals(sysId2));
+		}
+
+		return false;
+	}
 }

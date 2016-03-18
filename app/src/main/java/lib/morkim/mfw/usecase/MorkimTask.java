@@ -6,38 +6,30 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
 
-public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseResponse>
+public abstract class MorkimTask<Req extends TaskRequest, Res extends TaskResult>
 		extends AsyncTask<Req, Res, Void> {
 
 	private MorkimApp appContext;
 	private Req request;
-	private UseCaseStateListener listener;
+	private MorkimTaskListener<Res> listener;
 
-	public UseCase(MorkimApp morkimApp, UseCaseStateListener listener) {
+	public MorkimTask(MorkimApp morkimApp, MorkimTaskListener<Res> listener) {
 		this.appContext = morkimApp;
 		
 		if (listener == null)
-		this.listener = new UseCaseStateListener() {
-			@Override
-			public void onUseCaseStart(UseCase useCase) {
+			this.listener = new MorkimTaskListener<Res>() {
+				@Override
+				public void onTaskStart(MorkimTask useCase) {}
 
-			}
+				@Override
+				public void onTaskUpdate(Res result) {}
 
-			@Override
-			public void onUseCaseUpdate(UseCaseProgress response) {
+				@Override
+				public void onTaskComplete(Res result) {}
 
-			}
-
-			@Override
-			public void onUseCaseComplete(UseCaseResponse response) {
-
-			}
-
-			@Override
-			public void onUseCaseCancel() {
-
-			}
-		};
+				@Override
+				public void onTaskCancel() {}
+			};
 		else
 			this.listener = listener;
 	}
@@ -46,7 +38,7 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 	protected void onPreExecute() {
 		super.onPreExecute();
 
-		listener.onUseCaseStart(this);
+		listener.onTaskStart(this);
 	}
 
 	@Override
@@ -79,16 +71,16 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 	}
 
 	@Override
-	protected void onProgressUpdate(UseCaseResponse... values) {
+	protected void onProgressUpdate(Res... values) {
 
-		UseCaseResponse response = values[0];
-		if (response != null) {
-			if (response instanceof UseCaseProgress)
-				listener.onUseCaseUpdate((UseCaseProgress) response);
-			else if (response instanceof UseCaseResult)
-				listener.onUseCaseComplete((UseCaseResult) response);
+		Res result = values[0];
+		if (result != null) {
+			if (result.completionPercent != 100)
+				listener.onTaskUpdate(result);
+			else
+				listener.onTaskComplete(result);
 		} else
-			listener.onUseCaseComplete((UseCaseResult) response);
+			listener.onTaskComplete(null);
 	}
 
 	@Override
@@ -101,15 +93,14 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 	protected abstract Res onExecute();
 	protected void onSaveModel() {}
 
-	public MorkimApp getAppContext() {
-		return appContext;
-	}
-
 	public void setAppContext(MorkimApp appContext) {
 		this.appContext = appContext;
 	}
+	protected MorkimApp getAppContext() {
+		return appContext;
+	}
 
-	public Req getRequest() {
+	protected Req getRequest() {
 		return request;
 	}
 
@@ -117,11 +108,11 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 		this.request = request;
 	}
 
-	public UseCaseStateListener getListener() {
+	public MorkimTaskListener getListener() {
 		return listener;
 	}
 
-	public void setListener(UseCaseStateListener listener) {
+	public void setListener(MorkimTaskListener<Res> listener) {
 		this.listener = listener;
 	}
 
@@ -129,7 +120,7 @@ public abstract class UseCase<Req extends UseCaseRequest, Res extends UseCaseRes
 		return appContext.getModel();
 	}
 
-	public Repository getRepos() {
-		return ((MorkimApp) appContext).getRepos();	
+	protected Repository getRepos() {
+		return appContext.getRepos();
 	}
 }

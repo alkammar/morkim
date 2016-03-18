@@ -9,13 +9,12 @@ import java.util.Observer;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.usecase.UseCase;
-import lib.morkim.mfw.usecase.UseCaseProgress;
-import lib.morkim.mfw.usecase.UseCaseResponse;
-import lib.morkim.mfw.usecase.UseCaseStateListener;
+import lib.morkim.mfw.usecase.MorkimTask;
+import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.TaskResult;
 
 public abstract class Controller<P extends Presenter, M extends Model, A extends MorkimApp<M, ?>> extends Observable
-		implements UseCaseStateListener<UseCaseResponse> {
+		implements MorkimTaskListener<TaskResult> {
 
 	private A morkimApp;
 	protected Viewable<A, ?, P> viewable;
@@ -30,7 +29,7 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
         executeInitializationTask();
 	}
 
-	public void attachViewable(Viewable viewable) {
+	public void attachViewable(Viewable<A, ?, P> viewable) {
 		this.viewable = viewable;
 	}
 
@@ -53,16 +52,16 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	}
 
 	@Override
-	public void onUseCaseStart(UseCase useCase) {}
+	public void onTaskStart(MorkimTask useCase) {}
 
 	@Override
-	public void onUseCaseUpdate(UseCaseProgress response) {}
+	public void onTaskUpdate(TaskResult result) {}
 
 	@Override
-	public void onUseCaseComplete(UseCaseResponse response) {}
+	public void onTaskComplete(TaskResult result) {}
 
 	@Override
-	public void onUseCaseCancel() {}
+	public void onTaskCancel() {}
 
 	protected void finish() {
 		viewable.finish();
