@@ -1,6 +1,5 @@
 package lib.morkim.mfw.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -6,9 +6,6 @@ import java.util.Observable;
 
 import lib.morkim.mfw.ui.Screen;
 
-/**
- * Created by Kammar on 2/19/2016.
- */
 public class ExampleScreen extends Screen<ExampleController, ExamplePresenter> {
 
 

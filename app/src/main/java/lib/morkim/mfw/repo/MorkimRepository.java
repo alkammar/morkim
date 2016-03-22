@@ -53,9 +53,27 @@ public abstract class MorkimRepository implements Repository {
 		return new EmptyGateway<>();
 	}
 
+	/**
+	 * Override this method to associate a specific {@link Entity} to a specific {@link Gateway}.
+	 * Gateway translate application data models from/to their persisted form.
+	 * @param cls The Entity that maps a Gateway for it
+	 * @return The Gateway class
+	 */
 	protected Class<? extends AbstractGateway> getGatewayClass(Class<?> cls) {
 		return EmptyGateway.class;
 	}
 
+	/**
+	 * Checks for data persistence upgrades. Use the toVersion parameter to handle
+	 * the upgrade to a specific version. This method will be called n number of times
+	 * depending on the difference between the old repository version number and the
+	 * latest repository version number.
+	 * So if old version number is 3 and the latest version number is 6 then this method will
+	 * be called 3 times with progressive {@code toVersion} parameter.
+	 * This will basically hold your repository change history.
+	 * Remember that the latest database version is determined by
+	 * overriding the {@link #version()} method and returning the latest version number.
+	 * @param toVersion The version to upgrade to
+	 */
 	protected abstract void onUpgrade(int toVersion);
 }
