@@ -1,9 +1,5 @@
 package lib.morkim.mfw.ui.lists;
 
-/**
- * Created by Kammar on 3/25/2016.
- */
-
 import android.util.SparseArray;
 
 import java.util.ArrayList;
