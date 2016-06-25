@@ -2,6 +2,7 @@ package lib.morkim.mfw.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -142,5 +143,17 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 		for (String permission : permissions)
 			viewable.getScreen().onPermissionRequestHandled(permission);
+	}
+
+	protected static boolean verifyPermission(int[] grantResults) {
+
+		if (grantResults.length < 1)
+			return false;
+
+		for (int result : grantResults)
+			if (result != PackageManager.PERMISSION_GRANTED)
+				return false;
+
+		return true;
 	}
 }
