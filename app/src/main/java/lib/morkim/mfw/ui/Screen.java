@@ -170,4 +170,8 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	public void onPermissionRequestHandled(String permission) {
 		permissionsRequestControllers.remove(permission);
 	}
+
+	public void addPermissionRequestHandler(String permission, Controller controller) {
+		permissionsRequestControllers.put(permission, controller);
+	}
 }
