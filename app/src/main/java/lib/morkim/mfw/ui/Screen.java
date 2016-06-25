@@ -2,10 +2,15 @@ package lib.morkim.mfw.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import lib.morkim.mfw.R;
@@ -19,6 +24,7 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 
 	protected C controller;
 	protected P presenter;
+	private Map<String, Controller> permissionsRequestControllers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,8 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
+
+		permissionsRequestControllers = new HashMap<>();
 	}
 
 	@Override
@@ -141,5 +149,25 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	@Override
 	public UUID getInstanceId() {
 		return id;
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+		Set<Controller> controllers = new HashSet<>();
+
+		for (String permission : permissions) {
+			Controller controller = permissionsRequestControllers.get(permission);
+			if (controller != null)
+				controllers.add(controller);
+		}
+
+		for (Controller controller : controllers)
+			controller.onRequestPermissionResult(requestCode, permissions, grantResults);
+	}
+
+	public void onPermissionRequestHandled(String permission) {
+		permissionsRequestControllers.remove(permission);
 	}
 }

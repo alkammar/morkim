@@ -137,4 +137,10 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	public void destroy() {
 
 	}
+
+	public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+
+		for (String permission : permissions)
+			viewable.getScreen().onPermissionRequestHandled(permission);
+	}
 }
