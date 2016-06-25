@@ -38,14 +38,14 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 		if (layoutId > 0)
 			setContentView(layoutId);
 
+		permissionsRequestControllers = new HashMap<>();
+
 		presenter = (P) getMorkimContext().acquirePresenter(this);
 		controller = (C) getMorkimContext().acquireController(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
-
-		permissionsRequestControllers = new HashMap<>();
 	}
 
 	@Override
@@ -167,11 +167,11 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 			controller.onRequestPermissionResult(requestCode, permissions, grantResults);
 	}
 
-	public void onPermissionRequestHandled(String permission) {
-		permissionsRequestControllers.remove(permission);
-	}
-
 	public void addPermissionRequestHandler(String permission, Controller controller) {
 		permissionsRequestControllers.put(permission, controller);
+	}
+
+	public void onPermissionRequestHandled(String permission) {
+		permissionsRequestControllers.remove(permission);
 	}
 }
