@@ -32,7 +32,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	private Analytics analytics;
 
     private Map<UUID, Controller> controllers;
-    private Map<UUID, Presenter> presenters;
 
 	private M model;
 	private TaskScheduler taskScheduler;
@@ -52,7 +51,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		analytics.initialize();
 
         controllers = new HashMap<>();
-        presenters = new HashMap<>();
 
 		model = createModel();
 		if (model == null) 
@@ -84,22 +82,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
     }
 
 	/**
-	 * Gets the Presenter associated with a given Viewable.
-	 * Will create the presenter if it is not already created.
-	 * @param viewable Viewable to fetch Presenter for
-	 * @return Presenter associated with passed viewable
-	 */
-    public Presenter acquirePresenter(Viewable viewable) {
-
-        Presenter presenter = presenters.get(viewable.getInstanceId());
-        presenter = (presenter == null) ? viewable.createPresenter() : presenter;
-		presenter.attachViewable(viewable);
-		presenters.put(viewable.getInstanceId(), presenter);
-
-		return presenter;
-    }
-
-	/**
 	 * Gets a controller given its class
 	 * @param cls Controller class
 	 * @return Controller. Returns null if the controller does not exist
@@ -120,15 +102,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
     public void destroyController(Viewable viewable) {
 		controllers.get(viewable.getInstanceId()).destroy();
 	    controllers.remove(viewable.getInstanceId());
-    }
-
-
-	/**
-	 * Destroys the {@link Presenter} associated with the passed Viewable
-	 * @param viewable Viewable to fetch Presenter for
-	 */
-    public void destroyPresenter(Viewable viewable) {
-        presenters.remove(viewable.getInstanceId());
     }
 
 	/**

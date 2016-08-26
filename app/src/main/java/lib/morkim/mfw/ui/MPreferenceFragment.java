@@ -22,7 +22,7 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		presenter = (P) getMorkimContext().acquirePresenter(this);
+		presenter = createPresenter();
 		controller = (C) getMorkimContext().acquireController(this);
 
 	}
@@ -38,14 +38,14 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 	public void onStart() {
 		super.onStart();
 
-		controller.registerForUpdates(this);
+		controller.bindViews();
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
 
-		controller.unregisterFromUpdates(this);
+		controller.unbindViews();
 	}
 
 	@Override

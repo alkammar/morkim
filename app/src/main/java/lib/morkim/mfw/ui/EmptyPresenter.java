@@ -7,8 +7,6 @@ public class EmptyPresenter extends Presenter<EmptyController, Model, MorkimApp<
 
 	public EmptyPresenter(Viewable viewable) {
 		super(viewable);
-
-		EmptyController sdf = getController();
 	}
 
 }

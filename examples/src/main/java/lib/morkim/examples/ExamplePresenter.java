@@ -12,7 +12,7 @@ import lib.morkim.mfw.ui.Viewable;
  */
 public class ExamplePresenter extends Presenter<ExampleController, Model, MorkimApp<Model, ?>> {
 
-    public ExamplePresenter(Viewable viewable) {
+    public ExamplePresenter(Viewable<MorkimApp<Model, ?>, ExampleController, ?> viewable) {
         super(viewable);
     }
 
@@ -22,5 +22,10 @@ public class ExamplePresenter extends Presenter<ExampleController, Model, Morkim
 
     public void doSomethingElse() {
         Log.i("ExamplePresenter", "doing something else");
+    }
+
+    public String getTextViewText() {
+        double count = controller.getCount();
+        return count == 0 ? getContext().getString(R.string.second_text) : "" + count;
     }
 }

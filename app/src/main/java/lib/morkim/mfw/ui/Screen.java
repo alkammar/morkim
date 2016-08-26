@@ -15,8 +15,9 @@ import java.util.UUID;
 
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
 
-public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity implements Viewable<MorkimApp, C, P> {
+public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity implements Viewable<MorkimApp<Model, ?>, C, P> {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 
@@ -40,7 +41,7 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 
 		permissionsRequestControllers = new HashMap<>();
 
-		presenter = (P) getMorkimContext().acquirePresenter(this);
+		presenter = createPresenter();
 		controller = (C) getMorkimContext().acquireController(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
@@ -76,7 +77,7 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	protected void onStart() {
 		super.onStart();
 
-		controller.registerForUpdates(this);
+		controller.bindViews();
 	}
 
 	@Override
@@ -90,17 +91,15 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	protected void onStop() {
 		super.onStop();
 
-		controller.unregisterFromUpdates(this);
+        controller.unbindViews();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (isFinishing()) {
+		if (isFinishing())
 			((MorkimApp) getApplication()).destroyController(this);
-			((MorkimApp) getApplication()).destroyPresenter(this);
-		}
 	}
 
 	protected void setCustomTilteBar() {

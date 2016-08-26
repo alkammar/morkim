@@ -3,6 +3,8 @@ package lib.morkim.mfw.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.SparseArray;
+import android.view.View;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -21,12 +23,17 @@ import lib.morkim.mfw.domain.Model;
  * @param <M> The {@link Model} for this application
  * @param <A> The {@link MorkimApp} application that extends Android {@link android.app.Application}
  */
-public abstract class Controller<P extends Presenter, M extends Model, A extends MorkimApp<M, ?>> extends Observable {
+public abstract class Controller<P extends Presenter, M extends Model, A extends MorkimApp<M, ?>> {
 
+	protected SparseArray<ViewUpdater> viewUpdaterArray;
 	private A morkimApp;
 	protected Viewable<A, ?, P> viewable;
+	protected P presenter;
 
 	public Controller(Viewable<A, ?, P> viewable) {
+
+		viewUpdaterArray = new SparseArray<>();
+
 		this.viewable = viewable;
 
         morkimApp = createContext();
@@ -38,6 +45,8 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	public void attachViewable(Viewable<A, ?, P> viewable) {
 		this.viewable = viewable;
+		this.presenter = viewable.getPresenter();
+		this.presenter.setController(this);
 	}
 
 	protected void onExtractExtraData() {
@@ -82,10 +91,6 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
         return viewable.getContext();
     }
 
-	protected P getPresenter() {
-		return viewable.getPresenter();
-	}
-
 	private Observer modelObserver = new Observer() {
 		@Override
 		public void update(final Observable observable, final Object data) {
@@ -108,23 +113,6 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	protected void unwatchModel(Observable observable) {
 		observable.deleteObserver(modelObserver);
-	}
-
-	void registerForUpdates(Observer observer) {
-
-		addObserver(observer);
-		observer.update(this, null);
-	}
-
-	void unregisterFromUpdates(Observer observer) {
-		synchronized (this) {
-			deleteObserver(observer);
-		}
-	}
-
-	protected void notifyRegistered() {
-		setChanged();
-		notifyObservers();
 	}
 
 	protected void registerToTask(String task) {
@@ -155,5 +143,54 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 				return false;
 
 		return true;
+	}
+
+	public void bindViews() {
+
+		synchronized (this) {
+			onBindViews();
+		}
+
+		onInitViews();
+	}
+
+	protected abstract void onBindViews();
+
+	public void unbindViews() {
+
+		synchronized (this) {
+			viewUpdaterArray.clear();
+		}
+	}
+
+	protected void onUnBindViews() {}
+
+	protected void onInitViews() {
+
+	}
+
+	protected void notifyView(int id) {
+	    ViewUpdater viewUpdater = viewUpdaterArray.get(id);
+
+	    if (viewUpdater != null) {
+	        View view = viewUpdater.view;
+		    //noinspection unchecked
+		    viewUpdater.listener.onUpdate(view);
+	    }
+	}
+
+	protected class ViewUpdater {
+
+	    View view;
+	    ViewUpdateListener listener;
+
+	    public ViewUpdater(View view, ViewUpdateListener listener) {
+		    this.view = view;
+		    this.listener = listener;
+	    }
+	}
+
+	public interface ViewUpdateListener<V extends View> {
+		void onUpdate(V view);
 	}
 }

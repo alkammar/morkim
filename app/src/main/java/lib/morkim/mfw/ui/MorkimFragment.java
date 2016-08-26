@@ -31,7 +31,7 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        presenter = (P) getMorkimContext().acquirePresenter(this);
+        presenter = createPresenter();
         controller = (C) getMorkimContext().acquireController(this);
 
     }
@@ -54,14 +54,14 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     public void onStart() {
         super.onStart();
 
-        controller.registerForUpdates(this);
+        controller.bindViews();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        controller.unregisterFromUpdates(this);
+        controller.unbindViews();
     }
 
     @Override

@@ -5,4 +5,9 @@ public class EmptyController extends Controller {
 	public EmptyController(Viewable viewable) {
 		super(viewable);
 	}
+
+	@Override
+	protected void onBindViews() {
+
+	}
 }

@@ -10,14 +10,12 @@ public abstract class Presenter<C extends  Controller, M extends Model, A extend
 	private A morkimApp;
 	protected Viewable<A, C, ?> viewable;
 
-	public Presenter(Viewable viewable) {
+	protected C controller;
+
+	public Presenter(Viewable<A, C, ?> viewable) {
 		
 		this.viewable = viewable;
-		this.morkimApp = (A) viewable.getMorkimContext();
-	}
-
-	protected C getController() {
-		return viewable.getController();
+		this.morkimApp = viewable.getMorkimContext();
 	}
 
 	public MorkimApp getAppContext() {
@@ -36,7 +34,7 @@ public abstract class Presenter<C extends  Controller, M extends Model, A extend
 		return morkimApp.getModel();
 	}
 
-	public void attachViewable(Viewable viewable) {
-		this.viewable = viewable;
+	void setController(C controller) {
+		this.controller = controller;
 	}
 }

@@ -8,6 +8,10 @@ import lib.morkim.mfw.ui.Screen;
 
 public class ExampleScreen extends Screen<ExampleController, ExamplePresenter> {
 
+    @Override
+    protected int layoutId() {
+        return R.layout.screeen_example;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
