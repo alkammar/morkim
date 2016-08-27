@@ -8,7 +8,7 @@ import lib.morkim.mfw.ui.lists.ListItemHolder;
 
 public class ExampleAdapter extends ListAdapter<ExampleUpdateListener, ExampleAdapter.ExampleItemHolder> {
 
-	public ExampleAdapter(ExampleUpdateListener updateListener) {
+	public ExampleAdapter(UpdateListener<ExampleItemHolder> updateListener) {
 		super(updateListener);
 	}
 
@@ -26,12 +26,12 @@ public class ExampleAdapter extends ListAdapter<ExampleUpdateListener, ExampleAd
 	@Override
 	protected void bindView(ExampleItemHolder holder, int position) {
 
-		holder.textView.setText(updateListener.getItemNumber(position));
+		updateListener.onUpdateListItem(holder, position);
 	}
 
 	static class ExampleItemHolder extends ListItemHolder {
 
-		private TextView textView;
+		TextView textView;
 
 		public ExampleItemHolder(View itemView) {
 			super(itemView);

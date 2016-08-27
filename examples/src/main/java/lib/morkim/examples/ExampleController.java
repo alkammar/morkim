@@ -19,7 +19,8 @@ import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleController extends ScreenController<ExamplePresenter, Model, MorkimApp<Model, ?>> {
+public class ExampleController extends ScreenController<ExamplePresenter, Model, MorkimApp<Model, ?>>
+        implements ListAdapter.UpdateListener<ExampleAdapter.ExampleItemHolder> {
 
     private int count;
 
@@ -72,6 +73,16 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         notifyView(R.id.rv_example_list);
     }
 
+    @Override
+    public int onUpdateListSize() {
+        return presenter.getListSize();
+    }
+
+    @Override
+    public void onUpdateListItem(ExampleAdapter.ExampleItemHolder holder, int position) {
+        holder.textView.setText(presenter.getItemNumber(position));
+    }
+
     private ViewUpdateListener textViewUpdateListener = new ViewUpdateListener<TextView>() {
         @Override
         public void onUpdate(TextView view) {
@@ -88,7 +99,6 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
             if (view.getAdapter() == null)
                 view.setAdapter(adapter);
 
-            adapter.init();
             adapter.notifyDataSetChanged();
         }
     };

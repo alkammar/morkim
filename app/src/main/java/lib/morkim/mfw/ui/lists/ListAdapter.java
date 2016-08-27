@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 
 public abstract class ListAdapter<U extends ListAdapter.UpdateListener, VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
 
-	protected U updateListener;
+	protected UpdateListener<VH> updateListener;
 
 	private View.OnClickListener onClickListener;
 	private View.OnLongClickListener onLongClickListener;
 
-	public ListAdapter(U updateListener) {
+	public ListAdapter(UpdateListener<VH> updateListener) {
 		this.updateListener = updateListener;
 	}
 
@@ -44,7 +44,7 @@ public abstract class ListAdapter<U extends ListAdapter.UpdateListener, VH exten
 
 	@Override
 	public int getItemCount() {
-		return updateListener.getCount();
+		return updateListener.onUpdateListSize();
 	}
 
 	@Override
@@ -61,11 +61,10 @@ public abstract class ListAdapter<U extends ListAdapter.UpdateListener, VH exten
 		this.onLongClickListener = onLongClickListener;
 	}
 
-	public void init() {}
+	public interface UpdateListener<VH> {
 
-	public interface UpdateListener {
+		int onUpdateListSize();
 
-		int getCount();
-		boolean isEnabled(int position);
+		void onUpdateListItem(VH holder, int position);
 	}
 }

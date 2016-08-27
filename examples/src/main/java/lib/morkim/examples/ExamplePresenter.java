@@ -6,7 +6,7 @@ import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 
-public class ExamplePresenter extends Presenter<ExampleController, Model, MorkimApp<Model, ?>> implements ExampleUpdateListener {
+public class ExamplePresenter extends Presenter<ExampleController, Model, MorkimApp<Model, ?>> {
 
     private ExampleAdapter adapter;
 
@@ -22,23 +22,20 @@ public class ExamplePresenter extends Presenter<ExampleController, Model, Morkim
     public ListAdapter getAdapter() {
 
         if (adapter == null)
-            adapter = new ExampleAdapter(this);
+            adapter = new ExampleAdapter(controller);
 
         return adapter;
     }
 
-    @Override
-    public int getCount() {
+    public int getListSize() {
         return controller.getEntities().size();
     }
 
-    @Override
-    public boolean isEnabled(int position) {
-        return true;
-    }
-
-    @Override
     public String getItemNumber(int position) {
         return "" + controller.getEntities().get(position).index;
+    }
+
+    public boolean isItemEnabled(int position) {
+        return true;
     }
 }
