@@ -11,11 +11,13 @@ import java.util.UUID;
 
 import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
 
 /**
  * Created by Kammar on 2/16/2016.
  */
-public abstract class ToolbarScreen<C extends Controller, P extends Presenter> extends AppCompatActivity implements Viewable<MorkimApp, C,P> {
+public abstract class ToolbarScreen<C extends Controller, P extends Presenter> extends AppCompatActivity
+        implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
 
     public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 

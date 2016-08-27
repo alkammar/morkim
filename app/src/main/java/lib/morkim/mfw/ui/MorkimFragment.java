@@ -11,14 +11,14 @@ import android.widget.Toast;
 import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
 
-/**
- * Created by Kammar on 2/16/2016.
- */
-public abstract class MorkimFragment<C extends Controller, P extends Presenter> extends PreferenceFragment implements Viewable<MorkimApp, C, P> {
+public abstract class MorkimFragment<C extends Controller, P extends Presenter> extends PreferenceFragment
+        implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
 
     private C controller;
     private P presenter;
+
     private UUID id;
 
     protected int layoutId() {
@@ -31,9 +31,19 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        presenter = createPresenter();
-        controller = (C) getMorkimContext().acquireController(this);
+        getMorkimContext().acquireController(this);
+    }
 
+    @Override
+    public void attachController(C controller) {
+
+        presenter = createPresenter();
+
+        this.controller = controller;
+        this.controller.setViewable(this);
+        this.controller.setPresenter(presenter);
+
+        presenter.setController(this.controller);
     }
 
     @Override
@@ -44,9 +54,7 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(layoutId(), container, false);
     }
 

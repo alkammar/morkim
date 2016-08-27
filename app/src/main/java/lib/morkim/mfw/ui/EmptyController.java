@@ -7,7 +7,7 @@ public class EmptyController extends ScreenController {
 	}
 
 	@Override
-	protected void onBindViews() {
+	protected void onRegisterUpdates() {
 
 	}
 }

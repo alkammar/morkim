@@ -1,17 +1,11 @@
 package lib.morkim.examples;
 
-import android.content.Context;
-
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 
 public class ExamplePresenter extends Presenter<ExampleController> {
 
     private ExampleAdapter adapter;
-
-    public ExamplePresenter(Context context) {
-        super(context);
-    }
 
     public String getTextViewText() {
         double count = controller.getCount();

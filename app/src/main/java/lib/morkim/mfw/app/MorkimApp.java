@@ -15,7 +15,6 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
-import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 
 /**
@@ -71,11 +70,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * @param viewable Viewable to fetch Controller for
 	 * @return Controller associated with passed viewable
 	 */
-    public <C extends Controller, P extends Presenter> Controller acquireController(Viewable viewable) {
+    public Controller acquireController(Viewable viewable) {
 
         Controller controller = controllers.get(viewable.getInstanceId());
         controller = (controller == null) ? viewable.createController() : controller;
-		controller.attachViewable(viewable);
+	    viewable.attachController(controller);
 		controllers.put(viewable.getInstanceId(), controller);
 
 		return controller;

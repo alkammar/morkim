@@ -5,7 +5,7 @@ import android.content.Context;
 public class EmptyPresenter extends Presenter<EmptyController> {
 
 	public EmptyPresenter(Context context) {
-		super(context);
+		super();
 	}
 
 }

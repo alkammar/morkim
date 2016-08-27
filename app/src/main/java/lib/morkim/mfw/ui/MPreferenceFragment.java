@@ -8,9 +8,11 @@ import android.preference.PreferenceFragment;
 import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
 
 @SuppressLint("NewApi")
-public abstract class MPreferenceFragment<C extends Controller, P extends Presenter> extends PreferenceFragment implements Viewable<MorkimApp, C, P> {
+public abstract class MPreferenceFragment<C extends Controller, P extends Presenter> extends PreferenceFragment
+		implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
 
 	protected C controller;
 	private P presenter;

@@ -1,9 +1,7 @@
 package lib.morkim.examples;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
 
     private List<ExampleEntity> entities;
 
-    public ExampleController(Viewable<MorkimApp<Model, ?>, ?, ExamplePresenter> viewable) {
+    public ExampleController(Viewable<Model, MorkimApp<Model, ?>, ?, ExamplePresenter> viewable) {
         super(viewable);
 
 //        try {
@@ -49,20 +47,10 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
     }
 
     @Override
-    public void onBindViews() {
+    protected void onRegisterUpdates() {
 
-        bindUpdateListener(R.id.tv_example_text_view, textViewUpdateListener);
-        bindUpdateListener(R.id.rv_example_list, listUpdateListener);
-
-        Button textButton = (Button) activity.findViewById(R.id.btn_example_button);
-        textButton.setOnClickListener(buttonClickListener);
-
-        Button taskButton = (Button) activity.findViewById(R.id.btn_example_button_task);
-        taskButton.setOnClickListener(taskButtonClickListener);
-
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.rv_example_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(listItemClickListener);
+        registerUpdateListener(R.id.tv_example_text_view, textViewUpdateListener);
+        registerUpdateListener(R.id.rv_example_list, listUpdateListener);
     }
 
     @Override
@@ -103,14 +91,14 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         }
     };
 
-    private View.OnClickListener buttonClickListener = new View.OnClickListener() {
+    View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(android.view.View v) {
             notifyView(R.id.tv_example_text_view);
         }
     };
 
-    private View.OnClickListener taskButtonClickListener = new View.OnClickListener() {
+    View.OnClickListener taskButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(android.view.View v) {
 
@@ -140,7 +128,7 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         }
     };
 
-    private ItemClickSupport.OnItemClickListener listItemClickListener = new ItemClickSupport.OnItemClickListener() {
+    ItemClickSupport.OnItemClickListener listItemClickListener = new ItemClickSupport.OnItemClickListener() {
         @Override
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 

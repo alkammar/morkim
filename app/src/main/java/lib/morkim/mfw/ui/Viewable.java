@@ -5,8 +5,9 @@ import android.content.Context;
 import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
 
-public interface Viewable<A extends MorkimApp, C extends Controller, P extends Presenter> {
+public interface Viewable<M extends Model, A extends MorkimApp<M, ?>, C extends Controller, P extends Presenter> {
 
 	static final String VIEWABLE_ID = "viewable.position";
 
@@ -19,7 +20,7 @@ public interface Viewable<A extends MorkimApp, C extends Controller, P extends P
 	C getController();
 	P getPresenter();
 
-	public void finish();
+	void finish();
 	A getMorkimContext();
 
 	void keepScreenOn(boolean keepOn);
@@ -27,4 +28,8 @@ public interface Viewable<A extends MorkimApp, C extends Controller, P extends P
 	void showShortMessage(String message);
 
 	UUID getInstanceId();
+
+	void attachController(C controller);
+
+	void onBindViews();
 }

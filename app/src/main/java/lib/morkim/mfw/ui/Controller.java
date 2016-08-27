@@ -27,10 +27,10 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	protected SparseArray<ViewUpdater> viewUpdaterArray;
 	private A morkimApp;
-	protected Viewable<A, ?, P> viewable;
+	protected Viewable<M, A, ?, P> viewable;
 	protected P presenter;
 
-	public Controller(Viewable<A, ?, P> viewable) {
+	public Controller(Viewable<M, A, ?, P> viewable) {
 
 		viewUpdaterArray = new SparseArray<>();
 
@@ -41,12 +41,6 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 		onExtractExtraData();
 
         executeInitializationTask();
-	}
-
-	public void attachViewable(Viewable<A, ?, P> viewable) {
-		this.viewable = viewable;
-		this.presenter = viewable.getPresenter();
-		this.presenter.setController(this);
 	}
 
 	protected void onExtractExtraData() {
@@ -148,13 +142,14 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	public void bindViews() {
 
 		synchronized (this) {
-			onBindViews();
+			onRegisterUpdates();
+			viewable.onBindViews();
 		}
 
 		onInitViews();
 	}
 
-	protected abstract void onBindViews();
+	protected abstract void onRegisterUpdates();
 
 	public void unbindViews() {
 
@@ -165,7 +160,7 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	protected void onUnBindViews() {}
 
-	protected void bindUpdateListener(int id, ViewUpdateListener listener) {
+	protected void registerUpdateListener(int id, ViewUpdateListener listener) {
 
 	    View view = getViewById(id);
 	    viewUpdaterArray.put(id, new ViewUpdater(view, listener));
@@ -185,6 +180,14 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 		    //noinspection unchecked
 		    viewUpdater.listener.onUpdate(view);
 	    }
+	}
+
+	public void setPresenter(P presenter) {
+		this.presenter = presenter;
+	}
+
+	public void setViewable(Viewable<M, A, ?, P> viewable) {
+		this.viewable = viewable;
 	}
 
 	protected class ViewUpdater {

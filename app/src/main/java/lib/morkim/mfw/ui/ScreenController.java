@@ -11,19 +11,19 @@ public abstract class ScreenController<P extends Presenter, M extends Model, A e
 
 	protected Activity activity;
 
-	public ScreenController(Viewable<A, ?, P> viewable) {
+	public ScreenController(Viewable<M, A, ?, P> viewable) {
 		super(viewable);
 	}
 
 	@Override
-	public void attachViewable(Viewable<A, ?, P> viewable) {
-		super.attachViewable(viewable);
+	public void setViewable(Viewable<M, A, ?, P> viewable) {
+		super.setViewable(viewable);
 
 		this.activity = (Activity) viewable;
 	}
 
 	@Override
-	protected View getViewById(int id) {
+	public View getViewById(int id) {
 		return activity.findViewById(id);
 	}
 }

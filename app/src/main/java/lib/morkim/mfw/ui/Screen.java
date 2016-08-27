@@ -17,7 +17,8 @@ import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity implements Viewable<MorkimApp<Model, ?>, C, P> {
+public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity
+		implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 
@@ -25,6 +26,7 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 
 	protected C controller;
 	protected P presenter;
+
 	private Map<String, Controller> permissionsRequestControllers;
 
 	@Override
@@ -41,12 +43,23 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 
 		permissionsRequestControllers = new HashMap<>();
 
-		presenter = createPresenter();
-		controller = (C) getMorkimContext().acquireController(this);
+		getMorkimContext().acquireController(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
 		animateTransition(transition);
+	}
+
+	@Override
+	public void attachController(C controller) {
+
+		presenter = createPresenter();
+
+		this.controller = controller;
+		this.controller.setViewable(this);
+		this.controller.setPresenter(presenter);
+
+		presenter.setController(this.controller);
 	}
 
 	@Override
