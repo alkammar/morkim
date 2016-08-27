@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class ListAdapter<U extends ListAdapter.UpdateListener, VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
+public abstract class ListAdapter<VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
 
 	protected UpdateListener<VH> updateListener;
 

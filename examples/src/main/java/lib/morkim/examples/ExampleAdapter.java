@@ -6,7 +6,7 @@ import android.widget.TextView;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.ui.lists.ListItemHolder;
 
-public class ExampleAdapter extends ListAdapter<ExampleUpdateListener, ExampleAdapter.ExampleItemHolder> {
+public class ExampleAdapter extends ListAdapter<ExampleAdapter.ExampleItemHolder> {
 
 	public ExampleAdapter(UpdateListener<ExampleItemHolder> updateListener) {
 		super(updateListener);
