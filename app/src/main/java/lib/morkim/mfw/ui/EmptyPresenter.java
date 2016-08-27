@@ -1,12 +1,11 @@
 package lib.morkim.mfw.ui;
 
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.domain.Model;
+import android.content.Context;
 
-public class EmptyPresenter extends Presenter<EmptyController, Model, MorkimApp<Model, ?>> {
+public class EmptyPresenter extends Presenter<EmptyController> {
 
-	public EmptyPresenter(Viewable viewable) {
-		super(viewable);
+	public EmptyPresenter(Context context) {
+		super(context);
 	}
 
 }

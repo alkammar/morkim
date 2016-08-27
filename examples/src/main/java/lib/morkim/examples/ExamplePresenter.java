@@ -1,22 +1,21 @@
 package lib.morkim.examples;
 
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.domain.Model;
+import android.content.Context;
+
 import lib.morkim.mfw.ui.Presenter;
-import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 
-public class ExamplePresenter extends Presenter<ExampleController, Model, MorkimApp<Model, ?>> {
+public class ExamplePresenter extends Presenter<ExampleController> {
 
     private ExampleAdapter adapter;
 
-    public ExamplePresenter(Viewable<MorkimApp<Model, ?>, ExampleController, ?> viewable) {
-        super(viewable);
+    public ExamplePresenter(Context context) {
+        super(context);
     }
 
     public String getTextViewText() {
         double count = controller.getCount();
-        return count == 0 ? getContext().getString(R.string.second_text) : "" + count;
+        return count == 0 ? context.getString(R.string.second_text) : "" + count;
     }
 
     public ListAdapter getAdapter() {
@@ -33,9 +32,5 @@ public class ExamplePresenter extends Presenter<ExampleController, Model, Morkim
 
     public String getItemNumber(int position) {
         return "" + controller.getEntities().get(position).index;
-    }
-
-    public boolean isItemEnabled(int position) {
-        return true;
     }
 }
