@@ -165,6 +165,14 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	protected void onUnBindViews() {}
 
+	protected void bindUpdateListener(int id, ViewUpdateListener listener) {
+
+	    View view = getViewById(id);
+	    viewUpdaterArray.put(id, new ViewUpdater(view, listener));
+	}
+
+	protected abstract View getViewById(int id);
+
 	protected void onInitViews() {
 
 	}

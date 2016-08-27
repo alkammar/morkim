@@ -2,12 +2,11 @@ package lib.morkim.mfw.ui;
 
 import android.content.Context;
 
-import java.util.Observer;
 import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public interface Viewable<A extends MorkimApp, C extends Controller, P extends Presenter> extends Observer {
+public interface Viewable<A extends MorkimApp, C extends Controller, P extends Presenter> {
 
 	static final String VIEWABLE_ID = "viewable.position";
 

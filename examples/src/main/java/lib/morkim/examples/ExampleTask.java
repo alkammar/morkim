@@ -16,17 +16,19 @@ public class ExampleTask extends MorkimTask<TaskRequest, ExampleResult> {
 	@Override
 	protected ExampleResult onExecute() {
 
-		ExampleResult exampleResult = new ExampleResult();
-		exampleResult.setCompletionPercent(0);
+		ExampleResult result = new ExampleResult();
+		result.setCompletionPercent(0);
 
 		for (int i = 0; i <= 101; i++) {
-			publishProgress(exampleResult);
+			publishProgress(result);
 
 			SystemClock.sleep(200);
 
-			exampleResult.count = i;
+			result.count = i;
 		}
 
-		return null;
+		result.setCompletionPercent(100);
+
+		return result;
 	}
 }

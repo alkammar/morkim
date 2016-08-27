@@ -1,13 +1,20 @@
 package lib.morkim.examples;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.ScreenController;
 import lib.morkim.mfw.ui.Viewable;
+import lib.morkim.mfw.ui.lists.ItemClickSupport;
+import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
@@ -15,6 +22,8 @@ import lib.morkim.mfw.usecase.TaskRequest;
 public class ExampleController extends ScreenController<ExamplePresenter, Model, MorkimApp<Model, ?>> {
 
     private int count;
+
+    private List<ExampleEntity> entities;
 
     public ExampleController(Viewable<MorkimApp<Model, ?>, ?, ExamplePresenter> viewable) {
         super(viewable);
@@ -28,10 +37,21 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
 //        } catch (GatewayPersistException e) {
 //            e.printStackTrace();
 //        }
+
+        entities = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            ExampleEntity entity = new ExampleEntity();
+            entity.index = i;
+            entities.add(entity);
+        }
     }
 
     @Override
     public void onBindViews() {
+
+        bindUpdateListener(R.id.tv_example_text_view, textViewUpdateListener);
+        bindUpdateListener(R.id.rv_example_list, listUpdateListener);
 
         Button textButton = (Button) activity.findViewById(R.id.btn_example_button);
         textButton.setOnClickListener(buttonClickListener);
@@ -39,8 +59,9 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         Button taskButton = (Button) activity.findViewById(R.id.btn_example_button_task);
         taskButton.setOnClickListener(taskButtonClickListener);
 
-        View textView = activity.findViewById(R.id.tv_example_text_view);
-        viewUpdaterArray.put(R.id.tv_example_text_view, new ViewUpdater(textView, textViewUpdateListener));
+        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.rv_example_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(listItemClickListener);
     }
 
     @Override
@@ -48,7 +69,29 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         super.onInitViews();
 
         notifyView(R.id.tv_example_text_view);
+        notifyView(R.id.rv_example_list);
     }
+
+    private ViewUpdateListener textViewUpdateListener = new ViewUpdateListener<TextView>() {
+        @Override
+        public void onUpdate(TextView view) {
+            view.setText(presenter.getTextViewText());
+        }
+    };
+
+    private ViewUpdateListener listUpdateListener = new ViewUpdateListener<RecyclerView>() {
+        @Override
+        public void onUpdate(RecyclerView view) {
+
+            ListAdapter adapter = presenter.getAdapter();
+
+            if (view.getAdapter() == null)
+                view.setAdapter(adapter);
+
+            adapter.init();
+            adapter.notifyDataSetChanged();
+        }
+    };
 
     private View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
@@ -72,7 +115,13 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
                 }
 
                 @Override
-                public void onTaskComplete(ExampleResult result) {}
+                public void onTaskComplete(ExampleResult result) {
+
+                    for (ExampleEntity entity : entities) {
+                        entity.index += 100;
+                        presenter.getAdapter().notifyItemChanged(entities.indexOf(entity));
+                    }
+                }
 
                 @Override
                 public void onTaskCancel() {}
@@ -81,14 +130,20 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         }
     };
 
-    private ViewUpdateListener textViewUpdateListener = new ViewUpdateListener<TextView>() {
+    private ItemClickSupport.OnItemClickListener listItemClickListener = new ItemClickSupport.OnItemClickListener() {
         @Override
-        public void onUpdate(TextView view) {
-            view.setText(presenter.getTextViewText());
+        public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+            entities.get(position).index++;
+            presenter.getAdapter().notifyItemChanged(position);
         }
     };
 
     public int getCount() {
         return count;
+    }
+
+    public List<ExampleEntity> getEntities() {
+        return entities;
     }
 }

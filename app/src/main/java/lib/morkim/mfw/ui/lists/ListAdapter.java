@@ -5,21 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
+public abstract class ListAdapter<U extends ListAdapter.UpdateListener, VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
 
-public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
-
-	protected List<M> listModel;
+	protected U updateListener;
 
 	private View.OnClickListener onClickListener;
 	private View.OnLongClickListener onLongClickListener;
 
-	public ListAdapter() {
-
-	}
-
-	public ListAdapter(List<M> listModel) {
-		this.listModel = listModel;
+	public ListAdapter(U updateListener) {
+		this.updateListener = updateListener;
 	}
 
 	@Override
@@ -48,28 +42,9 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 
 	protected abstract void bindView(VH holder, int position);
 
-	public void updateData(List<M> listModel) {
-
-		this.listModel = listModel;
-
-		notifyDataSetChanged();
-	}
-
 	@Override
 	public int getItemCount() {
-
-		if (listModel != null)
-			return listModel.size();
-
-		return 0;
-	}
-
-	public M getItem(int position) {
-
-		if (listModel != null)
-			return listModel.get(position);
-
-		return null;
+		return updateListener.getCount();
 	}
 
 	@Override
@@ -78,19 +53,19 @@ public abstract class ListAdapter<M extends ListItemModel, VH extends ListItemHo
 		return 0;
 	}
 
-	public boolean isEnabled(int position) {
-
-		if (listModel != null)
-			return listModel.get(position).isEnabled;
-
-		return false;
-	}
-
 	public void setOnClickListener(View.OnClickListener onClickListener) {
 		this.onClickListener = onClickListener;
 	}
 
 	public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
 		this.onLongClickListener = onLongClickListener;
+	}
+
+	public void init() {}
+
+	public interface UpdateListener {
+
+		int getCount();
+		boolean isEnabled(int position);
 	}
 }

@@ -1,6 +1,6 @@
 package lib.morkim.mfw.ui;
 
-public class EmptyController extends Controller {
+public class EmptyController extends ScreenController {
 
 	public EmptyController(Viewable viewable) {
 		super(viewable);
