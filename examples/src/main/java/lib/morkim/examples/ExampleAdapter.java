@@ -23,12 +23,6 @@ public class ExampleAdapter extends ListAdapter<ExampleAdapter.ExampleItemHolder
 		return new ExampleItemHolder(convertView);
 	}
 
-	@Override
-	protected void bindView(ExampleItemHolder holder, int position) {
-
-		updateListener.onUpdateListItem(holder, position);
-	}
-
 	static class ExampleItemHolder extends ListItemHolder {
 
 		TextView textView;

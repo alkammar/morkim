@@ -33,14 +33,12 @@ public abstract class ListAdapter<VH extends ListItemHolder> extends RecyclerVie
 	@Override
 	public void onBindViewHolder(VH holder, int position) {
 
-		bindView(holder, position);
+		updateListener.onUpdateListItem(holder, position);
 	}
 
 	protected abstract int layoutId();
 
 	protected abstract VH holdView(View convertView, int position);
-
-	protected abstract void bindView(VH holder, int position);
 
 	@Override
 	public int getItemCount() {
