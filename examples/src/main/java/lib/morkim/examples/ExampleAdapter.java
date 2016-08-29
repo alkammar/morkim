@@ -19,7 +19,6 @@ public class ExampleAdapter extends ListAdapter<ExampleAdapter.ExampleItemHolder
 
 	@Override
 	protected ExampleItemHolder holdView(View convertView, int position) {
-
 		return new ExampleItemHolder(convertView);
 	}
 

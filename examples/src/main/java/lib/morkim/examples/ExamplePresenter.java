@@ -7,24 +7,27 @@ public class ExamplePresenter extends Presenter<ExampleController> {
 
     private ExampleAdapter adapter;
 
-    public String getTextViewText() {
+    @Override
+    protected void onControllerAttached() {
+        super.onControllerAttached();
+
+        adapter = new ExampleAdapter(controller);
+    }
+
+    String getTextViewText() {
         double count = controller.getCount();
         return count == 0 ? context.getString(R.string.second_text) : "" + count;
     }
 
-    public ListAdapter getAdapter() {
-
-        if (adapter == null)
-            adapter = new ExampleAdapter(controller);
-
+    ListAdapter getAdapter() {
         return adapter;
     }
 
-    public int getListSize() {
+    int getListSize() {
         return controller.getEntities().size();
     }
 
-    public String getItemNumber(int position) {
+    String getItemNumber(int position) {
         return "" + controller.getEntities().get(position).index;
     }
 }
