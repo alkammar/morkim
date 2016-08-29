@@ -93,16 +93,20 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 				((Activity) viewable).runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						onModelUpdated(observable, data);
+						onModelUpdated((Entity) observable, data);
 					}
 				});
 		}
 	};
 
-	protected void onModelUpdated(Observable observable, Object data) {}
+	protected <E extends Entity> void onModelUpdated(E observable, Object data) {}
 
-	protected void watchModel(Observable observable) {
+	protected void watchEntity(Observable observable) {
 		observable.addObserver(modelObserver);
+	}
+
+	protected <E extends Entity> void watchEntity(Observable observable, UiEntityObserver<E> observer) {
+		observable.addObserver(observer);
 	}
 
 	protected void unwatchModel(Observable observable) {

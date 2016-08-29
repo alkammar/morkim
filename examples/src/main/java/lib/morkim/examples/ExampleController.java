@@ -10,6 +10,7 @@ import java.util.List;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.ScreenController;
+import lib.morkim.mfw.ui.UiEntityObserver;
 import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 import lib.morkim.mfw.ui.lists.ListAdapter;
@@ -51,6 +52,13 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
 
         registerUpdateListener(R.id.tv_example_text_view, textViewUpdateListener);
         registerUpdateListener(R.id.rv_example_list, listUpdateListener);
+
+        watchEntity(entities.get(0), new UiEntityObserver<ExampleEntity>(activity) {
+            @Override
+            public void onEntityUpdated(ExampleEntity observable, Object data) {
+                super.onEntityUpdated(observable, data);
+            }
+        });
     }
 
     @Override
