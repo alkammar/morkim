@@ -1,5 +1,6 @@
 package lib.morkim.examples;
 
+import lib.morkim.mfw.ui.EmptyListAdapter;
 import lib.morkim.mfw.ui.ViewableActions;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 

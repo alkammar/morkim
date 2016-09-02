@@ -1,8 +1,7 @@
-package lib.morkim.examples;
+package lib.morkim.mfw.ui;
 
 import android.view.View;
 
-import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.ui.lists.ListItemHolder;
 
