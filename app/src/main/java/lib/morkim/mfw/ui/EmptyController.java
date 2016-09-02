@@ -1,13 +1,15 @@
 package lib.morkim.mfw.ui;
 
+import lib.morkim.mfw.app.MorkimApp;
+
 public class EmptyController extends ScreenController {
 
-	public EmptyController(Viewable viewable) {
-		super(viewable);
+	public EmptyController(MorkimApp morkimApp) {
+		super(morkimApp);
 	}
 
 	@Override
-	protected void onRegisterUpdates() {
-
+	protected ViewableActions createEmptyViewableActions() {
+		return null;
 	}
 }

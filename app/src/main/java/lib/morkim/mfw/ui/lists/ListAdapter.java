@@ -5,15 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class ListAdapter<VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
+import lib.morkim.mfw.ui.Presenter;
 
-	protected UpdateListener<VH> updateListener;
+public abstract class ListAdapter<P extends Presenter, VH extends ListItemHolder> extends RecyclerView.Adapter<VH> {
 
 	private View.OnClickListener onClickListener;
 	private View.OnLongClickListener onLongClickListener;
+	protected P presenter;
 
-	public ListAdapter(UpdateListener<VH> updateListener) {
-		this.updateListener = updateListener;
+	public ListAdapter(P presenter) {
+		this.presenter = presenter;
 	}
 
 	@Override
@@ -30,24 +31,12 @@ public abstract class ListAdapter<VH extends ListItemHolder> extends RecyclerVie
 		return holder;
 	}
 
-	@Override
-	public void onBindViewHolder(VH holder, int position) {
-
-		updateListener.onUpdateListItem(holder, position);
-	}
-
 	protected abstract int layoutId();
 
 	protected abstract VH holdView(View convertView, int position);
 
 	@Override
-	public int getItemCount() {
-		return updateListener.onUpdateListSize();
-	}
-
-	@Override
 	public long getItemId(int position) {
-
 		return 0;
 	}
 

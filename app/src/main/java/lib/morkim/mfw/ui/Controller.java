@@ -3,7 +3,6 @@ package lib.morkim.mfw.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.util.SparseArray;
 import android.view.View;
 
 import java.util.Observable;
@@ -19,24 +18,24 @@ import lib.morkim.mfw.domain.Model;
  * to update the Viewable.
  * This class stays alive even if the Viewable is destroyed due to rotation. Will be destroyed when
  * its Viewable is completely destroyed.
- * @param <P> The {@link Presenter} associated with the Viewable
+ * @param <VA> The {@link Presenter} associated with the Viewable
  * @param <M> The {@link Model} for this application
  * @param <A> The {@link MorkimApp} application that extends Android {@link android.app.Application}
  */
-public abstract class Controller<P extends Presenter, M extends Model, A extends MorkimApp<M, ?>> {
+public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, VA extends ViewableActions> {
 
-	protected SparseArray<ViewUpdater> viewUpdaterArray;
 	private A morkimApp;
-	protected Viewable<M, A, ?, P> viewable;
-	protected P presenter;
+	protected Viewable<A, M, VA, ?, ?> viewable;
 
-	public Controller(Viewable<M, A, ?, P> viewable) {
+	private VA viewableActions;
+	private VA emptyViewableActions;
+	private boolean isViewUpdatable;
 
-		viewUpdaterArray = new SparseArray<>();
+	public Controller(A morkimApp) {
 
-		this.viewable = viewable;
+		this.morkimApp = morkimApp;
 
-        morkimApp = createContext();
+		emptyViewableActions = createEmptyViewableActions();
 
 		onExtractExtraData();
 
@@ -47,9 +46,7 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	}
 
-	protected A createContext() {
-		return viewable.getMorkimContext();
-	}
+	protected abstract A createContext();
 
 	protected void executeInitializationTask() {}
 
@@ -61,9 +58,7 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 		return morkimApp.getModel();
 	}
 
-	protected void finish() {
-		viewable.finish();
-	}
+	protected void finish() {}
 	
 	protected void keepScreenOn(boolean keepOn) {
 		viewable.keepScreenOn(keepOn);
@@ -127,8 +122,8 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
 
-		for (String permission : permissions)
-			viewable.getScreen().onPermissionRequestHandled(permission);
+//		for (String permission : permissions)
+//			viewable.getScreen().onPermissionRequestHandled(permission);
 	}
 
 	protected static boolean verifyPermission(int[] grantResults) {
@@ -146,29 +141,21 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 	public void bindViews() {
 
 		synchronized (this) {
-			onRegisterUpdates();
+			isViewUpdatable = true;
 			viewable.onBindViews();
 		}
 
 		onInitViews();
 	}
 
-	protected abstract void onRegisterUpdates();
-
 	public void unbindViews() {
 
 		synchronized (this) {
-			viewUpdaterArray.clear();
+			isViewUpdatable = false;
 		}
 	}
 
 	protected void onUnBindViews() {}
-
-	protected void registerUpdateListener(int id, ViewUpdateListener listener) {
-
-	    View view = getViewById(id);
-	    viewUpdaterArray.put(id, new ViewUpdater(view, listener));
-	}
 
 	protected abstract View getViewById(int id);
 
@@ -176,22 +163,18 @@ public abstract class Controller<P extends Presenter, M extends Model, A extends
 
 	}
 
-	protected void notifyView(int id) {
-	    ViewUpdater viewUpdater = viewUpdaterArray.get(id);
+	protected abstract VA createEmptyViewableActions();
 
-	    if (viewUpdater != null) {
-	        View view = viewUpdater.view;
-		    //noinspection unchecked
-		    viewUpdater.listener.onUpdate(view);
-	    }
+	protected VA getViewableActions() {
+		synchronized (this) {
+			return (isViewUpdatable) ? viewableActions : emptyViewableActions;
+		}
 	}
 
-	public void setPresenter(P presenter) {
-		this.presenter = presenter;
-	}
-
-	public void setViewable(Viewable<M, A, ?, P> viewable) {
+	public void setViewable(Viewable<A, M, VA, ?, ?> viewable) {
 		this.viewable = viewable;
+
+		viewableActions = viewable.getActions();
 	}
 
 	protected class ViewUpdater {

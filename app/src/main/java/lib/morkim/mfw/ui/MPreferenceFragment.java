@@ -11,8 +11,9 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
 @SuppressLint("NewApi")
-public abstract class MPreferenceFragment<C extends Controller, P extends Presenter> extends PreferenceFragment
-		implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
+public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter>
+		extends PreferenceFragment
+		implements Viewable<A, M, V, C, P> {
 
 	protected C controller;
 	private P presenter;
@@ -51,8 +52,9 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 	}
 
 	@Override
-	public MorkimApp getMorkimContext() {
-		return (MorkimApp) getActivity().getApplicationContext();
+	public A getMorkimContext() {
+		//noinspection unchecked
+		return (A) getActivity().getApplicationContext();
 	}
 
 	@Override
@@ -63,21 +65,6 @@ public abstract class MPreferenceFragment<C extends Controller, P extends Presen
 	@Override
 	public void keepScreenOn(boolean keepOn) {
 		((Screen) getActivity()).keepScreenOn(keepOn);
-	}
-
-	@Override
-	public void finish() {
-
-	}
-
-	@Override
-	public Screen getScreen() {
-		return (Screen) getActivity();
-	}
-
-	@Override
-	public P getPresenter() {
-		return presenter;
 	}
 
 	@Override

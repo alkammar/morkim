@@ -6,17 +6,17 @@ import android.view.View;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class ScreenController<P extends Presenter, M extends Model, A extends MorkimApp<M, ?>>
-		extends Controller<P, M, A> {
+public abstract class ScreenController<A extends MorkimApp<M, ?>, M extends Model, VA extends ViewableActions>
+		extends Controller<A, M, VA> {
 
 	protected Activity activity;
 
-	public ScreenController(Viewable<M, A, ?, P> viewable) {
-		super(viewable);
+	public ScreenController(A morkimApp) {
+		super(morkimApp);
 	}
 
 	@Override
-	public void setViewable(Viewable<M, A, ?, P> viewable) {
+	public void setViewable(Viewable<A, M, VA, ?, ?> viewable) {
 		super.setViewable(viewable);
 
 		this.activity = (Activity) viewable;
@@ -25,5 +25,16 @@ public abstract class ScreenController<P extends Presenter, M extends Model, A e
 	@Override
 	public View getViewById(int id) {
 		return activity.findViewById(id);
+	}
+
+	@Override
+	protected void finish() {
+		activity.finish();
+	}
+
+	@Override
+	protected A createContext() {
+		//noinspection unchecked
+		return (A) activity.getApplication();
 	}
 }

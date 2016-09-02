@@ -16,8 +16,9 @@ import lib.morkim.mfw.domain.Model;
 /**
  * Created by Kammar on 2/16/2016.
  */
-public abstract class ToolbarScreen<C extends Controller, P extends Presenter> extends AppCompatActivity
-        implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
+public abstract class ToolbarScreen<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter>
+        extends AppCompatActivity
+        implements Viewable<A, M, V, C, P> {
 
     public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 
@@ -118,8 +119,9 @@ public abstract class ToolbarScreen<C extends Controller, P extends Presenter> e
     }
 
     @Override
-    public MorkimApp getMorkimContext() {
-        return (MorkimApp) getApplication();
+    public A getMorkimContext() {
+        //noinspection unchecked
+        return (A) getApplication();
     }
 
     @Override
@@ -128,18 +130,8 @@ public abstract class ToolbarScreen<C extends Controller, P extends Presenter> e
     }
 
     @Override
-    public Screen<C, P> getScreen() {
-        return null;
-    }
-
-    @Override
     public C getController() {
         return controller;
-    }
-
-    @Override
-    public P getPresenter() {
-        return presenter;
     }
 
     @Override

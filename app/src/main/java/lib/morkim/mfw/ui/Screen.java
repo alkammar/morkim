@@ -17,13 +17,15 @@ import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class Screen<C extends Controller, P extends Presenter> extends AppCompatActivity
-		implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
+public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter>
+		extends AppCompatActivity
+		implements Viewable<A, M, V, C, P> {
 
 	public static final String KEY_SCREEN_TRANSITION = "screen.transition";
 
 	private UUID id;
 
+	private V viewableActions;
 	protected C controller;
 	protected P presenter;
 
@@ -54,12 +56,11 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	public void attachController(C controller) {
 
 		presenter = createPresenter();
-
+		viewableActions = createActions();
 		this.controller = controller;
-		this.controller.setViewable(this);
-		this.controller.setPresenter(presenter);
 
-		presenter.setController(this.controller);
+		this.controller.setViewable(this);
+		this.presenter.setController(controller);
 	}
 
 	@Override
@@ -122,15 +123,14 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	@Override
 	public void keepScreenOn(boolean keepOn) {
 
-		if (keepOn) 
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		else
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		if (keepOn) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	@Override
-	public MorkimApp getMorkimContext() {
-		return (MorkimApp) getApplication();
+	public A getMorkimContext() {
+		//noinspection unchecked
+		return ((A) getApplication());
 	}
 
 	@Override
@@ -139,18 +139,13 @@ public abstract class Screen<C extends Controller, P extends Presenter> extends 
 	}
 
 	@Override
-	public Screen getScreen() {
-		return this;
+	public V getActions() {
+		return viewableActions;
 	}
 
 	@Override
 	public C getController() {
 		return controller;
-	}
-
-	@Override
-	public P getPresenter() {
-		return presenter;
 	}
 
 	@Override

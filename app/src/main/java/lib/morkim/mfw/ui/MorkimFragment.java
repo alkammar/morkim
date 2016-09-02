@@ -1,8 +1,8 @@
 package lib.morkim.mfw.ui;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +13,9 @@ import java.util.UUID;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class MorkimFragment<C extends Controller, P extends Presenter> extends PreferenceFragment
-        implements Viewable<Model, MorkimApp<Model, ?>, C, P> {
+public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter>
+        extends Fragment
+        implements Viewable<A, M, V, C, P> {
 
     private C controller;
     private P presenter;
@@ -41,9 +42,7 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
 
         this.controller = controller;
         this.controller.setViewable(this);
-        this.controller.setPresenter(presenter);
-
-        presenter.setController(this.controller);
+        this.presenter.setController(this.controller);
     }
 
     @Override
@@ -73,8 +72,9 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     }
 
     @Override
-    public MorkimApp getMorkimContext() {
-        return (MorkimApp) getActivity().getApplication();
+    public A getMorkimContext() {
+        //noinspection unchecked
+        return (A) getActivity().getApplication();
     }
 
     @Override
@@ -83,18 +83,8 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     }
 
     @Override
-    public Screen getScreen() {
-        return (Screen) getActivity();
-    }
-
-    @Override
     public C getController() {
         return controller;
-    }
-
-    @Override
-    public P getPresenter() {
-        return presenter;
     }
 
     @Override
@@ -105,11 +95,6 @@ public abstract class MorkimFragment<C extends Controller, P extends Presenter> 
     @Override
     public void keepScreenOn(boolean keepOn) {
         ((Screen) getActivity()).keepScreenOn(keepOn);
-    }
-
-    @Override
-    public void finish() {
-
     }
 
     @Override

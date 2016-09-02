@@ -6,10 +6,10 @@ import android.widget.TextView;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.ui.lists.ListItemHolder;
 
-public class ExampleAdapter extends ListAdapter<ExampleAdapter.ExampleItemHolder> {
+public class ExampleAdapter extends ListAdapter<ExamplePresenter, ExampleAdapter.ExampleItemHolder> {
 
-	public ExampleAdapter(UpdateListener<ExampleItemHolder> updateListener) {
-		super(updateListener);
+	public ExampleAdapter(ExamplePresenter presenter) {
+		super(presenter);
 	}
 
 	@Override
@@ -18,8 +18,18 @@ public class ExampleAdapter extends ListAdapter<ExampleAdapter.ExampleItemHolder
 	}
 
 	@Override
+	public int getItemCount() {
+		return presenter.getListSize();
+	}
+
+	@Override
 	protected ExampleItemHolder holdView(View convertView, int position) {
 		return new ExampleItemHolder(convertView);
+	}
+
+	@Override
+	public void onBindViewHolder(ExampleItemHolder holder, int position) {
+		holder.textView.setText(presenter.getItemNumber(position));
 	}
 
 	static class ExampleItemHolder extends ListItemHolder {

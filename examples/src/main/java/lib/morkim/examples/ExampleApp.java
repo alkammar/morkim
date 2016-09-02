@@ -10,7 +10,7 @@ import lib.morkim.mfw.task.TaskFactory;
 /**
  * Created by Kammar on 2/19/2016.
  */
-public class ExampleApp extends MorkimApp {
+public class ExampleApp extends MorkimApp<Model, MorkimRepository> {
 
     @Override
     protected void createFactories() {

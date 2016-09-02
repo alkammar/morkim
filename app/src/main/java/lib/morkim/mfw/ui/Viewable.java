@@ -7,21 +7,19 @@ import java.util.UUID;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public interface Viewable<M extends Model, A extends MorkimApp<M, ?>, C extends Controller, P extends Presenter> {
+public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter> {
 
 	static final String VIEWABLE_ID = "viewable.position";
 
+	A getMorkimContext();
 	Context getContext();
 
+	V createActions();
 	C createController();
 	P createPresenter();
 
-	Screen<C, P> getScreen();
+	V getActions();
 	C getController();
-	P getPresenter();
-
-	void finish();
-	A getMorkimContext();
 
 	void keepScreenOn(boolean keepOn);
 
@@ -32,4 +30,5 @@ public interface Viewable<M extends Model, A extends MorkimApp<M, ?>, C extends 
 	void attachController(C controller);
 
 	void onBindViews();
+
 }

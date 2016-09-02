@@ -2,7 +2,6 @@ package lib.morkim.examples;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,23 +9,19 @@ import java.util.List;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.ScreenController;
-import lib.morkim.mfw.ui.UiEntityObserver;
-import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
-import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleController extends ScreenController<ExamplePresenter, Model, MorkimApp<Model, ?>>
-        implements ListAdapter.UpdateListener<ExampleAdapter.ExampleItemHolder> {
+public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Model, ExampleViewableActions> {
 
     private int count;
 
     private List<ExampleEntity> entities;
 
-    public ExampleController(Viewable<Model, MorkimApp<Model, ?>, ?, ExamplePresenter> viewable) {
-        super(viewable);
+    public ExampleController(MorkimApp<Model, ?> morkimApp) {
+        super(morkimApp);
 
 //        try {
 //            ExampleEntity entity = getAppContext().getRepos().get(ExampleEntity.class).retrieve();
@@ -48,61 +43,24 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
     }
 
     @Override
-    protected void onRegisterUpdates() {
-
-        registerUpdateListener(R.id.tv_example_text_view, textViewUpdateListener);
-        registerUpdateListener(R.id.rv_example_list, listUpdateListener);
-
-        watchEntity(entities.get(0), new UiEntityObserver<ExampleEntity>(activity) {
-            @Override
-            public void onEntityUpdated(ExampleEntity observable, Object data) {
-                super.onEntityUpdated(observable, data);
-            }
-        });
-    }
-
-    @Override
     protected void onInitViews() {
         super.onInitViews();
 
-        notifyView(R.id.tv_example_text_view);
-        notifyView(R.id.rv_example_list);
+        getViewableActions().initializeTextView();
+
+        getViewableActions().initializeList();
+        getViewableActions().getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public int onUpdateListSize() {
-        return presenter.getListSize();
+    protected ExampleViewableActions createEmptyViewableActions() {
+        return new ExampleViewableActions(null);
     }
-
-    @Override
-    public void onUpdateListItem(ExampleAdapter.ExampleItemHolder holder, int position) {
-        holder.textView.setText(presenter.getItemNumber(position));
-    }
-
-    private ViewUpdateListener textViewUpdateListener = new ViewUpdateListener<TextView>() {
-        @Override
-        public void onUpdate(TextView view) {
-            view.setText(presenter.getTextViewText());
-        }
-    };
-
-    private ViewUpdateListener listUpdateListener = new ViewUpdateListener<RecyclerView>() {
-        @Override
-        public void onUpdate(RecyclerView view) {
-
-            ListAdapter adapter = presenter.getAdapter();
-
-            if (view.getAdapter() == null)
-                view.setAdapter(adapter);
-
-            adapter.notifyDataSetChanged();
-        }
-    };
 
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(android.view.View v) {
-            notifyView(R.id.tv_example_text_view);
+            getViewableActions().updateTextView();
         }
     };
 
@@ -117,7 +75,7 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
                 @Override
                 public void onTaskUpdate(ExampleResult result) {
                     count = result.count;
-                    notifyView(R.id.tv_example_text_view);
+                    getViewableActions().updateTextView();
                 }
 
                 @Override
@@ -125,7 +83,7 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
 
                     for (ExampleEntity entity : entities) {
                         entity.index += 100;
-                        presenter.getAdapter().notifyItemChanged(entities.indexOf(entity));
+                        getViewableActions().getAdapter().notifyItemChanged(entities.indexOf(entity));
                     }
                 }
 
@@ -141,7 +99,7 @@ public class ExampleController extends ScreenController<ExamplePresenter, Model,
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
             entities.get(position).index++;
-            presenter.getAdapter().notifyItemChanged(position);
+            getViewableActions().getAdapter().notifyItemChanged(position);
         }
     };
 
