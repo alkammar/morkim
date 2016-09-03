@@ -11,7 +11,7 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
 @SuppressLint("NewApi")
-public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateActions, C extends Controller, P extends Presenter>
+public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener, C extends Controller, P extends Presenter>
 		extends PreferenceFragment
 		implements Viewable<A, M, V, C, P> {
 

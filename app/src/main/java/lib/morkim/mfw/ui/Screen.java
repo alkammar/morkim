@@ -17,7 +17,7 @@ import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateActions, C extends Controller, P extends Presenter>
+public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener, C extends Controller, P extends Presenter>
 		extends AppCompatActivity
 		implements Viewable<A, M, V, C, P> {
 

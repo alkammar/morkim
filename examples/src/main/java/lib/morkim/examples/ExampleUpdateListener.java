@@ -1,8 +1,16 @@
 package lib.morkim.examples;
 
-import lib.morkim.mfw.ui.lists.ListAdapter;
+import lib.morkim.mfw.ui.UpdateListener;
 
-public interface ExampleUpdateListener extends ListAdapter.UpdateListener {
+public interface ExampleUpdateListener extends UpdateListener {
 
-	String getItemNumber(int position);
+	void initializeTextView();
+
+	void updateTextView();
+
+	void doSomeAction();
+
+	void initializeList();
+	void initializeListData();
+	void updateListItem(int position);
 }

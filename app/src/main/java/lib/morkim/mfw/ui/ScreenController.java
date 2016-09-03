@@ -6,7 +6,7 @@ import android.view.View;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class ScreenController<A extends MorkimApp<M, ?>, M extends Model, VA extends UpdateActions>
+public abstract class ScreenController<A extends MorkimApp<M, ?>, M extends Model, VA extends UpdateListener>
 		extends Controller<A, M, VA> {
 
 	protected Activity activity;

@@ -9,7 +9,7 @@ public class EmptyController extends ScreenController {
 	}
 
 	@Override
-	protected Class getViewableUpdateClass() {
+	protected Class getUpdateListenerClass() {
 		return null;
 	}
 }

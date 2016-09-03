@@ -25,18 +25,18 @@ import lib.morkim.mfw.domain.Model;
  * @param <M> The {@link Model} for this application
  * @param <A> The {@link MorkimApp} application that extends Android {@link android.app.Application}
  */
-public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateActions> {
+public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener> {
 
 	private A morkimApp;
 	protected Viewable<A, M, V, ?, ?> viewable;
 
-	private V viewableActions;
-	private V emptyViewableActions;
+	private V updateListener;
+	private V emptyUpdateListener;
 	private boolean isViewUpdatable;
 
 	public Controller(A morkimApp) {
 
-		emptyViewableActions = createEmptyViewableUpdate();
+		emptyUpdateListener = createEmptyViewableUpdate();
 		this.morkimApp = morkimApp;
 
 		onExtractExtraData();
@@ -170,7 +170,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		V instance = null;
 
 		try {
-			Class<V> cls = (Class<V>) Class.forName(getViewableUpdateClass().getName());
+			Class<V> cls = (Class<V>) Class.forName(getUpdateListenerClass().getName());
 
 			InvocationHandler handler = new InvocationHandler() {
 				@Override
@@ -188,17 +188,17 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		return instance;
 	}
 
-	protected abstract Class<V> getViewableUpdateClass();
+	protected abstract Class<V> getUpdateListenerClass();
 
-	protected V getUpdateActions() {
+	protected V getUpdateListener() {
 		synchronized (this) {
-			return (isViewUpdatable) ? viewableActions : emptyViewableActions;
+			return (isViewUpdatable) ? updateListener : emptyUpdateListener;
 		}
 	}
 
 	public void setViewable(Viewable<A, M, V, ?, ?> viewable) {
 		this.viewable = viewable;
 
-		viewableActions = viewable.getUpdateActions();
+		updateListener = viewable.getUpdateListener();
 	}
 }

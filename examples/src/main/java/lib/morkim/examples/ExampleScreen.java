@@ -10,8 +10,8 @@ import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.Screen;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 
-public class ExampleScreen extends Screen<ExampleApp, Model, ExampleUpdateActions, ExampleController, ExamplePresenter>
-        implements ExampleUpdateActions {
+public class ExampleScreen extends Screen<ExampleApp, Model, ExampleUpdateListener, ExampleController, ExamplePresenter>
+        implements ExampleUpdateListener {
 
     private TextView textView;
     private RecyclerView recyclerView;
@@ -79,7 +79,7 @@ public class ExampleScreen extends Screen<ExampleApp, Model, ExampleUpdateAction
     }
 
     @Override
-    public ExampleUpdateActions getUpdateActions() {
+    public ExampleUpdateListener getUpdateListener() {
         return this;
     }
 
