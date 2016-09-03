@@ -16,7 +16,8 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 		implements Viewable<A, M, V, C, P> {
 
 	protected C controller;
-	private P presenter;
+	protected P presenter;
+
 	private UUID id;
 
 	@Override
@@ -27,7 +28,16 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 
 		presenter = createPresenter();
 		controller = (C) getMorkimContext().acquireController(this);
+	}
 
+	@Override
+	public void attachController(C controller) {
+
+		presenter = createPresenter();
+		this.controller = controller;
+
+		this.controller.setViewable(this);
+		this.presenter.setController(controller);
 	}
 
 	@Override
