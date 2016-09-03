@@ -10,7 +10,8 @@ import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.Screen;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 
-public class ExampleScreen extends Screen<ExampleApp, Model, ExampleViewableActions, ExampleController, ExamplePresenter> {
+public class ExampleScreen extends Screen<ExampleApp, Model, ExampleUpdateActions, ExampleController, ExamplePresenter>
+        implements ExampleUpdateActions {
 
     private TextView textView;
     private RecyclerView recyclerView;
@@ -27,6 +28,8 @@ public class ExampleScreen extends Screen<ExampleApp, Model, ExampleViewableActi
 
         textView = (TextView) findViewById(R.id.tv_example_text_view);
         recyclerView = (RecyclerView) findViewById(R.id.rv_example_list);
+
+        adapter = new ExampleAdapter(presenter);
     }
 
     @Override
@@ -44,24 +47,40 @@ public class ExampleScreen extends Screen<ExampleApp, Model, ExampleViewableActi
     }
 
     @Override
-    public ExampleViewableActions createActions() {
+    public void initializeTextView() {
 
-        adapter = new ExampleAdapter(presenter);
+    }
 
-        return new ExampleViewableActions(adapter) {
+    @Override
+    public void doSomeAction() {
 
-            @Override
-            public void initializeList() {
+    }
 
-                if (recyclerView.getAdapter() == null)
-                    recyclerView.setAdapter(adapter);
-            }
+    @Override
+    public void initializeList() {
 
-            @Override
-            public void updateTextView() {
-                textView.setText(presenter.getTextViewText());
-            }
-        };
+        if (recyclerView.getAdapter() == null)
+            recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void initializeListData() {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateListItem(int position) {
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void updateTextView() {
+        textView.setText(presenter.getTextViewText());
+    }
+
+    @Override
+    public ExampleUpdateActions getUpdateActions() {
+        return this;
     }
 
     @Override

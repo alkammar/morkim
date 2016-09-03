@@ -14,7 +14,7 @@ import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Model, ExampleViewableActions> {
+public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Model, ExampleUpdateActions> {
 
     private int count;
 
@@ -46,21 +46,16 @@ public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Mod
     protected void onInitViews() {
         super.onInitViews();
 
-        getViewableActions().initializeTextView();
+        getUpdateActions().initializeTextView();
 
-        getViewableActions().initializeList();
-        getViewableActions().getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    protected ExampleViewableActions createEmptyViewableActions() {
-        return new ExampleViewableActions(null);
+        getUpdateActions().initializeList();
+        getUpdateActions().initializeListData();
     }
 
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(android.view.View v) {
-            getViewableActions().updateTextView();
+            getUpdateActions().updateTextView();
         }
     };
 
@@ -75,7 +70,7 @@ public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Mod
                 @Override
                 public void onTaskUpdate(ExampleResult result) {
                     count = result.count;
-                    getViewableActions().updateTextView();
+                    getUpdateActions().updateTextView();
                 }
 
                 @Override
@@ -83,7 +78,7 @@ public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Mod
 
                     for (ExampleEntity entity : entities) {
                         entity.index += 100;
-                        getViewableActions().getAdapter().notifyItemChanged(entities.indexOf(entity));
+                        getUpdateActions().updateListItem(entities.indexOf(entity));
                     }
                 }
 
@@ -99,7 +94,7 @@ public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Mod
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
             entities.get(position).index++;
-            getViewableActions().getAdapter().notifyItemChanged(position);
+            getUpdateActions().updateListItem(position);
         }
     };
 
@@ -109,5 +104,10 @@ public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Mod
 
     public List<ExampleEntity> getEntities() {
         return entities;
+    }
+
+    @Override
+    protected Class<ExampleUpdateActions> getViewableUpdateClass() {
+        return ExampleUpdateActions.class;
     }
 }

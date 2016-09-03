@@ -17,7 +17,7 @@ import lib.morkim.mfw.R;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter>
+public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateActions, C extends Controller, P extends Presenter>
 		extends AppCompatActivity
 		implements Viewable<A, M, V, C, P> {
 
@@ -25,7 +25,6 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 
 	private UUID id;
 
-	private V viewableActions;
 	protected C controller;
 	protected P presenter;
 
@@ -56,7 +55,6 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	public void attachController(C controller) {
 
 		presenter = createPresenter();
-		viewableActions = createActions();
 		this.controller = controller;
 
 		this.controller.setViewable(this);
@@ -136,11 +134,6 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	@Override
 	public Context getContext() {
 		return this;
-	}
-
-	@Override
-	public V getActions() {
-		return viewableActions;
 	}
 
 	@Override

@@ -9,7 +9,7 @@ public class EmptyController extends ScreenController {
 	}
 
 	@Override
-	protected ViewableActions createEmptyViewableActions() {
+	protected Class getViewableUpdateClass() {
 		return null;
 	}
 }

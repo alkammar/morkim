@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.View;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,24 +21,23 @@ import lib.morkim.mfw.domain.Model;
  * to update the Viewable.
  * This class stays alive even if the Viewable is destroyed due to rotation. Will be destroyed when
  * its Viewable is completely destroyed.
- * @param <VA> The {@link Presenter} associated with the Viewable
+ * @param <V> The {@link Presenter} associated with the Viewable
  * @param <M> The {@link Model} for this application
  * @param <A> The {@link MorkimApp} application that extends Android {@link android.app.Application}
  */
-public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, VA extends ViewableActions> {
+public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateActions> {
 
 	private A morkimApp;
-	protected Viewable<A, M, VA, ?, ?> viewable;
+	protected Viewable<A, M, V, ?, ?> viewable;
 
-	private VA viewableActions;
-	private VA emptyViewableActions;
+	private V viewableActions;
+	private V emptyViewableActions;
 	private boolean isViewUpdatable;
 
 	public Controller(A morkimApp) {
 
+		emptyViewableActions = createEmptyViewableUpdate();
 		this.morkimApp = morkimApp;
-
-		emptyViewableActions = createEmptyViewableActions();
 
 		onExtractExtraData();
 
@@ -163,32 +165,40 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, VA 
 
 	}
 
-	protected abstract VA createEmptyViewableActions();
+	private V createEmptyViewableUpdate() {
 
-	protected VA getViewableActions() {
+		V instance = null;
+
+		try {
+			Class<V> cls = (Class<V>) Class.forName(getViewableUpdateClass().getName());
+
+			InvocationHandler handler = new InvocationHandler() {
+				@Override
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+					System.out.println(method.getName());
+					return null;
+				}
+			};
+
+			instance = (V) Proxy.newProxyInstance(cls.getClassLoader(), new Class<?>[] { cls }, handler);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return instance;
+	}
+
+	protected abstract Class<V> getViewableUpdateClass();
+
+	protected V getUpdateActions() {
 		synchronized (this) {
 			return (isViewUpdatable) ? viewableActions : emptyViewableActions;
 		}
 	}
 
-	public void setViewable(Viewable<A, M, VA, ?, ?> viewable) {
+	public void setViewable(Viewable<A, M, V, ?, ?> viewable) {
 		this.viewable = viewable;
 
-		viewableActions = viewable.getActions();
-	}
-
-	protected class ViewUpdater {
-
-	    View view;
-	    ViewUpdateListener listener;
-
-	    public ViewUpdater(View view, ViewUpdateListener listener) {
-		    this.view = view;
-		    this.listener = listener;
-	    }
-	}
-
-	public interface ViewUpdateListener<V extends View> {
-		void onUpdate(V view);
+		viewableActions = viewable.getUpdateActions();
 	}
 }

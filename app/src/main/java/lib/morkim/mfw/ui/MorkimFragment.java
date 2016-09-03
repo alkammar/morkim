@@ -13,7 +13,7 @@ import java.util.UUID;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
-public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model, V extends ViewableActions, C extends Controller, P extends Presenter>
+public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateActions, C extends Controller, P extends Presenter>
         extends Fragment
         implements Viewable<A, M, V, C, P> {
 
