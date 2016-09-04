@@ -6,24 +6,28 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
 
-public abstract class MorkimTask<Req extends TaskRequest, Res extends TaskResult>
+public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
 		extends AsyncTask<Req, Res, Void> {
 
-	private MorkimApp appContext;
+	private A appContext;
+	protected M model;
+
 	private Req request;
 	private MorkimTaskListener<Res> listener;
 
-	public MorkimTask(MorkimApp appContext) {
+	public MorkimTask(A appContext) {
 		this(appContext, null);
 	}
 
-	public MorkimTask(MorkimApp morkimApp, MorkimTaskListener<Res> listener) {
+	public MorkimTask(A morkimApp, MorkimTaskListener<Res> listener) {
+
 		this.appContext = morkimApp;
+		this.model = appContext.getModel();
 		
 		if (listener == null)
 			this.listener = new MorkimTaskListener<Res>() {
 				@Override
-				public void onTaskStart(MorkimTask useCase) {}
+				public void onTaskStart(MorkimTask task) {}
 
 				@Override
 				public void onTaskUpdate(Res result) {}
@@ -97,7 +101,7 @@ public abstract class MorkimTask<Req extends TaskRequest, Res extends TaskResult
 	protected abstract Res onExecute();
 	protected void onSaveModel() {}
 
-	public void setAppContext(MorkimApp appContext) {
+	public void setAppContext(A appContext) {
 		this.appContext = appContext;
 	}
 	protected MorkimApp getAppContext() {

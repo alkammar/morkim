@@ -7,9 +7,6 @@ import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.task.TaskFactory;
 
-/**
- * Created by Kammar on 2/19/2016.
- */
 public class ExampleApp extends MorkimApp<Model, MorkimRepository> {
 
     @Override

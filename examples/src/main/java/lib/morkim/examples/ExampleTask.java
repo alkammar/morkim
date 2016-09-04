@@ -2,14 +2,14 @@ package lib.morkim.examples;
 
 import android.os.SystemClock;
 
-import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleTask extends MorkimTask<TaskRequest, ExampleResult> {
+public class ExampleTask extends MorkimTask<ExampleApp, Model, TaskRequest, ExampleResult> {
 
-	public ExampleTask(MorkimApp appContext, MorkimTaskListener<ExampleResult> morkimTaskListener) {
+	public ExampleTask(ExampleApp appContext, MorkimTaskListener<ExampleResult> morkimTaskListener) {
 		super(appContext, morkimTaskListener);
 	}
 

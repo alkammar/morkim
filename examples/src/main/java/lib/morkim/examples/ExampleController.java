@@ -6,7 +6,6 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.ScreenController;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
@@ -14,13 +13,13 @@ import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleController extends ScreenController<MorkimApp<Model, ?>, Model, ExampleUpdateListener> {
+public class ExampleController extends ScreenController<ExampleApp, Model, ExampleUpdateListener> {
 
     private int count;
 
     private List<ExampleEntity> entities;
 
-    public ExampleController(MorkimApp<Model, ?> morkimApp) {
+    public ExampleController(ExampleApp morkimApp) {
         super(morkimApp);
 
 //        try {
