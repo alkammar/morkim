@@ -27,7 +27,7 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	protected C controller;
 	protected P presenter;
 
-	private Map<String, Controller> permissionsRequestControllers;
+	private Map<String, onPermissionResultListener> permissionsRequestControllers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -149,21 +149,21 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-		Set<Controller> controllers = new HashSet<>();
+		Set<onPermissionResultListener> listeners = new HashSet<>();
 
 		for (String permission : permissions) {
-			Controller controller = permissionsRequestControllers.get(permission);
+			onPermissionResultListener controller = permissionsRequestControllers.get(permission);
 			if (controller != null)
-				controllers.add(controller);
+				listeners.add(controller);
 		}
 
-		for (Controller controller : controllers)
-			controller.onRequestPermissionResult(requestCode, permissions, grantResults);
+		for (onPermissionResultListener listener : listeners)
+			listener.onRequestPermissionResult(requestCode, permissions, grantResults);
 	}
 
 	@Override
-	public void registerPermissionController(String permission, Controller controller) {
-		permissionsRequestControllers.put(permission, controller);
+	public void registerPermissionListener(String permission, onPermissionResultListener listener) {
+		permissionsRequestControllers.put(permission, listener);
 	}
 
 	public void onPermissionRequestHandled(String permission) {

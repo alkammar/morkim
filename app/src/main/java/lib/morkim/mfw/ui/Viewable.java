@@ -29,6 +29,5 @@ public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends 
 
 	void onBindViews();
 
-	void registerPermissionController(String permission, C controller);
-
+	void registerPermissionListener(String permission, onPermissionResultListener listener);
 }
