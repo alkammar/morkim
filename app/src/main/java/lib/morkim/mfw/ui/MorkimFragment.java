@@ -40,7 +40,7 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
         presenter = createPresenter();
 
         this.controller = controller;
-        this.controller.setViewable(this);
+        this.controller.attachViewable(this);
         this.presenter.setController(this.controller);
     }
 

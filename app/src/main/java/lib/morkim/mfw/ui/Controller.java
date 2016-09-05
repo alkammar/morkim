@@ -34,18 +34,29 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 	private V emptyUpdateListener;
 	private boolean isViewUpdatable;
 
+	private boolean initializationTaskExecuted;
+
 	public Controller(A morkimApp) {
 
 		emptyUpdateListener = createEmptyViewableUpdate();
 		this.morkimApp = morkimApp;
 
 		onExtractExtraData();
-
-        executeInitializationTask();
 	}
 
 	protected void onExtractExtraData() {
 
+	}
+
+	public void attachViewable(Viewable<A, M, V, ?, ?> viewable) {
+		this.viewable = viewable;
+
+		updateListener = viewable.getUpdateListener();
+
+		if (!initializationTaskExecuted) {
+			executeInitializationTask();
+			initializationTaskExecuted = true;
+		}
 	}
 
 	protected abstract A createContext();
@@ -194,11 +205,5 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		synchronized (this) {
 			return (isViewUpdatable) ? updateListener : emptyUpdateListener;
 		}
-	}
-
-	public void setViewable(Viewable<A, M, V, ?, ?> viewable) {
-		this.viewable = viewable;
-
-		updateListener = viewable.getUpdateListener();
 	}
 }

@@ -36,7 +36,7 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 		presenter = createPresenter();
 		this.controller = controller;
 
-		this.controller.setViewable(this);
+		this.controller.attachViewable(this);
 		this.presenter.setController(controller);
 	}
 

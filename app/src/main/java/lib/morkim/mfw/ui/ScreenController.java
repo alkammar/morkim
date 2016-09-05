@@ -16,8 +16,8 @@ public abstract class ScreenController<A extends MorkimApp<M, ?>, M extends Mode
 	}
 
 	@Override
-	public void setViewable(Viewable<A, M, VA, ?, ?> viewable) {
-		super.setViewable(viewable);
+	public void attachViewable(Viewable<A, M, VA, ?, ?> viewable) {
+		super.attachViewable(viewable);
 
 		this.activity = (Activity) viewable;
 	}

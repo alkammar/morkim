@@ -56,7 +56,7 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 		presenter = createPresenter();
 		this.controller = controller;
 
-		this.controller.setViewable(this);
+		this.controller.attachViewable(this);
 		this.presenter.setController(controller);
 	}
 
