@@ -162,7 +162,7 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	}
 
 	@Override
-	public void registerPermissionController(String permission, C controller) {
+	public void registerPermissionController(String permission, Controller controller) {
 		permissionsRequestControllers.put(permission, controller);
 	}
 
