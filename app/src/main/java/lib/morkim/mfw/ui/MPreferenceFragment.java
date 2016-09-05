@@ -83,11 +83,6 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 	}
 
 	@Override
-	public void showShortMessage(String message) {
-		((Viewable) getActivity()).showShortMessage(message);
-	}
-
-	@Override
 	public UUID getInstanceId() {
 		return id;
 	}

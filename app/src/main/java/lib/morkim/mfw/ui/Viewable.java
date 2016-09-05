@@ -23,12 +23,12 @@ public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends 
 
 	void keepScreenOn(boolean keepOn);
 
-	void showShortMessage(String message);
-
 	UUID getInstanceId();
 
 	void attachController(C controller);
 
 	void onBindViews();
+
+	void registerPermissionController(String permission, C controller);
 
 }

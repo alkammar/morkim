@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -142,11 +141,6 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	}
 
 	@Override
-	public void showShortMessage(String message) {
-		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
 	public UUID getInstanceId() {
 		return id;
 	}
@@ -167,7 +161,8 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 			controller.onRequestPermissionResult(requestCode, permissions, grantResults);
 	}
 
-	public void addPermissionRequestHandler(String permission, Controller controller) {
+	@Override
+	public void registerPermissionController(String permission, C controller) {
 		permissionsRequestControllers.put(permission, controller);
 	}
 

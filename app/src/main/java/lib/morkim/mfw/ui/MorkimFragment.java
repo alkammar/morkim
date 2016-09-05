@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -85,11 +84,6 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
     @Override
     public C getController() {
         return controller;
-    }
-
-    @Override
-    public void showShortMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
