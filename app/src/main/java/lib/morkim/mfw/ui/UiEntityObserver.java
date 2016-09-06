@@ -1,7 +1,5 @@
 package lib.morkim.mfw.ui;
 
-import android.app.Activity;
-
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,15 +7,16 @@ import lib.morkim.mfw.domain.Entity;
 
 public class UiEntityObserver<E extends Entity> implements Observer {
 
-	private Activity activity;
+	private Controller controller;
 
-	public UiEntityObserver(Activity activity) {
-		this.activity = activity;
+	public UiEntityObserver(Controller controller) {
+		this.controller = controller;
 	}
 
 	@Override
 	public void update(final Observable observable, final Object data) {
-		activity.runOnUiThread(new Runnable() {
+
+		controller.getActivity().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				//noinspection unchecked

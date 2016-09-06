@@ -206,4 +206,6 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 			return (isViewUpdatable) ? updateListener : emptyUpdateListener;
 		}
 	}
+
+	public abstract Activity getActivity();
 }

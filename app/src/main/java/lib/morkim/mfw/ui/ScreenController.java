@@ -37,4 +37,9 @@ public abstract class ScreenController<A extends MorkimApp<M, ?>, M extends Mode
 		//noinspection unchecked
 		return (A) activity.getApplication();
 	}
+
+	@Override
+	public Activity getActivity() {
+		return (Activity) viewable;
+	}
 }
