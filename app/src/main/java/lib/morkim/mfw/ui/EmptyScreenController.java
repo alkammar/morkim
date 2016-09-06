@@ -5,8 +5,8 @@ import lib.morkim.mfw.domain.Model;
 
 public class EmptyScreenController extends ScreenController<MorkimApp<Model, ?>, Model, UpdateListener> {
 
-	public EmptyScreenController(MorkimApp<Model, ?> morkimApp) {
-		super(morkimApp);
+	public EmptyScreenController() {
+		super(null);
 	}
 
 	@Override
