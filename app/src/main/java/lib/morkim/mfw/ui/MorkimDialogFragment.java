@@ -80,6 +80,20 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+
+		controller.bindViews();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		controller.unbindViews();
+	}
+
+	@Override
 	public void keepScreenOn(boolean b) {
 
 	}
