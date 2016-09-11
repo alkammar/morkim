@@ -34,7 +34,6 @@ public abstract class MorkimRepository implements Repository {
 		}
 	}
 
-
 	/**
 	 * Override this method to associate a specific {@link Entity} to a specific {@link Gateway}.
 	 * Gateway translate application data models from/to their persisted form.
@@ -51,14 +50,16 @@ public abstract class MorkimRepository implements Repository {
 
 		Class<? extends AbstractGateway<E>> gatewayClass = (Class<? extends AbstractGateway<E>>) map.get(entityClass);
 
-		try {
-			AbstractGateway<E> gateway = gatewayClass.<E>newInstance();
-			gateway.setMorkimApp(context);
-			return gateway;
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		if (gatewayClass != null) {
+			try {
+				AbstractGateway<E> gateway = gatewayClass.<E>newInstance();
+				gateway.setMorkimApp(context);
+				return gateway;
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return new EmptyGateway<>();
