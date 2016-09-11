@@ -35,6 +35,11 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
     }
 
     @Override
+    public Bundle getBundledData() {
+        return getArguments();
+    }
+
+    @Override
     public void attachController(C controller) {
 
         presenter = createPresenter();

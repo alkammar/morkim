@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.morkim.mfw.domain.Model;
+import lib.morkim.mfw.repo.gateway.GatewayPersistException;
+import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.ui.ScreenController;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 import lib.morkim.mfw.usecase.MorkimTask;
@@ -22,15 +24,14 @@ public class ExampleController extends ScreenController<ExampleApp, Model, Examp
     public ExampleController(ExampleApp morkimApp) {
         super(morkimApp);
 
-//        try {
-//            ExampleEntity entity = getAppContext().getRepos().get(ExampleEntity.class).retrieve();
-//            List<ExampleEntity> entities = getAppContext().getRepos().get(ExampleEntity.class).retrieveAll();
-//            entity.save(getAppContext().getRepos().get(ExampleEntity.class));
-//        } catch (GatewayRetrieveException e) {
-//            e.printStackTrace();
-//        } catch (GatewayPersistException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            ExampleEntity entity = new ExampleEntity();
+            entity.save(getAppContext().getRepos().get(ExampleEntity.class));
+            entity = getAppContext().getRepos().get(ExampleEntity.class).retrieve();
+            List<ExampleEntity> entities = getAppContext().getRepos().get(ExampleEntity.class).retrieveAll();
+        } catch (GatewayRetrieveException | GatewayPersistException e) {
+            e.printStackTrace();
+        }
 
         entities = new ArrayList<>();
 

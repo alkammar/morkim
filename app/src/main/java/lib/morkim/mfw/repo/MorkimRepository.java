@@ -1,5 +1,8 @@
 package lib.morkim.mfw.repo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
@@ -9,11 +12,15 @@ import lib.morkim.mfw.repo.gateway.Gateway;
 public abstract class MorkimRepository implements Repository {
 
 	protected MorkimApp context;
+	protected Map<Class<?>, Class<? extends AbstractGateway<? extends Entity>>> map;
 
 	protected abstract int version();
 
 	public MorkimRepository(MorkimApp application) {
 		this.context = application;
+
+		map = new HashMap<>();
+		mapGateways(map);
 
 		RepoVersion repoVersion = createVersionGateway();
 		int savedVersion = repoVersion.get();
@@ -27,21 +34,19 @@ public abstract class MorkimRepository implements Repository {
 		}
 	}
 
+	protected abstract void mapGateways(Map<Class<?>, Class<? extends AbstractGateway<? extends Entity>>> map);
+
 	protected RepoVersion createVersionGateway() {
 		return new RepoVersion(context);
 	}
 
 	@Override
-	public <T extends Entity> Gateway<T> get(Class<T> cls) {
-		return createGateway(cls);
-	}
+	public <E extends Entity> Gateway<E> get(Class<E> entityClass) {
 
-	protected <T extends Entity> Gateway<T> createGateway(Class<T> entityClass) {
-
-		Class gatewayClass = getGatewayClass(entityClass);
+		Class<? extends AbstractGateway<E>> gatewayClass = (Class<? extends AbstractGateway<E>>) map.get(entityClass);
 
 		try {
-			AbstractGateway<T> gateway = (AbstractGateway<T>) gatewayClass.newInstance();
+			AbstractGateway<E> gateway = gatewayClass.<E>newInstance();
 			gateway.setMorkimApp(context);
 			return gateway;
 		} catch (InstantiationException e) {

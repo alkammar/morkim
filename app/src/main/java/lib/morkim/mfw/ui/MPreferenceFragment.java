@@ -31,6 +31,11 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 	}
 
 	@Override
+	public Bundle getBundledData() {
+		return getArguments();
+	}
+
+	@Override
 	public void attachController(C controller) {
 
 		presenter = createPresenter();

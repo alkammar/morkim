@@ -3,6 +3,7 @@ package lib.morkim.mfw.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.view.View;
 
 import java.lang.reflect.InvocationHandler;
@@ -40,18 +41,18 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 		emptyUpdateListener = createEmptyViewableUpdate();
 		this.morkimApp = morkimApp;
-
-		onExtractExtraData();
 	}
 
-	protected void onExtractExtraData() {
-
-	}
+	protected void onExtractExtraData(Bundle bundledData) {}
 
 	public void attachViewable(Viewable<A, M, V, ?, ?> viewable) {
 		this.viewable = viewable;
 
 		updateListener = viewable.getUpdateListener();
+
+		Bundle bundledData = viewable.getBundledData();
+		if (bundledData != null)
+			onExtractExtraData(bundledData);
 
 		if (!initializationTaskExecuted) {
 			executeInitializationTask();

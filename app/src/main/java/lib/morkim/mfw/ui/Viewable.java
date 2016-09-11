@@ -1,6 +1,7 @@
 package lib.morkim.mfw.ui;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import java.util.UUID;
 
@@ -30,4 +31,6 @@ public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends 
 	void onBindViews();
 
 	void registerPermissionListener(String permission, onPermissionResultListener listener);
+
+	Bundle getBundledData();
 }

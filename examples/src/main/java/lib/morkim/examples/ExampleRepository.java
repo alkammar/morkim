@@ -1,6 +1,9 @@
 package lib.morkim.examples;
 
+import java.util.Map;
+
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 
@@ -24,11 +27,19 @@ public class ExampleRepository extends MorkimRepository {
 	}
 
 	@Override
-	protected Class<? extends AbstractGateway> getGatewayClass(Class<?> cls) {
+	protected void mapGateways(Map<Class<?>, Class<? extends AbstractGateway<? extends Entity>>> map) {
 
-		if (ExampleEntity.class.equals(cls))
-			return ExampleGateway.class;
-
-		return super.getGatewayClass(cls);
+		map.put(ExampleEntity.class, ExampleGateway.class);
 	}
+
+//	@Override
+//	protected Class<? extends AbstractGateway> getGatewayClass(Class<?> cls) {
+//
+//		return map.get(cls);
+//
+//		if (ExampleEntity.class.equals(cls))
+//			return ExampleGateway.class;
+//
+//		return super.getGatewayClass(cls);
+//	}
 }

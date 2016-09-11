@@ -51,6 +51,11 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	}
 
 	@Override
+	public Bundle getBundledData() {
+		return getIntent().getExtras();
+	}
+
+	@Override
 	public void attachController(C controller) {
 
 		presenter = createPresenter();
