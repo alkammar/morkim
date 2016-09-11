@@ -34,6 +34,12 @@ public abstract class MorkimRepository implements Repository {
 		}
 	}
 
+
+	/**
+	 * Override this method to associate a specific {@link Entity} to a specific {@link Gateway}.
+	 * Gateway translate application data models from/to their persisted form.
+	 * @param map The map to add entity/gateway pairs
+	 */
 	protected abstract void mapGateways(Map<Class<?>, Class<? extends AbstractGateway<? extends Entity>>> map);
 
 	protected RepoVersion createVersionGateway() {
@@ -56,16 +62,6 @@ public abstract class MorkimRepository implements Repository {
 		}
 
 		return new EmptyGateway<>();
-	}
-
-	/**
-	 * Override this method to associate a specific {@link Entity} to a specific {@link Gateway}.
-	 * Gateway translate application data models from/to their persisted form.
-	 * @param cls The Entity that maps a Gateway for it
-	 * @return The Gateway class
-	 */
-	protected Class<? extends AbstractGateway> getGatewayClass(Class<?> cls) {
-		return EmptyGateway.class;
 	}
 
 	/**
