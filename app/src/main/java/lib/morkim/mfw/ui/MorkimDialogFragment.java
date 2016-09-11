@@ -2,6 +2,7 @@ package lib.morkim.mfw.ui;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 
 import java.util.UUID;
@@ -64,6 +65,11 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 	}
 
 	@Override
+	public Context getContext() {
+		return getActivity();
+	}
+
+	@Override
 	public C getController() {
 		return controller;
 	}
@@ -80,7 +86,7 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 
 	@Override
 	public UUID getInstanceId() {
-		return null;
+		return id;
 	}
 
 	@Override

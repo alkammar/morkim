@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
@@ -36,6 +37,8 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 	private boolean isViewUpdatable;
 
 	private boolean initializationTaskExecuted;
+
+	protected Set<String> alerts;
 
 	public Controller(A morkimApp) {
 
@@ -209,4 +212,14 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 	}
 
 	public abstract Activity getActivity();
+
+	public boolean consumeAlert(String alert) {
+
+		if (alerts.contains(alert)) {
+			alerts.remove(alert);
+			return true;
+		}
+
+		return false;
+	}
 }
