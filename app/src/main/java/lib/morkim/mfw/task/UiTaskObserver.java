@@ -1,15 +1,15 @@
-package lib.morkim.mfw.ui;
+package lib.morkim.mfw.task;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import lib.morkim.mfw.domain.Entity;
+import lib.morkim.mfw.ui.Controller;
 
-public class UiEntityObserver<E extends Entity> implements Observer {
+public class UiTaskObserver<E extends ScheduledTask> implements Observer {
 
 	private Controller controller;
 
-	public UiEntityObserver(Controller controller) {
+	public UiTaskObserver(Controller controller) {
 		this.controller = controller;
 	}
 
