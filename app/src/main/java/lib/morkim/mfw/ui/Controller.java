@@ -124,11 +124,11 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		observable.deleteObserver(modelObserver);
 	}
 
-	protected <T extends ScheduledTask> void registerToTask(Class<T> task, UiTaskObserver observer) {
+	protected <T extends ScheduledTask> void registerToTask(Class<T> task, UiTaskObserver<T> observer) {
 		morkimApp.getTaskScheduler().register(task, observer);
 	}
 
-	protected <T extends ScheduledTask> void unregisterFromTask(Class<T> task, UiTaskObserver observer) {
+	protected <T extends ScheduledTask> void unregisterFromTask(Class<T> task, UiTaskObserver<T> observer) {
 		morkimApp.getTaskScheduler().unregister(task, observer);
 	}
 
