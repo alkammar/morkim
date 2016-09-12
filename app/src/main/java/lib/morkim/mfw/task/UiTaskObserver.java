@@ -20,12 +20,12 @@ public class UiTaskObserver<E extends ScheduledTask> implements Observer {
 			@Override
 			public void run() {
 				//noinspection unchecked
-				onTaskUpdate((E) observable);
+				onTaskUpdate((E) observable, data);
 			}
 		});
 	}
 
-	public void onTaskUpdate(E observable) {
+	public void onTaskUpdate(E observable, Object data) {
 
 	}
 }

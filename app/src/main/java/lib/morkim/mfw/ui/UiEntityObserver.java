@@ -20,12 +20,12 @@ public class UiEntityObserver<E extends Entity> implements Observer {
 			@Override
 			public void run() {
 				//noinspection unchecked
-				onEntityUpdated((E) observable);
+				onEntityUpdated((E) observable, data);
 			}
 		});
 	}
 
-	public void onEntityUpdated(E observable) {
+	public void onEntityUpdated(E observable, Object data) {
 
 	}
 }
