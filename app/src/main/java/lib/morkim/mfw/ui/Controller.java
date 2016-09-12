@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Observable;
-import java.util.Observer;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
@@ -96,32 +95,14 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
         return viewable.getContext();
     }
 
-	private Observer modelObserver = new Observer() {
-		@Override
-		public void update(final Observable observable, final Object data) {
-
-			if (observable instanceof Entity)
-				((Activity) viewable).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onModelUpdated((Entity) observable, data);
-					}
-				});
-		}
-	};
-
 	protected <E extends Entity> void onModelUpdated(E observable, Object data) {}
-
-	protected void watchEntity(Observable observable) {
-		observable.addObserver(modelObserver);
-	}
 
 	protected <E extends Entity> void watchEntity(Observable observable, UiEntityObserver<E> observer) {
 		observable.addObserver(observer);
 	}
 
-	protected void unwatchModel(Observable observable) {
-		observable.deleteObserver(modelObserver);
+	protected <E extends Entity> void unwatchEntity(Observable observable, UiEntityObserver<E> observer) {
+		observable.deleteObserver(observer);
 	}
 
 	protected <T extends ScheduledTask> void registerToTask(Class<T> task, UiTaskObserver<T> observer) {
