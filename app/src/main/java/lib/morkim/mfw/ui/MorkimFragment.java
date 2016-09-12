@@ -3,9 +3,6 @@ package lib.morkim.mfw.ui;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.UUID;
 
@@ -16,10 +13,10 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
         extends Fragment
         implements Viewable<A, M, V, C, P> {
 
-    private C controller;
-    private P presenter;
-
     private UUID id;
+
+    protected C controller;
+    protected P presenter;
 
     protected int layoutId() {
         return 0;
@@ -43,36 +40,10 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
     public void attachController(C controller) {
 
         presenter = createPresenter();
-
         this.controller = controller;
+
         this.controller.attachViewable(this);
-        this.presenter.setController(this.controller);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putString(VIEWABLE_ID, id.toString());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(layoutId(), container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        controller.bindViews();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        controller.unbindViews();
+        this.presenter.setController(controller);
     }
 
     @Override
@@ -92,12 +63,43 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
     }
 
     @Override
-    public void keepScreenOn(boolean keepOn) {
-        ((Screen) getActivity()).keepScreenOn(keepOn);
+    public V getUpdateListener() {
+        return (V) this;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        controller.bindViews();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        controller.unbindViews();
+    }
+
+    @Override
+    public void keepScreenOn(boolean b) {
+
     }
 
     @Override
     public UUID getInstanceId() {
         return id;
+    }
+
+    @Override
+    public void registerPermissionListener(String s, onPermissionResultListener onPermissionResultListener) {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(VIEWABLE_ID, id.toString());
     }
 }
