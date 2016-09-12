@@ -36,6 +36,6 @@ public class ExampleApp extends MorkimApp<Model, MorkimRepository> {
 
     @Override
     protected TaskFactory createScheduledTaskFactory() {
-        return null;
+        return new ExampleTaskFactory(this);
     }
 }

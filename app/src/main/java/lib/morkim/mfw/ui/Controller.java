@@ -15,6 +15,7 @@ import java.util.Observer;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
+import lib.morkim.mfw.task.ScheduledTask;
 
 /**
  * {@link Viewable} controller. Handles Viewable communication with application data model.
@@ -123,6 +124,10 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 	}
 
 	protected void registerToTask(String task) {
+		morkimApp.getTaskScheduler().register(task, modelObserver);
+	}
+
+	protected <T extends ScheduledTask> void registerToTask(Class<T> task) {
 		morkimApp.getTaskScheduler().register(task, modelObserver);
 	}
 
