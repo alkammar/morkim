@@ -3,6 +3,9 @@ package lib.morkim.mfw.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.UUID;
 
@@ -29,6 +32,11 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
         getMorkimContext().acquireController(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(layoutId(), container, false);
     }
 
     @Override
