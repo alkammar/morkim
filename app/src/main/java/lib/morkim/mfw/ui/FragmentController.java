@@ -2,7 +2,6 @@ package lib.morkim.mfw.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.view.View;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
@@ -21,11 +20,6 @@ public abstract class FragmentController<A extends MorkimApp<M, ?>, M extends Mo
 		super.attachViewable(viewable);
 
 		this.fragment = (Fragment) viewable;
-	}
-
-	@Override
-	public View getViewById(int id) {
-		return fragment.getView().findViewById(id);
 	}
 
 	@Override

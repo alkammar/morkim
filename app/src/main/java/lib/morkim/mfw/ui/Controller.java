@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -153,8 +152,6 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 	}
 
 	protected void onUnBindViews() {}
-
-	protected abstract View getViewById(int id);
 
 	protected void onInitViews() {
 
