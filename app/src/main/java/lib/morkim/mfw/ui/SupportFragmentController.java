@@ -41,6 +41,6 @@ public abstract class SupportFragmentController<A extends MorkimApp<M, ?>, M ext
 
 	@Override
 	public Activity getActivity() {
-		return (Activity) viewable;
+		return fragment.getActivity();
 	}
 }
