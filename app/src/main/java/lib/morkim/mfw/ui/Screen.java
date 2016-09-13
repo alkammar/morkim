@@ -35,7 +35,7 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		setCustomTilteBar();
+		setCustomTitleBar();
 
 		int layoutId = layoutId();
 		if (layoutId > 0)
@@ -118,7 +118,7 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 			((MorkimApp) getApplication()).destroyController(this);
 	}
 
-	protected void setCustomTilteBar() {
+	protected void setCustomTitleBar() {
 
 	}
 

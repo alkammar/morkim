@@ -99,7 +99,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * @param viewable Viewable to fetch Controller for
 	 */
     public void destroyController(Viewable viewable) {
-		controllers.get(viewable.getInstanceId()).destroy();
+		controllers.get(viewable.getInstanceId()).onDestroy();
 	    controllers.remove(viewable.getInstanceId());
     }
 

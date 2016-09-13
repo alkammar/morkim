@@ -77,14 +77,6 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 	protected void keepScreenOn(boolean keepOn) {
 		viewable.keepScreenOn(keepOn);
 	}
-	
-	public void onDialogPositive(String tag) {
-		
-	}
-	
-	public void onDialogNegative(String tag) {
-		
-	}
 
     Viewable getViewable() {
         return viewable;
@@ -93,8 +85,6 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
     protected Context getContext() {
         return viewable.getContext();
     }
-
-	protected <E extends Entity> void onModelUpdated(E observable, Object data) {}
 
 	protected <E extends Entity> void watchEntity(Observable observable, UiEntityObserver<E> observer) {
 		observable.addObserver(observer);
@@ -112,7 +102,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		morkimApp.getTaskScheduler().unregister(task, observer);
 	}
 
-	public void destroy() {
+	public void onDestroy() {
 
 	}
 

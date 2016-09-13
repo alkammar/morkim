@@ -21,6 +21,8 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
     protected C controller;
     protected P presenter;
 
+    private boolean willBeRecreated;
+
     protected int layoutId() {
         return 0;
     }
@@ -90,6 +92,16 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (!willBeRecreated) {
+            controller.onDestroy();
+            willBeRecreated = false;
+        }
+    }
+
+    @Override
     public void keepScreenOn(boolean b) {
 
     }
@@ -109,5 +121,7 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
         super.onSaveInstanceState(outState);
 
         outState.putString(VIEWABLE_ID, id.toString());
+
+        willBeRecreated = true;
     }
 }
