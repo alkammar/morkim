@@ -23,15 +23,16 @@ public class UiEntityObserver<E extends Entity> implements Observer {
 			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					update(observable, data);
+					updateObserver(observable, data);
 				}
 			});
 		else
-			update(observable, data);
+			updateObserver(observable, data);
 	}
 
-	private void update(E observable, Object data) {
-		onEntityUpdated(observable, data);
+	private void updateObserver(Observable observable, Object data) {
+		//noinspection unchecked
+		onEntityUpdated((E) observable, data);
 	}
 
 	public void onEntityUpdated(E observable, Object data) {
