@@ -1,5 +1,6 @@
 package lib.morkim.mfw.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,31 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
 
     protected int layoutId() {
         return 0;
+    }
+
+    protected <T> T getParentAsListener() {
+
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment != null)
+            try {
+                return (T) parentFragment;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(parentFragment.toString()
+                        + " must implement interface");
+            }
+        else {
+            Activity activity = getActivity();
+            if (activity != null) {
+                try {
+                    return (T) activity;
+                } catch (ClassCastException e) {
+                    throw new ClassCastException(activity.toString()
+                            + " must implement interface");
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

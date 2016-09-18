@@ -86,12 +86,12 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
         return viewable.getContext();
     }
 
-	protected <E extends Entity> void watchEntity(Observable observable, UiEntityObserver<E> observer) {
-		observable.addObserver(observer);
+	protected <E extends Entity> void watchEntity(Observable observable, UiEntityObserver<E> entityObserver) {
+		observable.addObserver(entityObserver.getObserver());
 	}
 
-	protected <E extends Entity> void unwatchEntity(Observable observable, UiEntityObserver<E> observer) {
-		observable.deleteObserver(observer);
+	protected <E extends Entity> void unwatchEntity(Observable observable, UiEntityObserver<E> entityObserver) {
+		observable.deleteObserver(entityObserver.getObserver());
 	}
 
 	protected <T extends ScheduledTask> void registerToTask(Class<T> task, UiTaskObserver<T> observer) {

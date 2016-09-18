@@ -7,7 +7,7 @@ import java.util.Observer;
 
 import lib.morkim.mfw.domain.Entity;
 
-public class UiEntityObserver<E extends Entity> implements Observer {
+public class UiEntityObserver<E extends Entity> {
 
 	private Controller controller;
 
@@ -15,27 +15,33 @@ public class UiEntityObserver<E extends Entity> implements Observer {
 		this.controller = controller;
 	}
 
-	@Override
-	public void update(final Observable observable, final Object data) {
+	public void onEntityUpdated(E observable, Object data) {
 
-		Activity activity = controller.getActivity();
-		if (activity != null)
-			activity.runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					updateObserver(observable, data);
-				}
-			});
-		else
-			updateObserver(observable, data);
 	}
+
+	private Observer observer = new Observer() {
+		@Override
+		public void update(final Observable observable, final Object data) {
+
+			Activity activity = controller.getActivity();
+			if (activity != null)
+				activity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updateObserver(observable, data);
+					}
+				});
+			else
+				updateObserver(observable, data);
+		}
+	};
 
 	private void updateObserver(Observable observable, Object data) {
 		//noinspection unchecked
 		onEntityUpdated((E) observable, data);
 	}
 
-	public void onEntityUpdated(E observable, Object data) {
-
+	Observer getObserver() {
+		return observer;
 	}
 }
