@@ -8,9 +8,4 @@ public class EmptyScreenController extends ScreenController<MorkimApp<Model, ?>,
 	public EmptyScreenController() {
 		super(null);
 	}
-
-	@Override
-	protected Class<UpdateListener> getUpdateListenerClass() {
-		return UpdateListener.class;
-	}
 }

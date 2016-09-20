@@ -105,9 +105,4 @@ public class ExampleController extends ScreenController<ExampleApp, Model, Examp
     public List<ExampleEntity> getEntities() {
         return entities;
     }
-
-    @Override
-    protected Class<ExampleUpdateListener> getUpdateListenerClass() {
-        return ExampleUpdateListener.class;
-    }
 }

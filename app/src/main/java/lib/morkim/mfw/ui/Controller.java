@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.util.Observable;
 
@@ -151,26 +152,21 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 		V instance = null;
 
-		try {
-			Class<V> cls = (Class<V>) Class.forName(getUpdateListenerClass().getName());
+		Class<V> cls = (Class<V>) ((ParameterizedType) getClass()
+				.getGenericSuperclass()).getActualTypeArguments()[2];//(Class<V>) Class.forName(getUpdateListenerClass().getName());
 
-			InvocationHandler handler = new InvocationHandler() {
-				@Override
-				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-					System.out.println(method.getName());
-					return null;
-				}
-			};
+		InvocationHandler handler = new InvocationHandler() {
+			@Override
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				System.out.println(method.getName());
+				return null;
+			}
+		};
 
-			instance = (V) Proxy.newProxyInstance(cls.getClassLoader(), new Class<?>[] { cls }, handler);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		instance = (V) Proxy.newProxyInstance(cls.getClassLoader(), new Class<?>[] { cls }, handler);
 
 		return instance;
 	}
-
-	protected abstract Class<V> getUpdateListenerClass();
 
 	protected V getUpdateListener() {
 		synchronized (this) {
