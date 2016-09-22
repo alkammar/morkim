@@ -1,6 +1,7 @@
 package lib.morkim.mfw.app;
 
 import android.app.Application;
+import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -147,6 +148,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			Log.e("MorkimApp", e.getCause().getMessage());
 			e.printStackTrace();
 		}
 
