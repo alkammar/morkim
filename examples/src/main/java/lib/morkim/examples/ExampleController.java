@@ -21,7 +21,7 @@ class ExampleController extends ScreenController<ExampleApp, Model, ExampleUpdat
 
     private List<ExampleEntity> entities;
 
-    public ExampleController(ExampleApp morkimApp) {
+    ExampleController(ExampleApp morkimApp) {
         super(morkimApp);
 
         try {
@@ -98,11 +98,11 @@ class ExampleController extends ScreenController<ExampleApp, Model, ExampleUpdat
         }
     };
 
-    public int getCount() {
+    int getCount() {
         return count;
     }
 
-    public List<ExampleEntity> getEntities() {
+    List<ExampleEntity> getEntities() {
         return entities;
     }
 }
