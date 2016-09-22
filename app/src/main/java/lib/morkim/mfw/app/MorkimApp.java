@@ -5,6 +5,7 @@ import android.app.Application;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
+import lib.morkim.mfw.ui.EmptyController;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 
@@ -93,8 +95,18 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	private <A extends MorkimApp<m, ?>, m extends Model, C extends Controller> C constructController(Viewable<A, ?, ?, C, ?> viewable) {
 
-		Class<C> controllerClass = (Class<C>) ((ParameterizedType) viewable.getClass().getGenericSuperclass()).getActualTypeArguments()[3];
-		Class<A> appClass = (Class<A>) ((ParameterizedType) viewable.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
+
+		Class<C> controllerClass = null;
+		Class<A> appClass;
+
+		if (genericSuperclass instanceof ParameterizedType) {
+			controllerClass = (Class<C>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[3];
+			appClass = (Class<A>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
+		} else {
+			controllerClass = (Class<C>) EmptyController.class;
+			appClass = (Class<A>) this.getClass();
+		}
 
 		try {
 			Constructor<C> constructor = controllerClass.getDeclaredConstructor(appClass);
