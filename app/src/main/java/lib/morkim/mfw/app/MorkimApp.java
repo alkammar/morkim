@@ -121,6 +121,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			Log.e("MorkimApp", "constructController " + e.getCause().getMessage());
 			e.printStackTrace();
 		}
 
@@ -148,7 +149,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			Log.e("MorkimApp", e.getCause().getMessage());
 			e.printStackTrace();
 		}
 
