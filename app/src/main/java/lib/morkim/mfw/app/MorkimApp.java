@@ -98,21 +98,21 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 
-		Class<C> controllerClass;
-		Class<A> appClass;
+		Class<C> controllerClass = null;
+		Class<A> appClass = null;
 
 		if (genericSuperclass instanceof ParameterizedType) {
 			controllerClass = (Class<C>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[3];
 			appClass = (Class<A>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
-		} else {
-			controllerClass = (Class<C>) EmptyController.class;
-			appClass = (Class<A>) MorkimApp.class;
 		}
 
 		try {
-			Constructor<C> constructor = controllerClass.getDeclaredConstructor(appClass);
-			constructor.setAccessible(true);
-			return constructor.newInstance(this);
+			if (controllerClass != null) {
+				Constructor<C> constructor = controllerClass.getDeclaredConstructor(appClass);
+				constructor.setAccessible(true);
+				return constructor.newInstance(this);
+			} else
+				return (C) new EmptyController((MorkimApp<Model, ?>) this);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
