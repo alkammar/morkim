@@ -106,7 +106,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 			appClass = (Class<A>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
 		} else {
 			controllerClass = (Class<C>) EmptyController.class;
-			appClass = (Class<A>) this.getClass();
+			appClass = (Class<A>) MorkimApp.class;
 		}
 
 		try {
