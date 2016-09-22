@@ -20,6 +20,7 @@ import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.EmptyController;
+import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 
@@ -97,7 +98,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 
-		Class<C> controllerClass = null;
+		Class<C> controllerClass;
 		Class<A> appClass;
 
 		if (genericSuperclass instanceof ParameterizedType) {
@@ -127,7 +128,14 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	public <A extends MorkimApp<m, ?>, m extends Model, P extends Presenter> P createPresenter(Viewable<A, ?, ?, ?, P> viewable) {
 
-		Class<P> presenterClass = (Class<P>) ((ParameterizedType) viewable.getClass().getGenericSuperclass()).getActualTypeArguments()[4];
+		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
+
+		Class<P> presenterClass;
+
+		if (genericSuperclass instanceof ParameterizedType)
+			presenterClass = (Class<P>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[4];
+		else
+			presenterClass = (Class<P>) EmptyPresenter.class;
 
 		try {
 			Constructor<P> constructor = presenterClass.getConstructor();
