@@ -16,8 +16,8 @@ public abstract class FragmentController<A extends MorkimApp<M, ?>, M extends Mo
 	}
 
 	@Override
-	public void attachViewable(Viewable<A, M, VA, ?, ?> viewable) {
-		super.attachViewable(viewable);
+	public void onAttachViewable(Viewable<A, M, VA, ?, ?> viewable) {
+		super.onAttachViewable(viewable);
 
 		this.fragment = (Fragment) viewable;
 	}

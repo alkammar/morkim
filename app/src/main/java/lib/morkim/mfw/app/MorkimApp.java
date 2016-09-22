@@ -2,6 +2,9 @@ package lib.morkim.mfw.app;
 
 import android.app.Application;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,6 +18,7 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
+import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.Viewable;
 
 /**
@@ -70,15 +74,63 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * @param viewable Viewable to fetch Controller for
 	 * @return Controller associated with passed viewable
 	 */
-    public Controller acquireController(Viewable viewable) {
+    public <A extends MorkimApp<m, ?>, m extends Model, C extends Controller, P extends Presenter> C createFrameworkComponents(Viewable<A, m, ?, C, P> viewable) {
 
-        Controller controller = controllers.get(viewable.getInstanceId());
-        controller = (controller == null) ? viewable.createController() : controller;
-	    viewable.attachController(controller);
+        C controller = (C) controllers.get(viewable.getInstanceId());
+        controller = (controller == null) ? constructController(viewable) : controller;
+
+	    P presenter = createPresenter(viewable);
+
+	    viewable.onAttachPresenter(presenter);
+	    viewable.onAttachController(controller);
+	    controller.onAttachViewable(viewable);
+	    presenter.onAttachController(controller);
+
 		controllers.put(viewable.getInstanceId(), controller);
 
 		return controller;
     }
+
+	private <A extends MorkimApp<m, ?>, m extends Model, C extends Controller> C constructController(Viewable<A, ?, ?, C, ?> viewable) {
+
+		Class<C> controllerClass = (Class<C>) ((ParameterizedType) viewable.getClass().getGenericSuperclass()).getActualTypeArguments()[3];
+		Class<A> appClass = (Class<A>) ((ParameterizedType) viewable.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+
+		try {
+			Constructor<C> constructor = controllerClass.getConstructor(appClass);
+			return constructor.newInstance(this);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public <A extends MorkimApp<m, ?>, m extends Model, P extends Presenter> P createPresenter(Viewable<A, ?, ?, ?, P> viewable) {
+
+		Class<P> presenterClass = (Class<P>) ((ParameterizedType) viewable.getClass().getGenericSuperclass()).getActualTypeArguments()[4];
+
+		try {
+			Constructor<P> constructor = presenterClass.getConstructor();
+			return constructor.newInstance();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	/**
 	 * Gets a controller given its class
@@ -169,7 +221,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return this;
 	}
 
-	public String getCountryCode() {
+	public <P extends Presenter> String getCountryCode() {
 		return getResources().getConfiguration().locale.getCountry();
 	}
 }

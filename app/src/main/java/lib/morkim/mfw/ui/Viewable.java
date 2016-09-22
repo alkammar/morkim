@@ -16,9 +16,6 @@ public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends 
 	A getMorkimContext();
 	Context getContext();
 
-	C createController();
-	P createPresenter();
-
 	V getUpdateListener();
 	C getController();
 
@@ -26,11 +23,13 @@ public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends 
 
 	UUID getInstanceId();
 
-	void attachController(C controller);
-
 	void onBindViews();
 
 	void registerPermissionListener(String permission, onPermissionResultListener listener);
 
 	Bundle getBundledData();
+
+	void onAttachController(C controller);
+
+	void onAttachPresenter(P presenter);
 }

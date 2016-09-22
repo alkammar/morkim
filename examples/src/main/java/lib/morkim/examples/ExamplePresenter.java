@@ -2,7 +2,11 @@ package lib.morkim.examples;
 
 import lib.morkim.mfw.ui.Presenter;
 
-public class ExamplePresenter extends Presenter<ExampleController> {
+class ExamplePresenter extends Presenter<ExampleController> {
+
+    public ExamplePresenter() {
+        super();
+    }
 
     String getTextViewText() {
         double count = controller.getCount();

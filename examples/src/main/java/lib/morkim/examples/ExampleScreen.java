@@ -82,14 +82,4 @@ public class ExampleScreen extends Screen<ExampleApp, Model, ExampleUpdateListen
     public ExampleUpdateListener getUpdateListener() {
         return this;
     }
-
-    @Override
-    public ExampleController createController() {
-        return new ExampleController(getMorkimContext());
-    }
-
-    @Override
-    public ExamplePresenter createPresenter() {
-        return new ExamplePresenter();
-    }
 }

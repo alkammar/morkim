@@ -7,7 +7,11 @@ public abstract class Presenter<C extends Controller> {
 	protected Context context;
 	protected C controller;
 
-	void setController(C controller) {
+	public Presenter() {
+
+	}
+
+	public void onAttachController(C controller) {
 		this.controller = controller;
 		this.context = controller.getContext();
 

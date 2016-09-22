@@ -16,11 +16,11 @@ public abstract class SupportFragmentController<A extends MorkimApp<M, ?>, M ext
 	}
 
 	@Override
-	public void attachViewable(Viewable<A, M, VA, ?, ?> viewable) {
+	public void onAttachViewable(Viewable<A, M, VA, ?, ?> viewable) {
 
 		this.fragment = (Fragment) viewable;
 
-		super.attachViewable(viewable);
+		super.onAttachViewable(viewable);
 	}
 
 	@Override

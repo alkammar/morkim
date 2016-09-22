@@ -43,7 +43,7 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 
 		permissionsRequestControllers = new HashMap<>();
 
-		getMorkimContext().acquireController(this);
+		getMorkimContext().createFrameworkComponents(this);
 
 		int transitionOrdinal = getIntent().getIntExtra(KEY_SCREEN_TRANSITION, Transition.NONE.ordinal());
 		Transition transition = Transition.values()[transitionOrdinal];
@@ -51,18 +51,18 @@ public abstract class Screen<A extends MorkimApp<M, ?>, M extends Model, V exten
 	}
 
 	@Override
-	public Bundle getBundledData() {
-		return getIntent().getExtras();
+	public void onAttachController(C controller) {
+		this.controller = controller;
 	}
 
 	@Override
-	public void attachController(C controller) {
+	public void onAttachPresenter(P presenter) {
+		this.presenter = presenter;
+	}
 
-		presenter = createPresenter();
-		this.controller = controller;
-
-		this.controller.attachViewable(this);
-		this.presenter.setController(controller);
+	@Override
+	public Bundle getBundledData() {
+		return getIntent().getExtras();
 	}
 
 	@Override

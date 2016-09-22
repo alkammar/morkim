@@ -46,7 +46,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 	protected void onExtractExtraData(Bundle bundledData) {}
 
-	public void attachViewable(Viewable<A, M, V, ?, ?> viewable) {
+	public void onAttachViewable(Viewable<A, M, V, ?, ?> viewable) {
 		this.viewable = viewable;
 
 		updateListener = viewable.getUpdateListener();
@@ -153,7 +153,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		V instance = null;
 
 		Class<V> cls = (Class<V>) ((ParameterizedType) getClass()
-				.getGenericSuperclass()).getActualTypeArguments()[2];//(Class<V>) Class.forName(getUpdateListenerClass().getName());
+				.getGenericSuperclass()).getActualTypeArguments()[2];
 
 		InvocationHandler handler = new InvocationHandler() {
 			@Override

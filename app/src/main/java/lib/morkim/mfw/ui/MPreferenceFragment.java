@@ -26,23 +26,22 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		presenter = createPresenter();
-		controller = (C) getMorkimContext().acquireController(this);
+		getMorkimContext().createFrameworkComponents(this);
+	}
+
+	@Override
+	public void onAttachController(C controller) {
+		this.controller = controller;
+	}
+
+	@Override
+	public void onAttachPresenter(P presenter) {
+		this.presenter = presenter;
 	}
 
 	@Override
 	public Bundle getBundledData() {
 		return getArguments();
-	}
-
-	@Override
-	public void attachController(C controller) {
-
-		presenter = createPresenter();
-		this.controller = controller;
-
-		this.controller.attachViewable(this);
-		this.presenter.setController(controller);
 	}
 
 	@Override

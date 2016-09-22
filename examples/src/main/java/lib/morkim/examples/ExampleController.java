@@ -15,7 +15,7 @@ import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleController extends ScreenController<ExampleApp, Model, ExampleUpdateListener> {
+class ExampleController extends ScreenController<ExampleApp, Model, ExampleUpdateListener> {
 
     private int count;
 

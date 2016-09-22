@@ -31,9 +31,19 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 		if (layoutId > 0)
 			dialog.setContentView(layoutId());
 
-		getMorkimContext().acquireController(this);
+		getMorkimContext().createFrameworkComponents(this);
 
 		return dialog;
+	}
+
+	@Override
+	public void onAttachController(C controller) {
+		this.controller = controller;
+	}
+
+	@Override
+	public void onAttachPresenter(P presenter) {
+		this.presenter = presenter;
 	}
 
 	@Override
@@ -46,16 +56,6 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 	@Override
 	public void dismissDialog() {
 		getDialog().dismiss();
-	}
-
-	@Override
-	public void attachController(C controller) {
-
-		presenter = createPresenter();
-		this.controller = controller;
-
-		this.controller.attachViewable(this);
-		this.presenter.setController(controller);
 	}
 
 	@Override

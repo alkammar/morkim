@@ -28,22 +28,12 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        getMorkimContext().acquireController(this);
+        getMorkimContext().createFrameworkComponents(this);
     }
 
     @Override
     public Bundle getBundledData() {
         return getArguments();
-    }
-
-    @Override
-    public void attachController(C controller) {
-
-        presenter = createPresenter();
-        this.controller = controller;
-
-        this.controller.attachViewable(this);
-        this.presenter.setController(controller);
     }
 
     @Override

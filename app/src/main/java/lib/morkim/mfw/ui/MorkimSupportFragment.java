@@ -57,7 +57,17 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        getMorkimContext().acquireController(this);
+        getMorkimContext().createFrameworkComponents(this);
+    }
+
+    @Override
+    public void onAttachController(C controller) {
+        this.controller = controller;
+    }
+
+    @Override
+    public void onAttachPresenter(P presenter) {
+        this.presenter = presenter;
     }
 
     @Override
@@ -68,16 +78,6 @@ public abstract class MorkimSupportFragment<A extends MorkimApp<M, ?>, M extends
     @Override
     public Bundle getBundledData() {
         return getArguments();
-    }
-
-    @Override
-    public void attachController(C controller) {
-
-        presenter = createPresenter();
-        this.controller = controller;
-
-        this.controller.attachViewable(this);
-        this.presenter.setController(controller);
     }
 
     @Override
