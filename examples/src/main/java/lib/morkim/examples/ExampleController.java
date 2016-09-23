@@ -6,16 +6,14 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
-import lib.morkim.mfw.ui.ScreenController;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-class ExampleController extends ScreenController<ExampleApp, Model, ExampleUpdateListener> {
+class ExampleController extends ExampleBaseController<ExampleUpdateListener> {
 
     private int count;
 
