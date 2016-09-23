@@ -140,7 +140,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 			presenterClass = (Class<P>) EmptyPresenter.class;
 
 		try {
-			Constructor<P> constructor = presenterClass.getConstructor();
+			Constructor<P> constructor = presenterClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
 			return constructor.newInstance();
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
@@ -149,6 +150,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			Log.e("MorkimApp", "constructPresenter " + e.getCause().getMessage());
 			e.printStackTrace();
 		}
 
