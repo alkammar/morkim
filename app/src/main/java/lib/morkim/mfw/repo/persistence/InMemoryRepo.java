@@ -9,11 +9,11 @@ import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 
-public abstract class InMemoryRepo2<E extends Entity> extends AbstractGateway<E> {
+public abstract class InMemoryRepo<E extends Entity> extends AbstractGateway<E> {
 	
 	private SparseArray<E> entities;
 
-	public InMemoryRepo2() {
+	public InMemoryRepo() {
 		entities = new SparseArray<>();
 	}
 
