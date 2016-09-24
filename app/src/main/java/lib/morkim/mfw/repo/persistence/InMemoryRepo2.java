@@ -9,18 +9,20 @@ import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 
-public abstract class InmemoryRepo<E extends Entity> extends AbstractGateway<E> {
+public abstract class InMemoryRepo2<E extends Entity> extends AbstractGateway<E> {
 	
-	protected SparseArray<E> entities;
+	private SparseArray<E> entities;
 
-	public InmemoryRepo() {
+	public InMemoryRepo2() {
 		entities = new SparseArray<>();
 	}
 
 	@Override
 	public void persist(E entity) {
-		this.entities.put(entity.getLocalId(), entity);
+		this.entities.put(entity.getLocalId(), copy(entity));
 	}
+
+	protected abstract E copy(E entity);
 
 	@Override
 	public E retrieve() {
@@ -42,7 +44,7 @@ public abstract class InmemoryRepo<E extends Entity> extends AbstractGateway<E> 
 		return asList(entities);
 	}
 	
-	public static <C> List<C> asList(SparseArray<C> sparseArray) {
+	private static <C> List<C> asList(SparseArray<C> sparseArray) {
 	    
 		if (sparseArray == null) return null;
 	    
