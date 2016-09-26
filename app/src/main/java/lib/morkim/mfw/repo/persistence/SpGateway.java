@@ -10,15 +10,16 @@ import lib.morkim.mfw.repo.SpRepo;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class SpGateway<E extends Entity> extends AbstractGateway<E> {
 
 	protected static final String SP_DEFAULT = "sp.default";
 	
 	private SpRepo spRepo;
 
-	@Override
-	public void setMorkimApp(MorkimApp morkimApp) {
-		super.setMorkimApp(morkimApp);
+	public SpGateway(MorkimApp morkimApp) {
+		super(morkimApp);
+
 		spRepo = new SpRepo(morkimApp.getContext());
 	}
 

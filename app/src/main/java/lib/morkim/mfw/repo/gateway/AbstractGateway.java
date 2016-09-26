@@ -7,7 +7,7 @@ public abstract class AbstractGateway<E extends Entity> implements Gateway<E> {
 
 	protected MorkimApp morkimApp;
 
-	public void setMorkimApp(MorkimApp morkimApp) {
+	public AbstractGateway(MorkimApp morkimApp) {
 		this.morkimApp = morkimApp;
 	}
 

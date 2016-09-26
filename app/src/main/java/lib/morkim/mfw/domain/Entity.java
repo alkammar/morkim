@@ -9,6 +9,7 @@ import lib.morkim.mfw.repo.gateway.Gateway;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class Entity extends Observable {
 
 	public static final String ID = "position";
@@ -16,7 +17,7 @@ public abstract class Entity extends Observable {
 	public static final int EVENT_CHANGE = 0;
 
 	public static final int NO_LOCAL_ID = -1;
-	public static final int NO_PERSISTANCE = -1;
+	public static final int NO_PERSISTENCE = -1;
 
 	private UUID sysId;
 	private int localId = NO_LOCAL_ID;
@@ -86,7 +87,7 @@ public abstract class Entity extends Observable {
 	}
 
 	protected int persistenceId() {
-		return NO_PERSISTANCE;
+		return NO_PERSISTENCE;
 	}
 
 	/**

@@ -5,15 +5,18 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 
-public abstract class InMemoryRepo<E extends Entity> extends AbstractGateway<E> {
+public abstract class InMemoryGateway<E extends Entity> extends AbstractGateway<E> {
 	
 	private SparseArray<E> entities;
 
-	public InMemoryRepo() {
+	public InMemoryGateway(MorkimApp morkimApp) {
+		super(morkimApp);
+
 		entities = new SparseArray<>();
 	}
 
@@ -54,5 +57,10 @@ public abstract class InMemoryRepo<E extends Entity> extends AbstractGateway<E> 
 	        arrayList.add(sparseArray.valueAt(i));
 	    
 		return arrayList;
+	}
+
+	@Override
+	public void delete(E data) {
+		entities.remove(data.getLocalId());
 	}
 }

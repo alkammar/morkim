@@ -1,5 +1,7 @@
 package lib.morkim.mfw.repo;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,17 +54,24 @@ public abstract class MorkimRepository implements Repository {
 
 		if (gatewayClass != null) {
 			try {
-				AbstractGateway<E> gateway = gatewayClass.<E>newInstance();
-				gateway.setMorkimApp(context);
-				return gateway;
+				Constructor<?> constructor = gatewayClass.getDeclaredConstructor(MorkimApp.class);
+				constructor.setAccessible(true);
+				constructor.newInstance(context);
+
+				return (Gateway<E>) constructor.newInstance(context);
+
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
 			}
 		}
 
-		return new EmptyGateway<>();
+		return new EmptyGateway<>(context);
 	}
 
 	/**
