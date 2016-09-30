@@ -102,7 +102,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		Class<C> controllerClass = null;
 
 		if (genericSuperclass instanceof ParameterizedType) {
-			controllerClass = (Class<C>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[3];
+			controllerClass = (Class<C>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[1];
 		}
 
 		try {
