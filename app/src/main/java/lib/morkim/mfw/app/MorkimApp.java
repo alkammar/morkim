@@ -78,7 +78,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * @param viewable Viewable to fetch Controller for
 	 * @return Controller associated with passed viewable
 	 */
-    public <A extends MorkimApp<m, ?>, m extends Model, C extends Controller, P extends Presenter> C createFrameworkComponents(Viewable<A, m, ?, C, P> viewable) {
+    public <C extends Controller, P extends Presenter> C createUiComponents(Viewable<?, C, P> viewable) {
 
         C controller = (C) controllers.get(viewable.getInstanceId());
         controller = (controller == null) ? constructController(viewable) : controller;
@@ -95,21 +95,19 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return controller;
     }
 
-	private <A extends MorkimApp<m, ?>, m extends Model, C extends Controller> C constructController(Viewable<A, ?, ?, C, ?> viewable) {
+	private <C extends Controller> C constructController(Viewable<?, C, ?> viewable) {
 
 		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 
 		Class<C> controllerClass = null;
-		Class<A> appClass = null;
 
 		if (genericSuperclass instanceof ParameterizedType) {
 			controllerClass = (Class<C>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[3];
-			appClass = (Class<A>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
 		}
 
 		try {
 			if (controllerClass != null) {
-				Constructor<C> constructor = controllerClass.getDeclaredConstructor(appClass);
+				Constructor<C> constructor = controllerClass.getDeclaredConstructor(this.getClass());
 				constructor.setAccessible(true);
 				return constructor.newInstance(this);
 			} else
@@ -128,7 +126,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return null;
 	}
 
-	public <A extends MorkimApp<m, ?>, m extends Model, P extends Presenter> P createPresenter(Viewable<A, ?, ?, ?, P> viewable) {
+	public <P extends Presenter> P createPresenter(Viewable<?, ?, P> viewable) {
 
 		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 

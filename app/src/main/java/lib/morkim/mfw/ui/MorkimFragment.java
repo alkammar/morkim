@@ -11,7 +11,7 @@ import lib.morkim.mfw.domain.Model;
 
 public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener, C extends Controller, P extends Presenter>
         extends Fragment
-        implements Viewable<A, M, V, C, P> {
+        implements Viewable<V, C, P> {
 
     private UUID id;
 
@@ -28,7 +28,7 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        getMorkimContext().createFrameworkComponents(this);
+        UiComponentHelper.createUiComponents(this, getActivity());
     }
 
     @Override
@@ -37,19 +37,21 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
     }
 
     @Override
-    public A getMorkimContext() {
-        //noinspection unchecked
-        return (A) getActivity().getApplication();
-    }
-
-    @Override
     public Context getContext() {
         return getActivity();
     }
 
     @Override
-    public C getController() {
-        return controller;
+    public void runOnUi(Runnable runnable) {
+        getActivity().runOnUiThread(runnable);
+    }
+
+    @Override
+    public void finish() {
+        getFragmentManager()
+                .beginTransaction()
+                .remove(this)
+                .commit();
     }
 
     @Override
@@ -91,5 +93,10 @@ public abstract class MorkimFragment<A extends MorkimApp<M, ?>, M extends Model,
         super.onSaveInstanceState(outState);
 
         outState.putString(VIEWABLE_ID, id.toString());
+    }
+
+    @Override
+    public <T> T getParentListener() {
+        return UiComponentHelper.getParentAsListener(this);
     }
 }

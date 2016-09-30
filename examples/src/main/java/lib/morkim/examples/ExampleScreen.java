@@ -6,11 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.ui.Screen;
+import lib.morkim.mfw.ui.AppCompatScreen;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 
-public class ExampleScreen extends Screen<ExampleApp, Model, ExampleUpdateListener, ExampleController, ExamplePresenter>
+public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, ExampleController, ExamplePresenter>
         implements ExampleUpdateListener {
 
     private TextView textView;

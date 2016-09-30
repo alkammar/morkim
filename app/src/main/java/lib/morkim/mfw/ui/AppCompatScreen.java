@@ -1,9 +1,9 @@
 package lib.morkim.mfw.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import java.util.HashMap;
@@ -14,8 +14,8 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class Screen<V extends UpdateListener, C extends Controller, P extends Presenter>
-		extends Activity
+public abstract class AppCompatScreen<V extends UpdateListener, C extends Controller, P extends Presenter>
+		extends AppCompatActivity
 		implements Viewable<V, C, P> {
 
 	private UUID id;

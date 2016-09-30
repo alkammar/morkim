@@ -5,19 +5,18 @@ import android.os.Bundle;
 
 import java.util.UUID;
 
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.domain.Model;
-
-public interface Viewable<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener, C extends Controller, P extends Presenter>
+public interface Viewable<V extends UpdateListener, C extends Controller, P extends Presenter>
 		extends UpdateListener {
 
 	static final String VIEWABLE_ID = "viewable.position";
 
-	A getMorkimContext();
 	Context getContext();
 
+	void runOnUi(Runnable runnable);
+	void finish();
+
 	V getUpdateListener();
-	C getController();
+	<T> T getParentListener();
 
 	void keepScreenOn(boolean keepOn);
 

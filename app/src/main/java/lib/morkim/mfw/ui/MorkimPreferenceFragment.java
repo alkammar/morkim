@@ -7,13 +7,10 @@ import android.preference.PreferenceFragment;
 
 import java.util.UUID;
 
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.domain.Model;
-
 @SuppressLint("NewApi")
-public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener, C extends Controller, P extends Presenter>
+public abstract class MorkimPreferenceFragment<V extends UpdateListener, C extends Controller, P extends Presenter>
 		extends PreferenceFragment
-		implements Viewable<A, M, V, C, P> {
+		implements Viewable<V, C, P> {
 
 	protected C controller;
 	protected P presenter;
@@ -26,7 +23,7 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		getMorkimContext().createFrameworkComponents(this);
+		UiComponentHelper.createUiComponents(this, getActivity());
 	}
 
 	@Override
@@ -66,28 +63,35 @@ public abstract class MPreferenceFragment<A extends MorkimApp<M, ?>, M extends M
 	}
 
 	@Override
-	public A getMorkimContext() {
-		//noinspection unchecked
-		return (A) getActivity().getApplicationContext();
-	}
-
-	@Override
 	public Context getContext() {
 		return getActivity();
 	}
 
 	@Override
-	public void keepScreenOn(boolean keepOn) {
-		((Screen) getActivity()).keepScreenOn(keepOn);
+	public void runOnUi(Runnable runnable) {
+		getActivity().runOnUiThread(runnable);
 	}
 
 	@Override
-	public C getController() {
-		return controller;
+	public void finish() {
+		getFragmentManager()
+				.beginTransaction()
+				.remove(this)
+				.commit();
+	}
+
+	@Override
+	public void keepScreenOn(boolean keepOn) {
+		((AppCompatScreen) getActivity()).keepScreenOn(keepOn);
 	}
 
 	@Override
 	public UUID getInstanceId() {
 		return id;
+	}
+
+	@Override
+	public <T> T getParentListener() {
+		return UiComponentHelper.getParentAsListener(this);
 	}
 }

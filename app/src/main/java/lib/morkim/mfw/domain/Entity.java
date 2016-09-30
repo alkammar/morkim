@@ -53,11 +53,6 @@ public abstract class Entity extends Observable {
 		this.sysId = id;
 	}
 
-	/**
-	 * Get system position
-	 * 
-	 * @return
-	 */
 	public UUID getSysId() {
 		return sysId;
 	}

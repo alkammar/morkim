@@ -7,13 +7,9 @@ import android.os.Bundle;
 
 import java.util.UUID;
 
-import lib.morkim.mfw.app.MorkimApp;
-import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.repo.MorkimRepository;
-
-public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimRepository>, M extends Model, V extends DialogUpdateListener, C extends Controller, P extends Presenter>
+public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C extends Controller, P extends Presenter>
 		extends DialogFragment
-		implements Viewable<A, M, V, C, P>, DialogUpdateListener {
+		implements Viewable<V, C, P>, DialogUpdateListener {
 
 	private UUID id;
 
@@ -31,7 +27,7 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 		if (layoutId > 0)
 			dialog.setContentView(layoutId());
 
-		getMorkimContext().createFrameworkComponents(this);
+		UiComponentHelper.createUiComponents(this, getActivity());
 
 		return dialog;
 	}
@@ -59,19 +55,13 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 	}
 
 	@Override
-	public A getMorkimContext() {
-		//noinspection unchecked
-		return (A) getActivity().getApplication();
-	}
-
-	@Override
 	public Context getContext() {
 		return getActivity();
 	}
 
 	@Override
-	public C getController() {
-		return controller;
+	public void runOnUi(Runnable runnable) {
+		getActivity().runOnUiThread(runnable);
 	}
 
 	@Override
@@ -117,5 +107,10 @@ public abstract class MorkimDialogFragment<A extends MorkimApp<M, MorkimReposito
 
 	protected int layoutId() {
 		return 0;
+	}
+
+	@Override
+	public <T> T getParentListener() {
+		return UiComponentHelper.getParentAsListener(this);
 	}
 }

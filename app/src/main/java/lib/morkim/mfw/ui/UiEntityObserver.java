@@ -1,19 +1,15 @@
 package lib.morkim.mfw.ui;
 
-import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.util.Observable;
 import java.util.Observer;
 
 import lib.morkim.mfw.domain.Entity;
 
+@SuppressWarnings({"WeakerAccess", "UnusedParameters"})
 public class UiEntityObserver<E extends Entity> {
-
-	private Controller controller;
-
-	public UiEntityObserver(Controller controller) {
-		this.controller = controller;
-	}
 
 	public void onEntityUpdated(E observable, Object data) {
 
@@ -23,16 +19,12 @@ public class UiEntityObserver<E extends Entity> {
 		@Override
 		public void update(final Observable observable, final Object data) {
 
-			Activity activity = controller.getActivity();
-			if (activity != null)
-				activity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						updateObserver(observable, data);
-					}
-				});
-			else
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+			@Override
+			public void run() {
 				updateObserver(observable, data);
+			}
+		});
 		}
 	};
 

@@ -1,22 +1,18 @@
 package lib.morkim.mfw.task;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.Observable;
 import java.util.Observer;
 
-import lib.morkim.mfw.ui.Controller;
-
+@SuppressWarnings({"WeakerAccess", "UnusedParameters"})
 public class UiTaskObserver<E extends ScheduledTask> implements Observer {
-
-	private Controller controller;
-
-	public UiTaskObserver(Controller controller) {
-		this.controller = controller;
-	}
 
 	@Override
 	public void update(final Observable observable, final Object data) {
 
-		controller.getActivity().runOnUiThread(new Runnable() {
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {
 				//noinspection unchecked

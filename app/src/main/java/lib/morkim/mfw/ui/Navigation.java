@@ -7,17 +7,6 @@ public abstract class Navigation {
 
 	public abstract void navigate(Viewable source, String destination);
 
-	public static void to(Controller controller, Class<?> cls) {
-		to(controller, cls, Transition.NONE);
-	}
-
-	public static void to(Controller controller, Class<?> cls, Transition transition) {
-
-		Intent intent = new Intent(controller.getContext(), cls);
-		intent.putExtra(Screen.KEY_SCREEN_TRANSITION, transition.ordinal());
-		controller.getContext().startActivity(intent);
-	}
-
 	public static void to(Controller controller, Intent intent) {
 		controller.getContext().startActivity(intent);
 	}
@@ -41,11 +30,6 @@ public abstract class Navigation {
 
 	private static String googlePlayBaseUrl() {
 		return "https://play.google.com/store/apps/details?id=";
-	}
-
-	public static void reload(Controller controller, Transition transition) {
-		to(controller, controller.getContext().getClass(), transition);
-//		controller.getActivity().finish();
 	}
 
 }

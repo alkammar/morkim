@@ -1,6 +1,5 @@
 package lib.morkim.mfw.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -33,10 +32,11 @@ import lib.morkim.mfw.task.UiTaskObserver;
  * @param <M> The {@link Model} for this application
  * @param <A> The {@link MorkimApp} application that extends Android {@link android.app.Application}
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V extends UpdateListener> {
 
 	private A morkimApp;
-	protected Viewable<A, M, V, ?, ?> viewable;
+	protected Viewable<V, ?, ?> viewable;
 
 	private V updateListener;
 	private V emptyUpdateListener;
@@ -52,7 +52,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 	protected void onExtractExtraData(Bundle bundledData) {}
 
-	public void onAttachViewable(Viewable<A, M, V, ?, ?> viewable) {
+	public void onAttachViewable(Viewable<V, ?, ?> viewable) {
 		this.viewable = viewable;
 
 		updateListener = viewable.getUpdateListener();
@@ -67,8 +67,6 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		}
 	}
 
-	protected abstract A createContext();
-
 	protected void executeInitializationTask() {}
 
 	protected A getAppContext() {
@@ -79,7 +77,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		return morkimApp.getModel();
 	}
 
-	protected void finish() {}
+	protected void finish() { viewable.finish(); }
 	
 	protected void keepScreenOn(boolean keepOn) {
 		viewable.keepScreenOn(keepOn);
@@ -131,7 +129,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		return true;
 	}
 
-	public void bindViews() {
+	void bindViews() {
 
 		synchronized (this) {
 			isViewUpdatable = true;
@@ -141,7 +139,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		onInitViews();
 	}
 
-	public void unbindViews() {
+	void unbindViews() {
 
 		synchronized (this) {
 			isViewUpdatable = false;
@@ -260,6 +258,4 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 			return (isViewUpdatable) ? updateListener : emptyUpdateListener;
 		}
 	}
-
-	public abstract Activity getActivity();
 }
