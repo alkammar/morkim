@@ -2,10 +2,9 @@ package lib.morkim.mfw.repo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.domain.DataGateway;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.gateway.AbstractGateway;
 import lib.morkim.mfw.repo.gateway.EmptyGateway;
@@ -14,15 +13,11 @@ import lib.morkim.mfw.repo.gateway.Gateway;
 public abstract class MorkimRepository implements Repository {
 
 	protected MorkimApp context;
-	protected Map<Class<?>, Class<? extends AbstractGateway<? extends Entity>>> map;
 
 	protected abstract int version();
 
 	public MorkimRepository(MorkimApp application) {
 		this.context = application;
-
-		map = new HashMap<>();
-		mapGateways(map);
 
 		RepoVersion repoVersion = createVersionGateway();
 		int savedVersion = repoVersion.get();
@@ -36,13 +31,6 @@ public abstract class MorkimRepository implements Repository {
 		}
 	}
 
-	/**
-	 * Override this method to associate a specific {@link Entity} to a specific {@link Gateway}.
-	 * Gateway translate application data models from/to their persisted form.
-	 * @param map The map to add entity/gateway pairs
-	 */
-	protected abstract void mapGateways(Map<Class<?>, Class<? extends AbstractGateway<? extends Entity>>> map);
-
 	protected RepoVersion createVersionGateway() {
 		return new RepoVersion(context);
 	}
@@ -50,7 +38,11 @@ public abstract class MorkimRepository implements Repository {
 	@Override
 	public <E extends Entity> Gateway<E> get(Class<E> entityClass) {
 
-		Class<? extends AbstractGateway<E>> gatewayClass = (Class<? extends AbstractGateway<E>>) map.get(entityClass);
+		Class<? extends AbstractGateway<E>> gatewayClass = null;
+
+		DataGateway gatewayAnnotation = entityClass.getAnnotation(DataGateway.class);
+		if (gatewayAnnotation != null)
+			gatewayClass = (Class<? extends AbstractGateway<E>>) gatewayAnnotation.value();
 
 		if (gatewayClass != null) {
 			try {
