@@ -116,4 +116,12 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
     public <T> T getParentListener() {
         return UiComponentHelper.getParentAsListener(this);
     }
+
+    @Override
+    public void finish() {
+        getFragmentManager()
+                .beginTransaction()
+                .remove(this)
+                .commit();
+    }
 }
