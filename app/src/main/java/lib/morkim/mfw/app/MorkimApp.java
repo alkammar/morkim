@@ -133,7 +133,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		Class<P> presenterClass;
 
 		if (genericSuperclass instanceof ParameterizedType)
-			presenterClass = (Class<P>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[4];
+			presenterClass = (Class<P>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[2];
 		else
 			presenterClass = (Class<P>) EmptyPresenter.class;
 
