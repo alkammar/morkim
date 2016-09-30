@@ -113,4 +113,9 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	public <T> T getParentListener() {
 		return UiComponentHelper.getParentAsListener(this);
 	}
+
+	@Override
+	public void finish() {
+		dismissDialog();
+	}
 }
