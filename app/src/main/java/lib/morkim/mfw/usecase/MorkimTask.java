@@ -1,29 +1,26 @@
 package lib.morkim.mfw.usecase;
 
-import android.os.AsyncTask;
-
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
 
-public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
-		extends AsyncTask<Req, Res, Void> {
+@SuppressWarnings({"WeakerAccess", "unused"})
+public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult> {
 
-	private A appContext;
+	protected A appContext;
 	protected M model;
+	protected Repository repo;
+
+	protected MorkimTaskListener<Res> listener;
 
 	private Req request;
-	private MorkimTaskListener<Res> listener;
-
-	public MorkimTask(A appContext) {
-		this(appContext, null);
-	}
 
 	public MorkimTask(A morkimApp, MorkimTaskListener<Res> listener) {
 
-		this.appContext = morkimApp;
 		this.model = appContext.getModel();
-		
+		this.appContext = morkimApp;
+		this.repo = appContext.getRepo();
+
 		if (listener == null)
 			this.listener = new MorkimTaskListener<Res>() {
 				@Override
@@ -42,46 +39,32 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 			this.listener = listener;
 	}
 
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
-
-		listener.onTaskStart(this);
+	public void execute(Req request) {
+		setRequest(request);
+		onExecute();
 	}
 
-	@Override
-	protected Void doInBackground(Req... params) {
-
-		if (params.length > 0)
-			setRequest(params[0]);
-
-		executeSync();
-
-		return null;
-	}
-
-	public void executeSync() {
-
-		onPrepare();
-		publishProgress(onExecute());
-		onSaveModel();
+	public void execute() {
+		onExecute();
 	}
 
 	public void executeSync(Req request) {
-
 		setRequest(request);
-
-		executeSync();
+		onExecute();
 	}
 
-	protected void reportProgress(Res result) {
-		publishProgress(result);
+	public void executeSync() {
+		onExecute();
 	}
 
-	@Override
-	protected void onProgressUpdate(Res... values) {
+	protected void updateProgress(Res result) {
+		updateListener(result);
+	}
 
-		Res result = values[0];
+	protected abstract Res onExecute();
+
+	protected void updateListener(Res result) {
+
 		if (result != null) {
 			if (result.completionPercent != 100)
 				listener.onTaskUpdate(result);
@@ -91,21 +74,10 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 			listener.onTaskComplete(null);
 	}
 
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-	}
-
-	protected void onPrepare() {}
-
-	protected abstract Res onExecute();
 	protected void onSaveModel() {}
 
 	public void setAppContext(A appContext) {
 		this.appContext = appContext;
-	}
-	protected MorkimApp getAppContext() {
-		return appContext;
 	}
 
 	protected Req getRequest() {
@@ -116,19 +88,11 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 		this.request = request;
 	}
 
-	public MorkimTaskListener getListener() {
+	public MorkimTaskListener<Res> getListener() {
 		return listener;
 	}
 
 	public void setListener(MorkimTaskListener<Res> listener) {
 		this.listener = listener;
-	}
-
-	public Model getModel() {
-		return appContext.getModel();
-	}
-
-	protected Repository getRepos() {
-		return appContext.getRepos();
 	}
 }

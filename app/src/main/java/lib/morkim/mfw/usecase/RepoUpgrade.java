@@ -2,25 +2,18 @@ package lib.morkim.mfw.usecase;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class RepoUpgrade extends MorkimTask {
+public abstract class RepoUpgrade extends MorkimAsyncTask {
 
 //	private int versionCode;
 
 	public RepoUpgrade(MorkimApp morkimApp, MorkimTaskListener listener) {
 		super(morkimApp, listener);
 	}
-	
-	@Override
-	protected void onPrepare() {
-		super.onPrepare();
-		
-//		versionCode = Package.getVersionCode(getAppContext().getContext());
-	}
 
 	@Override
 	protected TaskResult onExecute() {
 		
-//		Gateway gateway = getRepos().get(ThunderRepo.DATA_SOURCE_STATE);
+//		Gateway gateway = getRepo().get(ThunderRepo.DATA_SOURCE_STATE);
 //		int currentVersion = gateway.getVersion();
 //		
 //		DataSourceState dataSourceState = (DataSourceState) gateway.retrieve();
