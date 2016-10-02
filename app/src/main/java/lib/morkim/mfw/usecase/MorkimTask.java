@@ -17,8 +17,8 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 	public MorkimTask(A morkimApp, MorkimTaskListener<Res> listener) {
 
-		this.model = appContext.getModel();
 		this.appContext = morkimApp;
+		this.model = appContext.getModel();
 		this.repo = appContext.getRepo();
 
 		if (listener == null)
