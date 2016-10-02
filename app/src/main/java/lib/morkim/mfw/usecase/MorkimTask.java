@@ -41,27 +41,27 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 	public void execute(Req request) {
 		setRequest(request);
-		onExecute();
+		onExecute(request);
 	}
 
 	public void execute() {
-		onExecute();
+		onExecute(null);
 	}
 
 	public void executeSync(Req request) {
 		setRequest(request);
-		onExecute();
+		onExecute(request);
 	}
 
 	public void executeSync() {
-		onExecute();
+		onExecute(null);
 	}
 
 	protected void updateProgress(Res result) {
 		updateListener(result);
 	}
 
-	protected abstract Res onExecute();
+	protected abstract Res onExecute(Req request);
 
 	protected void updateListener(Res result) {
 

@@ -38,7 +38,7 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 			if (params.length > 0)
 				setRequest(params[0]);
 
-			publishProgress(onExecute());
+			publishProgress(onExecute(getRequest()));
 			onSaveModel();
 
 			return null;

@@ -14,7 +14,7 @@ class ExampleTask extends MorkimAsyncTask<ExampleApp, Model, TaskRequest, Exampl
 	}
 
 	@Override
-	protected ExampleResult onExecute() {
+	protected ExampleResult onExecute(TaskRequest request) {
 
 		ExampleResult result = new ExampleResult();
 		result.setCompletionPercent(0);

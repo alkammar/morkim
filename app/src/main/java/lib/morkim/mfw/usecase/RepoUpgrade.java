@@ -11,7 +11,7 @@ public abstract class RepoUpgrade extends MorkimAsyncTask {
 	}
 
 	@Override
-	protected TaskResult onExecute() {
+	protected TaskResult onExecute(TaskRequest request) {
 		
 //		Gateway gateway = getRepo().get(ThunderRepo.DATA_SOURCE_STATE);
 //		int currentVersion = gateway.getVersion();
