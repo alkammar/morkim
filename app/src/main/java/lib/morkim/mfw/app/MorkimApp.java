@@ -216,7 +216,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 */
 	protected abstract TaskFactory createScheduledTaskFactory();
 
-	public Repository getRepos() {
+	public Repository getRepo() {
 		return repo;
 	}
 

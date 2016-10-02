@@ -15,7 +15,7 @@ public abstract class Model extends Observable {
 	public Model(MorkimApp morkimApp) {
 
 		this.morkimApp = morkimApp;
-		setRepository(((MorkimApp) morkimApp).getRepos());
+		setRepository(((MorkimApp) morkimApp).getRepo());
 	}
 	
 	public abstract void load() throws GatewayRetrieveException ;

@@ -5,7 +5,6 @@ import java.util.Observer;
 import java.util.UUID;
 
 import lib.morkim.mfw.repo.Repository;
-import lib.morkim.mfw.repo.gateway.Gateway;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
@@ -89,8 +88,9 @@ public abstract class Entity extends Observable {
 	 * Saves this entity to persistence repository
 	 * @throws GatewayPersistException
 	 */
-	public void save(Gateway gateway) throws GatewayPersistException {
-		gateway.persist(this);
+	public <E extends Entity> void save(Repository repo) throws GatewayPersistException {
+
+		repo.get((Class<E>) getClass()).persist((E) this);
 	}
 
 	/**

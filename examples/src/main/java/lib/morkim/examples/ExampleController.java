@@ -11,7 +11,6 @@ import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
-import lib.morkim.mfw.usecase.TaskRequest;
 
 class ExampleController extends ExampleBaseController<ExampleUpdateListener> {
 
@@ -24,9 +23,9 @@ class ExampleController extends ExampleBaseController<ExampleUpdateListener> {
 
         try {
             ExampleEntity entity = new ExampleEntity();
-            entity.save(getAppContext().getRepos().get(ExampleEntity.class));
-            entity = getAppContext().getRepos().get(ExampleEntity.class).retrieve();
-            List<ExampleEntity> entities = getAppContext().getRepos().get(ExampleEntity.class).retrieveAll();
+            entity.save(getAppContext().getRepo());
+            entity = getAppContext().getRepo().get(ExampleEntity.class).retrieve();
+            List<ExampleEntity> entities = getAppContext().getRepo().get(ExampleEntity.class).retrieveAll();
         } catch (GatewayRetrieveException | GatewayPersistException e) {
             e.printStackTrace();
         }
@@ -83,7 +82,7 @@ class ExampleController extends ExampleBaseController<ExampleUpdateListener> {
                 @Override
                 public void onTaskCancel() {}
 
-            }).execute(TaskRequest.EMPTY);
+            }).execute();
         }
     };
 

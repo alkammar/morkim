@@ -22,7 +22,7 @@ public abstract class ScheduledTask<M extends Model> extends Observable implemen
 		this.appContext = appContext;
 		
 		this.model = appContext.getModel();
-		this.repos = ((MorkimApp) appContext).getRepos();
+		this.repos = ((MorkimApp) appContext).getRepo();
 	}
 
 	@Override
