@@ -115,6 +115,11 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	}
 
 	@Override
+	public <T> T getChildListener() {
+		return (T) controller;
+	}
+
+	@Override
 	public void finish() {
 		dismissDialog();
 	}

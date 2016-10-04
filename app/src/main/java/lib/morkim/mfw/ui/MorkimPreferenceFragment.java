@@ -94,4 +94,9 @@ public abstract class MorkimPreferenceFragment<V extends UpdateListener, C exten
 	public <T> T getParentListener() {
 		return UiComponentHelper.getParentAsListener(this);
 	}
+
+	@Override
+	public <T> T getChildListener() {
+		return (T) controller;
+	}
 }

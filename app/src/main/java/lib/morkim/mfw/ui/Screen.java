@@ -152,4 +152,9 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	public <T> T getParentListener() {
 		return null;
 	}
+
+	@Override
+	public <T> T getChildListener() {
+		return (T) controller;
+	}
 }
