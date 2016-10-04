@@ -9,7 +9,7 @@ import android.widget.TextView;
 import lib.morkim.mfw.ui.AppCompatScreen;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 
-public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, ExampleController, ExamplePresenter>
+public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, ExampleScreenController, ExamplePresenter>
         implements ExampleUpdateListener {
 
     private TextView textView;

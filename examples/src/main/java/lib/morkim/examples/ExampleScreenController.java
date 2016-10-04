@@ -12,13 +12,13 @@ import lib.morkim.mfw.ui.lists.ItemClickSupport;
 import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
 
-class ExampleController extends ExampleBaseController<ExampleUpdateListener> {
+class ExampleScreenController extends ExampleBaseController<ExampleUpdateListener> implements ExampleParentListener {
 
     private int count;
 
     private List<ExampleEntity> entities;
 
-    ExampleController(ExampleApp morkimApp) {
+    ExampleScreenController(ExampleApp morkimApp) {
         super(morkimApp);
 
         try {
@@ -101,5 +101,11 @@ class ExampleController extends ExampleBaseController<ExampleUpdateListener> {
 
     List<ExampleEntity> getEntities() {
         return entities;
+    }
+
+    @Override
+    public void onSomethingHappenedInChild() {
+
+
     }
 }

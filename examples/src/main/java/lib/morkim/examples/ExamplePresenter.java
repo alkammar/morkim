@@ -2,7 +2,7 @@ package lib.morkim.examples;
 
 import lib.morkim.mfw.ui.Presenter;
 
-class ExamplePresenter extends Presenter<ExampleController> {
+class ExamplePresenter extends Presenter<ExampleScreenController> {
 
     public ExamplePresenter() {
         super();

@@ -152,4 +152,9 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 	public <T> T getParentListener() {
 		return null;
 	}
+
+	@Override
+	public <T> T getChildListener() {
+		return (T) controller;
+	}
 }

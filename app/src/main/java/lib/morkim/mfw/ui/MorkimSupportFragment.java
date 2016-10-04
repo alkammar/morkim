@@ -118,6 +118,11 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
     }
 
     @Override
+    public <T> T getChildListener() {
+        return (T) controller;
+    }
+
+    @Override
     public void finish() {
         getFragmentManager()
                 .beginTransaction()

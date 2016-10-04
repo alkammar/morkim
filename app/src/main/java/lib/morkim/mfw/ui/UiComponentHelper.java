@@ -4,6 +4,7 @@ package lib.morkim.mfw.ui;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import lib.morkim.mfw.app.MorkimApp;
@@ -27,43 +28,45 @@ class UiComponentHelper {
 		android.app.Fragment parentFragment = fragment.getParentFragment();
 		if (parentFragment != null)
 			try {
-				return (T) parentFragment;
+				return parentFragment instanceof Viewable ? (T) ((Viewable) parentFragment).getChildListener() : (T) parentFragment;
 			} catch (ClassCastException e) {
-				throw new ClassCastException(parentFragment.toString()
-						+ " must implement interface");
+				throw new ClassCastException(parentFragment.toString() + " must override method getChildListener() or implement interface");
 			}
 		else {
-			Activity activity = fragment.getActivity();
-			if (activity != null) {
-				try {
-					return (T) activity;
-				} catch (ClassCastException e) {
-					throw new ClassCastException(activity.toString()
-							+ " must implement interface");
-				}
-			}
+			return getActivityAsListener(fragment);
 		}
-
-		return null;
 	}
 
 	static <T> T getParentAsListener(Fragment fragment) {
 
 		Fragment parentFragment = fragment.getParentFragment();
-		if (parentFragment != null)
+		if (parentFragment != null) {
 			try {
-				return (T) parentFragment;
+				return parentFragment instanceof Viewable ? (T) ((Viewable) parentFragment).getChildListener() : (T) parentFragment;
 			} catch (ClassCastException e) {
-				throw new ClassCastException(parentFragment.toString() + " must implement interface");
+				throw new ClassCastException(parentFragment.toString() + " must override method getChildListener() or implement interface");
 			}
-		else {
-			Activity activity = fragment.getActivity();
-			if (activity != null) {
-				try {
-					return (T) activity;
-				} catch (ClassCastException e) {
-					throw new ClassCastException(activity.toString() + " must implement interface");
-				}
+		} else {
+			return getActivityAsListener(fragment);
+		}
+	}
+
+	@Nullable
+	private static <T> T getActivityAsListener(Fragment fragment) {
+		return getActivityAsListener(fragment.getActivity());
+	}
+
+	@Nullable
+	private static <T> T getActivityAsListener(android.app.Fragment fragment) {
+		return getActivityAsListener(fragment.getActivity());
+	}
+
+	private static <T> T getActivityAsListener(Activity activity) {
+		if (activity != null) {
+			try {
+				return activity instanceof Viewable ? (T) ((Viewable) activity).getChildListener() : (T) activity;
+			} catch (ClassCastException e) {
+				throw new ClassCastException(activity.toString() + " must override method getChildListener() or implement interface");
 			}
 		}
 

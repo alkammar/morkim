@@ -16,7 +16,9 @@ public interface Viewable<V extends UpdateListener, C extends Controller, P exte
 	void finish();
 
 	V getUpdateListener();
+
 	<T> T getParentListener();
+	<T> T getChildListener();
 
 	void keepScreenOn(boolean keepOn);
 
