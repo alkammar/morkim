@@ -67,7 +67,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		}
 	}
 
-	public void onAttachParent() {
+	public void onAttachParent(Viewable viewable) {
 
 	}
 

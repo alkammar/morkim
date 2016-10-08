@@ -38,7 +38,7 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        controller.onAttachParent();
+        controller.onAttachParent(this);
     }
 
     @Override
