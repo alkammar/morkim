@@ -1,8 +1,9 @@
 package lib.morkim.mfw.ui;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,13 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        controller.onAttachParent();
+    }
+
+    @Override
     public void onAttachController(C controller) {
         this.controller = controller;
     }
@@ -46,6 +54,13 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(layoutId(), container, false);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+
     }
 
     @Override

@@ -1,23 +1,31 @@
 package lib.morkim.examples;
 
+import android.view.View;
+
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.UpdateListener;
+import lib.morkim.mfw.ui.Viewable;
 
 class ExampleFragmentController extends Controller<ExampleApp, Model, UpdateListener> {
 
-	private final ExampleParentListener listener;
+	private ExampleParentListener parentListener;
 
 	public ExampleFragmentController(ExampleApp morkimApp) {
 		super(morkimApp);
-
-		listener = viewable.getParentListener();
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onAttachViewable(Viewable<UpdateListener, ?, ?> viewable) {
+		super.onAttachViewable(viewable);
 
-		listener.onSomethingHappenedInChild();
+		parentListener = viewable.getParentListener();
 	}
+
+	View.OnClickListener buttonClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			parentListener.onDoSomethingWhenButtonClicked();
+		}
+	};
 }

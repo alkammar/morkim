@@ -29,6 +29,12 @@ public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, Exampl
         recyclerView = (RecyclerView) findViewById(R.id.rv_example_list);
 
         adapter = new ExampleAdapter(presenter);
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fl_fragment, new ExampleFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

@@ -2,6 +2,7 @@ package lib.morkim.mfw.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,13 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
         UiComponentHelper.createUiComponents(this, getActivity());
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        controller.onAttachParent();
     }
 
     @Override

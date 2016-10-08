@@ -104,8 +104,11 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
     }
 
     @Override
-    public void onSomethingHappenedInChild() {
+    public void onDoSomethingWhenButtonClicked() {
 
-
+        for (ExampleEntity entity : entities) {
+            entity.index -= 100;
+            getUpdateListener().updateListItem(entities.indexOf(entity));
+        }
     }
 }

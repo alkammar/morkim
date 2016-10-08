@@ -4,6 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/fl_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+    </FrameLayout>
+
     <TextView
         android:id="@+id/tv_example_text_view"
         android:layout_width="wrap_content"
