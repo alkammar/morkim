@@ -107,13 +107,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 		try {
 			if (controllerClass != null) {
-				Constructor<C> constructor = controllerClass.getDeclaredConstructor(this.getClass());
+				Constructor<C> constructor = (Constructor<C>) controllerClass.getDeclaredConstructors()[0];
 				constructor.setAccessible(true);
 				return constructor.newInstance(this);
 			} else
 				return (C) new EmptyController((MorkimApp<Model, ?>) this);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
