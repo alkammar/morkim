@@ -24,7 +24,7 @@ public interface Viewable<V extends UpdateListener, C extends Controller, P exte
 
 	UUID getInstanceId();
 
-	void onBindViews();
+	void onAssignListeners();
 
 	void registerPermissionListener(String permission, onPermissionResultListener listener);
 

@@ -38,7 +38,7 @@ public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, Exampl
     }
 
     @Override
-    public void onBindViews() {
+    public void onAssignListeners() {
 
         Button textButton = (Button) findViewById(R.id.btn_example_button);
         textButton.setOnClickListener(controller.buttonClickListener);

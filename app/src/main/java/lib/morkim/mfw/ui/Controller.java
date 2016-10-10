@@ -137,7 +137,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 		synchronized (this) {
 			isViewUpdatable = true;
-			viewable.onBindViews();
+			viewable.onAssignListeners();
 		}
 
 		onInitViews();

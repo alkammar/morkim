@@ -27,7 +27,7 @@ public class ExampleFragment extends MorkimFragment<UpdateListener, ExampleFragm
 	}
 
 	@Override
-	public void onBindViews() {
+	public void onAssignListeners() {
 
 		getView().findViewById(R.id.button).setOnClickListener(controller.buttonClickListener);
 	}

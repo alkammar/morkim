@@ -13,7 +13,7 @@ public class ExampleChildFragment extends MorkimFragment<UpdateListener, Example
 	}
 
 	@Override
-	public void onBindViews() {
+	public void onAssignListeners() {
 
 	}
 }
