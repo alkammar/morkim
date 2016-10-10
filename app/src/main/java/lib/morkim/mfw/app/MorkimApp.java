@@ -23,6 +23,7 @@ import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.EmptyController;
 import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.Presenter;
+import lib.morkim.mfw.ui.UpdateListener;
 import lib.morkim.mfw.ui.Viewable;
 
 /**
@@ -78,7 +79,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * @param viewable Viewable to fetch Controller for
 	 * @return Controller associated with passed viewable
 	 */
-    public <C extends Controller, P extends Presenter> C createUiComponents(Viewable<?, C, P> viewable) {
+    public <U extends UpdateListener, C extends Controller, P extends Presenter> C createUiComponents(Viewable<U, C, P> viewable) {
 
         C controller = (C) controllers.get(viewable.getInstanceId());
         controller = (controller == null) ? constructController(viewable) : controller;
@@ -89,6 +90,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	    viewable.onAttachController(controller);
 	    controller.onAttachViewable(viewable);
 	    presenter.onAttachController(controller);
+
+	    controller.onInitializeViews(viewable.getUpdateListener());
 
 		controllers.put(viewable.getInstanceId(), controller);
 
