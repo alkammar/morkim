@@ -27,6 +27,11 @@ public abstract class MorkimPreferenceFragment<V extends UpdateListener, C exten
 	}
 
 	@Override
+	public void onBindViews() {
+
+	}
+
+	@Override
 	public void onAttachController(C controller) {
 		this.controller = controller;
 	}

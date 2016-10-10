@@ -43,6 +43,11 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 	}
 
 	@Override
+	public void onBindViews() {
+
+	}
+
+	@Override
 	public void onAttachController(C controller) {
 		this.controller = controller;
 	}

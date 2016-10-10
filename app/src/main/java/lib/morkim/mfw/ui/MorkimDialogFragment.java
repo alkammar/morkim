@@ -33,6 +33,11 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	}
 
 	@Override
+	public void onBindViews() {
+
+	}
+
+	@Override
 	public void onAttachController(C controller) {
 		this.controller = controller;
 	}

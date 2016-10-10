@@ -26,6 +26,8 @@ public interface Viewable<V extends UpdateListener, C extends Controller, P exte
 
 	void onAssignListeners();
 
+	void onBindViews();
+
 	void registerPermissionListener(String permission, onPermissionResultListener listener);
 
 	Bundle getBundledData();

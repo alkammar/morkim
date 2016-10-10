@@ -43,6 +43,11 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	}
 
 	@Override
+	public void onBindViews() {
+
+	}
+
+	@Override
 	public void onAttachController(C controller) {
 		this.controller = controller;
 	}
