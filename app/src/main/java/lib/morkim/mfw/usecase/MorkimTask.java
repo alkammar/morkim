@@ -39,18 +39,18 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 			this.listener = listener;
 	}
 
-	public void execute(Req request) {
-		setRequest(request);
-		onExecute(request);
-	}
-
 	public void execute() {
 		onExecute(null);
 	}
 
+	public void execute(Req request) {
+		executeSync();
+	}
+
 	public void executeSync(Req request) {
 		setRequest(request);
-		onExecute(request);
+		Res result = onExecute(request);
+		listener.onTaskComplete(result);
 	}
 
 	public void executeSync() {
