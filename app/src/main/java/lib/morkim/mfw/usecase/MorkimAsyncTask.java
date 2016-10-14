@@ -66,6 +66,11 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 	}
 
 	@Override
+	public void cancel() {
+		asyncTask.cancel(true);
+	}
+
+	@Override
 	protected void updateProgress(Res result) {
 		asyncTask.updateProgress(result);
 	}

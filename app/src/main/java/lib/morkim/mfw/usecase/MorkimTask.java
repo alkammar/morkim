@@ -40,21 +40,24 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 	}
 
 	public void execute() {
-		onExecute(null);
-	}
-
-	public void execute(Req request) {
 		executeSync();
 	}
 
-	public void executeSync(Req request) {
-		setRequest(request);
-		Res result = onExecute(request);
-		listener.onTaskComplete(result);
+	public void execute(Req request) {
+		executeSync(request);
 	}
 
 	public void executeSync() {
 		onExecute(null);
+	}
+
+	public void executeSync(Req request) {
+		setRequest(request);
+		onExecute(request);
+	}
+
+	public void cancel() {
+
 	}
 
 	protected void updateProgress(Res result) {
