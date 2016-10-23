@@ -5,14 +5,14 @@ import android.view.View;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.ui.lists.ListItemHolder;
 
-public class EmptyListAdapter extends ListAdapter<Presenter, ListItemHolder> {
+public class EmptyListAdapter extends ListAdapter<Controller, Presenter, ListItemHolder> {
 
 	public EmptyListAdapter() {
-		super(null);
+		super(null, null);
 	}
 
 	@Override
-	protected int layoutId() {
+	protected int layoutId(int viewType) {
 		return 0;
 	}
 

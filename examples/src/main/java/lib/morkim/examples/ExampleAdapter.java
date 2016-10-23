@@ -6,14 +6,14 @@ import android.widget.TextView;
 import lib.morkim.mfw.ui.lists.ListAdapter;
 import lib.morkim.mfw.ui.lists.ListItemHolder;
 
-public class ExampleAdapter extends ListAdapter<ExamplePresenter, ExampleAdapter.ExampleItemHolder> {
+class ExampleAdapter extends ListAdapter<ExampleScreenController, ExamplePresenter, ExampleAdapter.ExampleItemHolder> {
 
-	public ExampleAdapter(ExamplePresenter presenter) {
-		super(presenter);
+	ExampleAdapter(ExampleScreenController controller, ExamplePresenter presenter) {
+		super(controller, presenter);
 	}
 
 	@Override
-	protected int layoutId() {
+	protected int layoutId(int viewType) {
 		return R.layout.example_list_item;
 	}
 
@@ -36,7 +36,7 @@ public class ExampleAdapter extends ListAdapter<ExamplePresenter, ExampleAdapter
 
 		TextView textView;
 
-		public ExampleItemHolder(View itemView) {
+		ExampleItemHolder(View itemView) {
 			super(itemView);
 
 			textView = ((TextView) itemView.findViewById(R.id.tv_example_item_text_view));

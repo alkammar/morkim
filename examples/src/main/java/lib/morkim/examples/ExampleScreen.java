@@ -28,7 +28,7 @@ public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, Exampl
         textView = (TextView) findViewById(R.id.tv_example_text_view);
         recyclerView = (RecyclerView) findViewById(R.id.rv_example_list);
 
-        adapter = new ExampleAdapter(presenter);
+        adapter = new ExampleAdapter(controller, presenter);
 
         getFragmentManager()
                 .beginTransaction()
