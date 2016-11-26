@@ -33,9 +33,11 @@ public class PendingEventProcessor extends AbstractProcessor {
 
 			StringBuilder builder = new StringBuilder()
 					.append("package " + PACKAGE_PATH + ";\n\n")
-					.append("public class ").append(interfaceName).append(CLASS_SUFFIX)
-					.append(" implements ").append(element.toString())
-					.append(" {\n\n");
+					.append("import lib.morkim.mfw.ui.AbstractUpdateListenerPending;\n")
+					.append("import lib.morkim.mfw.ui.Controller;\n\n")
+					.append("public class ").append(interfaceName).append(CLASS_SUFFIX).append("\n")
+					.append("\textends ").append("AbstractUpdateListenerPending").append("\n")
+					.append("\timplements ").append(element.toString()).append(" {\n\n");
 
 			for (Element child : element.getEnclosedElements()) {
 
@@ -52,15 +54,15 @@ public class PendingEventProcessor extends AbstractProcessor {
 						params = child.toString().substring(methodName.length() + 1, child.toString().length() - 1)
 								.split(",");
 
-					for (int i = 0; i < params.length; i++) {
-						builder.append("final ").append(params[i]).append(" ").append("var").append(i + 1);
-						if (i < params.length - 1) builder.append(", ");
-					}
-
+					generateMethodSignature(builder, params);
 
 					builder.append(") {\n");
 
-					builder.append("\t\t")
+					builder.append("\t\tpendingEventsExecutor.add(new Controller.PendingEvent() {\n")
+						.append("\t\t\t@Override\n")
+						.append("\t\t\tpublic void onExecuteWhenUiAvailable() {\n");
+
+					builder.append("\t\t\t\t")
 							.append(methodName).append("(");
 
 					for (int i = 0; i < params.length; i++) {
@@ -68,7 +70,10 @@ public class PendingEventProcessor extends AbstractProcessor {
 						if (i < params.length - 1) builder.append(", ");
 					}
 
-					builder.append(");");
+					builder.append(");\n");
+
+					builder.append("\t\t\t}\n")
+							.append("\t\t});");
 
 					builder.append("\n")
 							.append("\t}\n\n");
@@ -84,6 +89,13 @@ public class PendingEventProcessor extends AbstractProcessor {
 
 
 		return true;
+	}
+
+	private void generateMethodSignature(StringBuilder builder, String[] params) {
+		for (int i = 0; i < params.length; i++) {
+			builder.append("final ").append(params[i]).append(" ").append("var").append(i + 1);
+			if (i < params.length - 1) builder.append(", ");
+		}
 	}
 
 	private void writeJavaFile(String className, StringBuilder builder) {

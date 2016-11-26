@@ -89,10 +89,17 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
 
     ItemClickSupport.OnItemClickListener listItemClickListener = new ItemClickSupport.OnItemClickListener() {
         @Override
-        public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+        public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
 
             entities.get(position).index++;
             getUpdateListener().updateListItem(position);
+
+            pendingEventsExecutor.add(new PendingEvent() {
+                @Override
+                public void onExecuteWhenUiAvailable() {
+                    getUpdateListener().updateListItem(position);
+                }
+            });
         }
     };
 

@@ -3,6 +3,7 @@ package lib.morkim.mfw.ui;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -10,6 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,9 +46,13 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 	private boolean initializationTaskExecuted;
 
+	protected PendingEventsExecutor pendingEventsExecutor;
+
 	public Controller(A morkimApp) {
 
-		emptyUpdateListener = createEmptyViewableUpdate();
+		pendingEventsExecutor = new PendingEventsExecutor(this);
+
+		emptyUpdateListener = createStubUpdateListener();
 		this.morkimApp = morkimApp;
 	}
 
@@ -156,7 +162,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 	}
 
-	private V createEmptyViewableUpdate() {
+	private V createStubUpdateListener() {
 
 		V instance;
 
@@ -164,7 +170,34 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 
 		Class<V> cls = (Class<V>) actualArgs[2];
 
-		InvocationHandler handler = new InvocationHandler() {
+		instance = getAnnotatedUpdateListenerPendingImplementation(cls);
+
+		return instance != null ? instance : generateEmptyUpdateListenerImplementation(cls);
+	}
+
+	private V getAnnotatedUpdateListenerPendingImplementation(Class<V> cls) {
+
+		V instance = null;
+		Class<V> generatedInterfaceImpl;
+
+		try {
+			generatedInterfaceImpl = (Class<V>) Class.forName("lib.morkim.mfw.generated.update.listeners." + cls.getSimpleName() + "Pending");
+			Log.i("Controller", generatedInterfaceImpl.toString());
+			instance = generatedInterfaceImpl.newInstance();
+			((AbstractUpdateListenerPending) instance).setPendingEventsExecutor(pendingEventsExecutor);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
+		return instance;
+	}
+
+	private V generateEmptyUpdateListenerImplementation(Class<V> cls) {
+		V instance;InvocationHandler handler = new InvocationHandler() {
 			@Override
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				System.out.println(method.getName());
@@ -172,7 +205,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 			}
 		};
 
-		instance = (V) Proxy.newProxyInstance(cls.getClassLoader(), new Class<?>[] { cls }, handler);
+		instance = (V) Proxy.newProxyInstance(cls.getClassLoader(), new Class<?>[]{cls}, handler);
 
 		return instance;
 	}
@@ -261,5 +294,48 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		synchronized (this) {
 			return (isViewUpdatable) ? updateListener : emptyUpdateListener;
 		}
+	}
+
+	public class PendingEventsExecutor {
+
+		private Controller controller;
+
+		private List<PendingEvent> pendingEvents;
+
+		public PendingEventsExecutor(Controller controller) {
+
+			this.controller = controller;
+
+			pendingEvents = new ArrayList<>();
+		}
+
+		public void add(PendingEvent pendingEvent) {
+
+			synchronized (Controller.this) {
+				if (isViewUpdatable)
+					pendingEvent.onExecuteWhenUiAvailable();
+				else
+					pendingEvents.add(pendingEvent);
+			}
+		}
+
+		void onExecutePendingEvents() {
+
+			List<PendingEvent> consumedEvents = new ArrayList<>();
+
+			for (PendingEvent pendingEvent : pendingEvents) {
+				pendingEvent.onExecuteWhenUiAvailable();
+				consumedEvents.add(pendingEvent);
+			}
+
+			for (PendingEvent pendingEvent : consumedEvents) {
+				pendingEvents.remove(pendingEvent);
+			}
+		}
+	}
+
+	public interface PendingEvent {
+
+		void onExecuteWhenUiAvailable();
 	}
 }
