@@ -37,7 +37,8 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
             entity.index = i;
             entities.add(entity);
         }
-    }
+
+     }
 
     @Override
     protected void onInitViews() {

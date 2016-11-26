@@ -1,0 +1,103 @@
+package lib.morkim.mfw.processor;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Set;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
+import javax.tools.JavaFileObject;
+
+
+@SupportedAnnotationTypes("lib.morkim.mfw.processor.PendingEventAnnotation")
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
+public class PendingEventProcessor extends AbstractProcessor {
+
+	private static final String PACKAGE_PATH = "lib.morkim.mfw.generated.update.listeners";
+	private static final String CLASS_SUFFIX = "Pending";
+
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+
+
+		// for each javax.lang.model.element.Element annotated with the CustomAnnotation
+		for (Element element : roundEnv.getElementsAnnotatedWith(PendingEventAnnotation.class)) {
+
+			String interfaceName = element.getSimpleName().toString();
+
+			StringBuilder builder = new StringBuilder()
+					.append("package " + PACKAGE_PATH + ";\n\n")
+					.append("public class ").append(interfaceName).append(CLASS_SUFFIX)
+					.append(" implements ").append(element.toString())
+					.append(" {\n\n");
+
+			for (Element child : element.getEnclosedElements()) {
+
+				if (child.getKind() == ElementKind.METHOD) {
+					String methodName = child.getSimpleName().toString();
+
+					builder.append("\t@Override\n")
+							.append("\tpublic void ")
+							.append(methodName).append("(");
+
+					String[] params = new String[0];
+
+					if (!child.toString().contains("()"))
+						params = child.toString().substring(methodName.length() + 1, child.toString().length() - 1)
+								.split(",");
+
+					for (int i = 0; i < params.length; i++) {
+						builder.append("final ").append(params[i]).append(" ").append("var").append(i + 1);
+						if (i < params.length - 1) builder.append(", ");
+					}
+
+
+					builder.append(") {\n");
+
+					builder.append("\t\t")
+							.append(methodName).append("(");
+
+					for (int i = 0; i < params.length; i++) {
+						builder.append("var").append(i + 1);
+						if (i < params.length - 1) builder.append(", ");
+					}
+
+					builder.append(");");
+
+					builder.append("\n")
+							.append("\t}\n\n");
+				}
+			}
+
+
+			builder.append("}\n"); // close class
+
+
+			writeJavaFile(interfaceName + CLASS_SUFFIX, builder);
+		}
+
+
+		return true;
+	}
+
+	private void writeJavaFile(String className, StringBuilder builder) {
+		try { // write the file
+			JavaFileObject source = processingEnv.getFiler().createSourceFile(PACKAGE_PATH + "." + className);
+
+
+			Writer writer = source.openWriter();
+			writer.write(builder.toString());
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			// Note: calling e.printStackTrace() will print IO errors
+			// that occur from the file already existing after its first run, this is normal
+		}
+	}
+}

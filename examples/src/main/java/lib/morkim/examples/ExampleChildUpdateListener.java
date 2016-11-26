@@ -4,7 +4,7 @@ import lib.morkim.mfw.processor.PendingEventAnnotation;
 import lib.morkim.mfw.ui.UpdateListener;
 
 @PendingEventAnnotation
-public interface ExampleUpdateListener extends UpdateListener {
+public interface ExampleChildUpdateListener extends UpdateListener {
 
 	void initializeTextView();
 
@@ -14,5 +14,5 @@ public interface ExampleUpdateListener extends UpdateListener {
 
 	void initializeList();
 	void initializeListData();
-	void updateListItem(int position);
+	void updateListItem(int position, String param);
 }
