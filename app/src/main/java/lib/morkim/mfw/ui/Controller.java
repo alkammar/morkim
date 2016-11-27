@@ -146,21 +146,25 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 			viewable.onAssignListeners();
 		}
 
-		onInitViews();
+		onShowViewable();
 	}
 
 	void unbindViews() {
+
+		onHideViewable();
 
 		synchronized (this) {
 			isViewUpdatable = false;
 		}
 	}
 
-	protected void onUnBindViews() {}
-
-	protected void onInitViews() {
-
+	protected void onShowViewable() {
+		if (emptyUpdateListener instanceof AbstractUpdateListenerPending)
+			((AbstractUpdateListenerPending) emptyUpdateListener).setUpdateListener(updateListener);
+		pendingEventsExecutor.onExecutePendingEvents();
 	}
+
+	protected void onHideViewable() {}
 
 	private V createStubUpdateListener() {
 

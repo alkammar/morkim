@@ -36,7 +36,7 @@ public class PendingEventProcessor extends AbstractProcessor {
 					.append("import lib.morkim.mfw.ui.AbstractUpdateListenerPending;\n")
 					.append("import lib.morkim.mfw.ui.Controller;\n\n")
 					.append("public class ").append(interfaceName).append(CLASS_SUFFIX).append("\n")
-					.append("\textends ").append("AbstractUpdateListenerPending").append("\n")
+					.append("\textends AbstractUpdateListenerPending<").append(element.toString()).append(">\n")
 					.append("\timplements ").append(element.toString()).append(" {\n\n");
 
 			for (Element child : element.getEnclosedElements()) {
@@ -63,7 +63,7 @@ public class PendingEventProcessor extends AbstractProcessor {
 						.append("\t\t\tpublic void onExecuteWhenUiAvailable() {\n");
 
 					builder.append("\t\t\t\t")
-							.append(methodName).append("(");
+							.append("updateListener.").append(methodName).append("(");
 
 					for (int i = 0; i < params.length; i++) {
 						builder.append("var").append(i + 1);

@@ -15,4 +15,6 @@ public interface ExampleUpdateListener extends UpdateListener {
 	void initializeList();
 	void initializeListData();
 	void updateListItem(int position);
+
+	void updateSomethingWhenViewableNotAvailable();
 }

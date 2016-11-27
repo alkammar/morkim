@@ -79,6 +79,11 @@ public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, Exampl
     }
 
     @Override
+    public void updateSomethingWhenViewableNotAvailable() {
+        recyclerView.setBackgroundColor(0xffff0000);
+    }
+
+    @Override
     public void updateTextView() {
         textView.setText(presenter.getTextViewText());
     }
@@ -86,5 +91,12 @@ public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, Exampl
     @Override
     public ExampleUpdateListener getUpdateListener() {
         return this;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        controller.onScreenStopped();
     }
 }

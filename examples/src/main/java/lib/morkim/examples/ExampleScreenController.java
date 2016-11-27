@@ -41,8 +41,8 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
      }
 
     @Override
-    protected void onInitViews() {
-        super.onInitViews();
+    protected void onShowViewable() {
+        super.onShowViewable();
 
         getUpdateListener().initializeTextView();
 
@@ -118,5 +118,9 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
             entity.index -= 100;
             getUpdateListener().updateListItem(entities.indexOf(entity));
         }
+    }
+
+    void onScreenStopped() {
+        getUpdateListener().updateSomethingWhenViewableNotAvailable();
     }
 }
