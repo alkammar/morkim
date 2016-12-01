@@ -1,5 +1,6 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen;
 
+import lib.morkim.examples.R;
 import lib.morkim.mfw.ui.Presenter;
 
 class ExamplePresenter extends Presenter<ExampleScreenController> {

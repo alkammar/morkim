@@ -1,11 +1,11 @@
-package lib.morkim.examples;
+package lib.morkim.examples.repo;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.repo.MorkimRepository;
 
-class ExampleRepository extends MorkimRepository {
+public class ExampleRepository extends MorkimRepository {
 
-	ExampleRepository(MorkimApp application) {
+	public ExampleRepository(MorkimApp application) {
 		super(application);
 	}
 

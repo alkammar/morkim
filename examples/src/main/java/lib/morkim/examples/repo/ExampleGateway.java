@@ -1,11 +1,12 @@
-package lib.morkim.examples;
+package lib.morkim.examples.repo;
 
 import java.util.Map;
 
+import lib.morkim.examples.model.ExampleEntity;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.repo.persistence.SpGateway;
 
-class ExampleGateway extends SpGateway<ExampleEntity> {
+public class ExampleGateway extends SpGateway<ExampleEntity> {
 
     public ExampleGateway(MorkimApp morkimApp) {
         super(morkimApp);

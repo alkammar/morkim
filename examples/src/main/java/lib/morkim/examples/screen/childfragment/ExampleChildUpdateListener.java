@@ -1,9 +1,8 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen.childfragment;
 
-import lib.morkim.mfw.mvp.PendingViewableUpdate;
 import lib.morkim.mfw.ui.UpdateListener;
 
-@PendingViewableUpdate
+//@PendingViewableUpdate
 public interface ExampleChildUpdateListener extends UpdateListener {
 
 	void initializeTextView();

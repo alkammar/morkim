@@ -1,5 +1,6 @@
 package lib.morkim.examples;
 
+import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 

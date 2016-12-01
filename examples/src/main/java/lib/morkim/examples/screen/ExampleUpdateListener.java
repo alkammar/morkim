@@ -1,14 +1,9 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen;
 
 import lib.morkim.mfw.mvp.PendingViewableUpdate;
-import lib.morkim.mfw.ui.UpdateListener;
 
 @PendingViewableUpdate
-public interface ExampleUpdateListener extends UpdateListener {
-
-	void initializeTextView();
-
-	void updateTextView();
+public interface ExampleUpdateListener extends ExampleBaseUpdateListener {
 
 	void doSomeAction();
 

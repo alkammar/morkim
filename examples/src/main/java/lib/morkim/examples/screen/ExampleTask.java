@@ -1,7 +1,8 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen;
 
 import android.os.SystemClock;
 
+import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.MorkimAsyncTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;

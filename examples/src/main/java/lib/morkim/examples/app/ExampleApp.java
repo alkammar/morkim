@@ -1,5 +1,7 @@
-package lib.morkim.examples;
+package lib.morkim.examples.app;
 
+import lib.morkim.examples.repo.ExampleRepository;
+import lib.morkim.examples.ExampleTaskFactory;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;

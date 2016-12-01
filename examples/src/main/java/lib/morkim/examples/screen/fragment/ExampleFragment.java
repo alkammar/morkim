@@ -1,9 +1,11 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import lib.morkim.examples.screen.childfragment.ExampleChildFragment;
+import lib.morkim.examples.R;
 import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.MorkimFragment;
 import lib.morkim.mfw.ui.UpdateListener;

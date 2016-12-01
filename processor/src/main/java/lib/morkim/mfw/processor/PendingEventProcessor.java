@@ -12,6 +12,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.JavaFileObject;
 
 import lib.morkim.mfw.mvp.PendingViewableUpdate;
@@ -41,45 +43,34 @@ public class PendingEventProcessor extends AbstractProcessor {
 					.append("\textends AbstractUpdateListenerPending<").append(element.toString()).append(">\n")
 					.append("\timplements ").append(element.toString()).append(" {\n\n");
 
+//			try {
+//				Class interfaceClass = Class.forName(element.asType().toString());
+//				builder.append(interfaceClass.getName());
+//			} catch (ClassNotFoundException e) {
+//				e.printStackTrace();
+//				builder.append(e);
+//			}
+
+//			TypeMirror typeMirror = element.();
+
+//			for (asfd : annotations.addAll())
+			final TypeElement typeElement = (TypeElement) element;
+
+			for (TypeMirror parent : typeElement.getInterfaces()) {
+
+				DeclaredType kind = (DeclaredType) parent;
+				Element o = kind.asElement();
+
+				for (Element method : o.getEnclosedElements())
+					addMethod(builder, method);
+
+//				for (method : parent.)
+			}
+
+
 			for (Element child : element.getEnclosedElements()) {
 
-				if (child.getKind() == ElementKind.METHOD) {
-					String methodName = child.getSimpleName().toString();
-
-					builder.append("\t@Override\n")
-							.append("\tpublic void ")
-							.append(methodName).append("(");
-
-					String[] params = new String[0];
-
-					if (!child.toString().contains("()"))
-						params = child.toString().substring(methodName.length() + 1, child.toString().length() - 1)
-								.split(",");
-
-					generateMethodSignature(builder, params);
-
-					builder.append(") {\n");
-
-					builder.append("\t\tpendingEventsExecutor.add(new Controller.PendingEvent() {\n")
-						.append("\t\t\t@Override\n")
-						.append("\t\t\tpublic void onExecuteWhenUiAvailable() {\n");
-
-					builder.append("\t\t\t\t")
-							.append("updateListener.").append(methodName).append("(");
-
-					for (int i = 0; i < params.length; i++) {
-						builder.append("var").append(i + 1);
-						if (i < params.length - 1) builder.append(", ");
-					}
-
-					builder.append(");\n");
-
-					builder.append("\t\t\t}\n")
-							.append("\t\t});");
-
-					builder.append("\n")
-							.append("\t}\n\n");
-				}
+				addMethod(builder, child);
 			}
 
 
@@ -91,6 +82,46 @@ public class PendingEventProcessor extends AbstractProcessor {
 
 
 		return true;
+	}
+
+	private void addMethod(StringBuilder builder, Element child) {
+		if (child.getKind() == ElementKind.METHOD) {
+			String methodName = child.getSimpleName().toString();
+
+			builder.append("\t@Override\n")
+					.append("\tpublic void ")
+					.append(methodName).append("(");
+
+			String[] params = new String[0];
+
+			if (!child.toString().contains("()"))
+				params = child.toString().substring(methodName.length() + 1, child.toString().length() - 1)
+						.split(",");
+
+			generateMethodSignature(builder, params);
+
+			builder.append(") {\n");
+
+			builder.append("\t\tpendingEventsExecutor.add(new Controller.PendingEvent() {\n")
+				.append("\t\t\t@Override\n")
+				.append("\t\t\tpublic void onExecuteWhenUiAvailable() {\n");
+
+			builder.append("\t\t\t\t")
+					.append("updateListener.").append(methodName).append("(");
+
+			for (int i = 0; i < params.length; i++) {
+				builder.append("var").append(i + 1);
+				if (i < params.length - 1) builder.append(", ");
+			}
+
+			builder.append(");\n");
+
+			builder.append("\t\t\t}\n")
+					.append("\t\t});");
+
+			builder.append("\n")
+					.append("\t}\n\n");
+		}
 	}
 
 	private void generateMethodSignature(StringBuilder builder, String[] params) {

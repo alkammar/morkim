@@ -1,4 +1,4 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen;
 
 import lib.morkim.mfw.usecase.TaskResult;
 

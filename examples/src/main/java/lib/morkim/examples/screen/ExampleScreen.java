@@ -1,4 +1,4 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import lib.morkim.examples.R;
+import lib.morkim.examples.screen.fragment.ExampleFragment;
 import lib.morkim.mfw.ui.AppCompatScreen;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 

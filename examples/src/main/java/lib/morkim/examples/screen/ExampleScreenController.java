@@ -1,4 +1,4 @@
-package lib.morkim.examples;
+package lib.morkim.examples.screen;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -6,6 +6,10 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import lib.morkim.examples.ExampleBaseController;
+import lib.morkim.examples.app.ExampleApp;
+import lib.morkim.examples.model.ExampleEntity;
+import lib.morkim.examples.screen.fragment.ExampleParentListener;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
