@@ -1,9 +1,9 @@
 package lib.morkim.examples;
 
-import lib.morkim.mfw.processor.PendingEventAnnotation;
+import lib.morkim.mfw.mvp.PendingViewableUpdate;
 import lib.morkim.mfw.ui.UpdateListener;
 
-@PendingEventAnnotation
+@PendingViewableUpdate
 public interface ExampleUpdateListener extends UpdateListener {
 
 	void initializeTextView();

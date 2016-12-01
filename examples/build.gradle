@@ -21,17 +21,10 @@ android {
 }
 
 dependencies {
-    compile files('libs/processor.jar')
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    provided project(':annotation')
+    apt project(':processor')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':app')
 }
-
-task processorTask(type: Copy) {
-    from '../processor/build/libs/processor.jar'
-    into 'libs/'
-}
-
-processorTask.dependsOn(':processor:build')
-preBuild.dependsOn(processorTask)

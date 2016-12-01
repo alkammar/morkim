@@ -14,8 +14,10 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.JavaFileObject;
 
+import lib.morkim.mfw.mvp.PendingViewableUpdate;
 
-@SupportedAnnotationTypes("lib.morkim.mfw.processor.PendingEventAnnotation")
+
+@SupportedAnnotationTypes("lib.morkim.mfw.mvp.PendingViewableUpdate")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class PendingEventProcessor extends AbstractProcessor {
 
@@ -27,7 +29,7 @@ public class PendingEventProcessor extends AbstractProcessor {
 
 
 		// for each javax.lang.model.element.Element annotated with the CustomAnnotation
-		for (Element element : roundEnv.getElementsAnnotatedWith(PendingEventAnnotation.class)) {
+		for (Element element : roundEnv.getElementsAnnotatedWith(PendingViewableUpdate.class)) {
 
 			String interfaceName = element.getSimpleName().toString();
 
