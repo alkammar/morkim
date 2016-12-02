@@ -92,7 +92,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	    presenter.onAttachController(controller);
 
 	    viewable.onBindViews();
-	    controller.onInitializeViews(viewable.getUpdateListener());
+	    controller.onInitializeViews();
 
 		controllers.put(viewable.getInstanceId(), controller);
 

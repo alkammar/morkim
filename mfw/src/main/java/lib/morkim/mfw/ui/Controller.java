@@ -73,7 +73,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, V e
 		}
 	}
 
-	public void onInitializeViews(V updateListener) {}
+	public void onInitializeViews() {}
 
 	public void onAttachParent(Viewable<V, ?, ?> viewable) {}
 
