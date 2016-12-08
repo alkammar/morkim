@@ -10,26 +10,33 @@ import lib.morkim.examples.ExampleBaseController;
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.model.ExampleEntity;
 import lib.morkim.examples.screen.fragment.ExampleParentListener;
+import lib.morkim.examples.task.ExampleResult;
+import lib.morkim.examples.task.ExampleTask;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
-import lib.morkim.mfw.usecase.MorkimTask;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.OnTaskUpdateListener;
+import lib.morkim.mfw.usecase.UseCaseCreator;
+import lib.morkim.mfw.usecase.UseCaseSubscription;
 
-class ExampleScreenController extends ExampleBaseController<ExampleUpdateListener> implements ExampleParentListener {
+class ExampleScreenController
+        extends ExampleBaseController<ExampleUpdateListener>
+        implements ExampleParentListener {
 
     private int count;
 
     private List<ExampleEntity> entities;
 
-    ExampleScreenController(ExampleApp morkimApp) {
-        super(morkimApp);
+    @Override
+    public void onAttachApp(ExampleApp morkimApp) {
+        super.onAttachApp(morkimApp);
 
         try {
             ExampleEntity entity = new ExampleEntity();
-            entity.save(getAppContext().getRepo());
-            entity = getAppContext().getRepo().get(ExampleEntity.class).retrieve();
-            List<ExampleEntity> entities = getAppContext().getRepo().get(ExampleEntity.class).retrieveAll();
+            entity.save(morkimApp.getRepo());
+            entity = morkimApp.getRepo().get(ExampleEntity.class).retrieve();
+            List<ExampleEntity> entities = morkimApp.getRepo().get(ExampleEntity.class).retrieveAll();
         } catch (GatewayRetrieveException | GatewayPersistException e) {
             e.printStackTrace();
         }
@@ -41,8 +48,7 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
             entity.index = i;
             entities.add(entity);
         }
-
-     }
+    }
 
     @Override
     protected void onShowViewable() {
@@ -62,32 +68,33 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
     };
 
     View.OnClickListener taskButtonClickListener = new View.OnClickListener() {
+
         @Override
-        public void onClick(android.view.View v) {
+        public void onClick(View v) {
 
-            new ExampleTask(getAppContext(), new MorkimTaskListener<ExampleResult>() {
-                @Override
-                public void onTaskStart(MorkimTask useCase) {}
+            new UseCaseCreator<ExampleTask>()
+                    .create(ExampleTask.class)
+                    .with(new ExampleTaskDependenciesImpl(getAppContext()))
+                    .execute();
+        }
+    };
 
-                @Override
-                public void onTaskUpdate(ExampleResult result) {
-                    count = result.count;
-                    getUpdateListener().updateTextView();
-                }
+    @UseCaseSubscription(ExampleTask.class)
+    private MorkimTaskListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
 
-                @Override
-                public void onTaskComplete(ExampleResult result) {
+        @Override
+        public void onTaskUpdate(ExampleResult result) {
+            count = result.count;
+            getUpdateListener().updateTextView();
+        }
 
-                    for (ExampleEntity entity : entities) {
-                        entity.index += 100;
-                        getUpdateListener().updateListItem(entities.indexOf(entity));
-                    }
-                }
+        @Override
+        public void onTaskComplete(ExampleResult result) {
 
-                @Override
-                public void onTaskCancel() {}
-
-            }).execute();
+            for (ExampleEntity entity : entities) {
+                entity.index += 100;
+                getUpdateListener().updateListItem(entities.indexOf(entity));
+            }
         }
     };
 
@@ -97,13 +104,6 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
 
             entities.get(position).index++;
             getUpdateListener().updateListItem(position);
-
-            pendingEventsExecutor.add(new PendingEvent() {
-                @Override
-                public void onExecuteWhenUiAvailable() {
-                    getUpdateListener().updateListItem(position);
-                }
-            });
         }
     };
 
@@ -127,4 +127,5 @@ class ExampleScreenController extends ExampleBaseController<ExampleUpdateListene
     void onScreenStopped() {
         getUpdateListener().updateSomethingWhenViewableNotAvailable();
     }
+
 }

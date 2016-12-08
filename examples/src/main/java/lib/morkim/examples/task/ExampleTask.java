@@ -1,21 +1,31 @@
-package lib.morkim.examples.screen;
+package lib.morkim.examples.task;
 
 import android.os.SystemClock;
 
 import lib.morkim.examples.app.ExampleApp;
+import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.MorkimAsyncTask;
-import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.TaskDependency;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-class ExampleTask extends MorkimAsyncTask<ExampleApp, Model, TaskRequest, ExampleResult> {
+public class ExampleTask extends MorkimAsyncTask<ExampleApp, Model, TaskRequest, ExampleResult> {
 
-	ExampleTask(ExampleApp appContext, MorkimTaskListener<ExampleResult> morkimTaskListener) {
-		super(appContext, morkimTaskListener);
-	}
+	@TaskDependency
+	private BackEndCall backEndCall;
+
+//	public ExampleTask() {
+//		super();
+//	}
+//
+//	public ExampleTask(ExampleApp appContext, MorkimTaskListener<ExampleResult> morkimTaskListener) {
+//		super(appContext, morkimTaskListener);
+//	}
 
 	@Override
 	protected ExampleResult onExecute(TaskRequest request) {
+
+		backEndCall.send(new BackEndCall.Request());
 
 		ExampleResult result = new ExampleResult();
 		result.setCompletionPercent(0);

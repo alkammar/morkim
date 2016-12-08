@@ -7,7 +7,7 @@ import lib.morkim.mfw.ui.UpdateListener;
 
 public class ExampleBaseController<V extends UpdateListener> extends Controller<ExampleApp, Model, V> {
 
-	protected ExampleBaseController(ExampleApp morkimApp) {
-		super(morkimApp);
+	protected ExampleBaseController() {
+		super();
 	}
 }

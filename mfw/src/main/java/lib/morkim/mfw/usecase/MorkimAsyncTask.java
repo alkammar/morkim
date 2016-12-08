@@ -22,6 +22,12 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 
 	}
 
+	public MorkimAsyncTask() {
+		super();
+
+		this.asyncTask = new Task();
+	}
+
 	@SuppressWarnings("unchecked")
 	private class Task extends AsyncTask<Req, Res, Void> {
 
@@ -62,6 +68,8 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 
 	@Override
 	public void execute() {
+
+		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 		asyncTask.execute();
 	}
 

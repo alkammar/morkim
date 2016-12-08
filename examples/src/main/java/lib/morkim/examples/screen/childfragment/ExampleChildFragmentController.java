@@ -6,9 +6,6 @@ import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.UpdateListener;
 
 
-public class ExampleChildFragmentController extends Controller<ExampleApp, Model, UpdateListener> {
+class ExampleChildFragmentController extends Controller<ExampleApp, Model, UpdateListener> {
 
-	public ExampleChildFragmentController(ExampleApp morkimApp) {
-		super(morkimApp);
-	}
 }

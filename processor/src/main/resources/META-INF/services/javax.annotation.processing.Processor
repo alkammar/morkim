@@ -1,1 +1,1 @@
-lib.morkim.mfw.processor.PendingEventProcessor
+lib.morkim.mfw.mvp.PendingEventProcessor

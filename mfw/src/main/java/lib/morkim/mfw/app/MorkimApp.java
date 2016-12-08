@@ -7,7 +7,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,6 +27,9 @@ import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.UpdateListener;
 import lib.morkim.mfw.ui.Viewable;
+import lib.morkim.mfw.usecase.MorkimTask;
+import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.TaskResult;
 
 /**
  * Holds application configuration. You should create here your Repository, Model ... etc.
@@ -42,8 +47,10 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
     private Map<UUID, Controller> controllers;
 
 	private M model;
-	private TaskScheduler taskScheduler;
 
+	private Map<Class<? extends MorkimTask>, List<MorkimTaskListener<? extends TaskResult>>> useCasesListeners;
+
+	private TaskScheduler taskScheduler;
 
     @Override
 	public void onCreate() {
@@ -64,6 +71,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		if (model == null) 
 			throw new Error(String.format("createModel() method in %s must return a non-null implementation", this.getClass()));
 
+	    useCasesListeners = new HashMap<>();
+
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
 
 		try {
@@ -79,12 +88,13 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * @param viewable Viewable to fetch Controller for
 	 * @return Controller associated with passed viewable
 	 */
-    public <U extends UpdateListener, C extends Controller, P extends Presenter> C createUiComponents(Viewable<U, C, P> viewable) {
+    public <u extends UpdateListener, c extends Controller, p extends Presenter> c createUiComponents(Viewable<u, c, p> viewable) {
 
-        C controller = (C) controllers.get(viewable.getInstanceId());
+        c controller = (c) controllers.get(viewable.getInstanceId());
         controller = (controller == null) ? constructController(viewable) : controller;
+	    controller.onAttachApp(this);
 
-	    P presenter = createPresenter(viewable);
+	    p presenter = createPresenter(viewable);
 
 	    viewable.onAttachPresenter(presenter);
 	    viewable.onAttachController(controller);
@@ -99,48 +109,50 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return controller;
     }
 
-	private <C extends Controller> C constructController(Viewable<?, C, ?> viewable) {
+	private <c extends Controller> c constructController(Viewable<?, c, ?> viewable) {
 
 		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 
-		Class<C> controllerClass = null;
+		Class<c> controllerClass = null;
 
 		if (genericSuperclass instanceof ParameterizedType) {
-			controllerClass = (Class<C>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[1];
+			controllerClass = (Class<c>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[1];
 		}
 
 		try {
 			if (controllerClass != null) {
-				Constructor<C> constructor = (Constructor<C>) controllerClass.getDeclaredConstructors()[0];
+				Constructor<c> constructor = (Constructor<c>) controllerClass.getDeclaredConstructors()[0];
 				constructor.setAccessible(true);
-				return constructor.newInstance(this);
+				return constructor.newInstance();
 			} else
-				return (C) new EmptyController((MorkimApp<Model, ?>) this);
+				return (c) new EmptyController();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			Log.e("MorkimApp", "constructController " + e.getCause().getMessage());
+			Log.e("MorkimApp", e.getCause().getMessage());
+			for (StackTraceElement element : e.getCause().getStackTrace())
+				Log.e("MorkimApp", "\tat " + element);
 			e.printStackTrace();
 		}
 
 		return null;
 	}
 
-	public <P extends Presenter> P createPresenter(Viewable<?, ?, P> viewable) {
+	public <p extends Presenter> p createPresenter(Viewable<?, ?, p> viewable) {
 
 		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 
-		Class<P> presenterClass;
+		Class<p> presenterClass;
 
 		if (genericSuperclass instanceof ParameterizedType)
-			presenterClass = (Class<P>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[2];
+			presenterClass = (Class<p>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[2];
 		else
-			presenterClass = (Class<P>) EmptyPresenter.class;
+			presenterClass = (Class<p>) EmptyPresenter.class;
 
 		try {
-			Constructor<P> constructor = presenterClass.getDeclaredConstructor();
+			Constructor<p> constructor = presenterClass.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			return constructor.newInstance();
 		} catch (NoSuchMethodException e) {
@@ -153,20 +165,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 			Log.e("MorkimApp", "constructPresenter " + e.getCause().getMessage());
 			e.printStackTrace();
 		}
-
-		return null;
-	}
-
-	/**
-	 * Gets a controller given its class
-	 * @param cls Controller class
-	 * @return Controller. Returns null if the controller does not exist
-	 */
-	protected Controller getController(Class<?> cls) {
-
-		for (Controller controller : controllers.values())
-			if (controller.getClass().equals(cls))
-				return controller;
 
 		return null;
 	}
@@ -185,7 +183,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	/**
 	 * Create specific application factories. The factories created here are not
-	 * used by Morkim framework. You can just you this for creating the
+	 * used by Morkim framework. You can just this for creating the
 	 * factories at an early initialization state of the application.
 	 */
 	protected abstract void createFactories();
@@ -251,5 +249,40 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	public <P extends Presenter> String getCountryCode() {
 		return getResources().getConfiguration().locale.getCountry();
+	}
+
+	public void subscribeToUseCase(Class<? extends MorkimTask> task, MorkimTaskListener<? extends TaskResult> listener) {
+
+		synchronized (this) {
+			List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(task);
+
+			if (useCaseListeners == null) {
+				useCaseListeners = new ArrayList<>();
+				useCasesListeners.put(task, useCaseListeners);
+			}
+
+			useCaseListeners.add(listener);
+		}
+	}
+
+	public void unsubscribeFromUseCase(Class<? extends MorkimTask> task, MorkimTaskListener listener) {
+
+		synchronized (this) {
+			List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(task);
+
+			if (useCaseListeners != null) {
+				useCaseListeners.remove(listener);
+
+				if (useCaseListeners.isEmpty())
+					useCasesListeners.remove(task);
+			}
+		}
+	}
+
+	public List<MorkimTaskListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends MorkimTask> aClass) {
+		synchronized (this) {
+			List<MorkimTaskListener<? extends TaskResult>> useCasekListeners = useCasesListeners.get(aClass);
+			return useCasekListeners != null ? useCasekListeners : new ArrayList<MorkimTaskListener<? extends TaskResult>>();
+		}
 	}
 }

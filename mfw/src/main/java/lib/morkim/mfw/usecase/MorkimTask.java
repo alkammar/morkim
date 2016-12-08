@@ -1,5 +1,7 @@
 package lib.morkim.mfw.usecase;
 
+import java.util.List;
+
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
@@ -7,11 +9,26 @@ import lib.morkim.mfw.repo.Repository;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult> {
 
+	@TaskDependency
 	protected A appContext;
 	protected M model;
 	protected Repository repo;
 
-	protected MorkimTaskListener<Res> listener;
+	protected MorkimTaskListener<Res> listener = new MorkimTaskListener<Res>() {
+		@Override
+		public void onTaskStart(MorkimTask task) {}
+
+		@Override
+		public void onTaskUpdate(Res result) {}
+
+		@Override
+		public void onTaskComplete(Res result) {}
+
+		@Override
+		public void onTaskCancel() {}
+	};
+
+	protected List<MorkimTaskListener<? extends TaskResult>> subscribedListeners;
 
 	private Req request;
 
@@ -21,22 +38,12 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 		this.model = appContext.getModel();
 		this.repo = appContext.getRepo();
 
-		if (listener == null)
-			this.listener = new MorkimTaskListener<Res>() {
-				@Override
-				public void onTaskStart(MorkimTask task) {}
-
-				@Override
-				public void onTaskUpdate(Res result) {}
-
-				@Override
-				public void onTaskComplete(Res result) {}
-
-				@Override
-				public void onTaskCancel() {}
-			};
-		else
+		if (listener != null)
 			this.listener = listener;
+	}
+
+	public MorkimTask() {
+
 	}
 
 	public void execute() {
@@ -48,10 +55,13 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 	}
 
 	public void executeSync() {
-		onExecute(null);
+		executeSync(null);
 	}
 
 	public void executeSync(Req request) {
+
+		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
+
 		setRequest(request);
 		onExecute(request);
 	}
@@ -69,10 +79,19 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 	protected void updateListener(Res result) {
 
 		if (result != null) {
-			if (result.completionPercent != 100)
+			if (result.completionPercent != 100) {
 				listener.onTaskUpdate(result);
-			else
+
+				for (MorkimTaskListener subsribedListener : subscribedListeners)
+					if (!subsribedListener.equals(MorkimTask.this.listener))
+						subsribedListener.onTaskUpdate(result);
+			} else {
 				listener.onTaskComplete(result);
+
+				for (MorkimTaskListener subsribedListener : subscribedListeners)
+					if (!subsribedListener.equals(MorkimTask.this.listener))
+						subsribedListener.onTaskComplete(result);
+			}
 		} else
 			listener.onTaskComplete(null);
 	}
@@ -95,7 +114,9 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 		return listener;
 	}
 
-	public void setListener(MorkimTaskListener<Res> listener) {
+	public MorkimTask setListener(MorkimTaskListener<Res> listener) {
 		this.listener = listener;
+
+		return this;
 	}
 }

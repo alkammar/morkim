@@ -5,7 +5,4 @@ import lib.morkim.mfw.domain.Model;
 
 public class EmptyController extends Controller<MorkimApp<Model, ?>, Model, UpdateListener> {
 
-	public EmptyController(MorkimApp<Model, ?> morkimApp) {
-		super(morkimApp);
-	}
 }

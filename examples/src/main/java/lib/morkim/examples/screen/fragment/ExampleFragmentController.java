@@ -3,21 +3,21 @@ package lib.morkim.examples.screen.fragment;
 import android.view.View;
 
 import lib.morkim.examples.app.ExampleApp;
+import lib.morkim.examples.task.ExampleResult;
+import lib.morkim.examples.task.ExampleTask;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.Controller;
-import lib.morkim.mfw.ui.UpdateListener;
 import lib.morkim.mfw.ui.Viewable;
+import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.OnTaskUpdateListener;
+import lib.morkim.mfw.usecase.UseCaseSubscription;
 
-class ExampleFragmentController extends Controller<ExampleApp, Model, UpdateListener> {
+class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFragmentUpdateListener> {
 
 	private ExampleParentListener parentListener;
 
-	public ExampleFragmentController(ExampleApp morkimApp) {
-		super(morkimApp);
-	}
-
 	@Override
-	public void onAttachViewable(Viewable<UpdateListener, ?, ?> viewable) {
+	public void onAttachViewable(Viewable<ExampleFragmentUpdateListener, ?, ?> viewable) {
 		super.onAttachViewable(viewable);
 
 		parentListener = viewable.getParentListener();
@@ -27,6 +27,20 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, UpdateList
 		@Override
 		public void onClick(View v) {
 			parentListener.onDoSomethingWhenButtonClicked();
+		}
+	};
+
+	@UseCaseSubscription(ExampleTask.class)
+	private MorkimTaskListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
+
+		@Override
+		public void onTaskUpdate(ExampleResult result) {
+			getUpdateListener().getClass();
+		}
+
+		@Override
+		public void onTaskComplete(ExampleResult result) {
+			getUpdateListener().doFragmentAction();
 		}
 	};
 }

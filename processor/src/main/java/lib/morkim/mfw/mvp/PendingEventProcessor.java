@@ -1,4 +1,4 @@
-package lib.morkim.mfw.processor;
+package lib.morkim.mfw.mvp;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -15,8 +15,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.JavaFileObject;
-
-import lib.morkim.mfw.mvp.PendingViewableUpdate;
 
 
 @SupportedAnnotationTypes("lib.morkim.mfw.mvp.PendingViewableUpdate")
@@ -43,17 +41,6 @@ public class PendingEventProcessor extends AbstractProcessor {
 					.append("\textends AbstractUpdateListenerPending<").append(element.toString()).append(">\n")
 					.append("\timplements ").append(element.toString()).append(" {\n\n");
 
-//			try {
-//				Class interfaceClass = Class.forName(element.asType().toString());
-//				builder.append(interfaceClass.getName());
-//			} catch (ClassNotFoundException e) {
-//				e.printStackTrace();
-//				builder.append(e);
-//			}
-
-//			TypeMirror typeMirror = element.();
-
-//			for (asfd : annotations.addAll())
 			final TypeElement typeElement = (TypeElement) element;
 
 			for (TypeMirror parent : typeElement.getInterfaces()) {
@@ -63,8 +50,6 @@ public class PendingEventProcessor extends AbstractProcessor {
 
 				for (Element method : o.getEnclosedElements())
 					addMethod(builder, method);
-
-//				for (method : parent.)
 			}
 
 
