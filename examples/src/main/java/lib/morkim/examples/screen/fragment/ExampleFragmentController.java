@@ -3,8 +3,8 @@ package lib.morkim.examples.screen.fragment;
 import android.view.View;
 
 import lib.morkim.examples.app.ExampleApp;
-import lib.morkim.examples.task.ExampleResult;
-import lib.morkim.examples.task.ExampleTask;
+import lib.morkim.examples.usecase.ExampleResult;
+import lib.morkim.examples.usecase.ExampleTask;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.Viewable;

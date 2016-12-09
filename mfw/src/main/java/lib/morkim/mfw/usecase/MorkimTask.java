@@ -82,15 +82,17 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 			if (result.completionPercent != 100) {
 				listener.onTaskUpdate(result);
 
-				for (MorkimTaskListener subsribedListener : subscribedListeners)
-					if (!subsribedListener.equals(MorkimTask.this.listener))
-						subsribedListener.onTaskUpdate(result);
+				if (subscribedListeners != null)
+					for (MorkimTaskListener subsribedListener : subscribedListeners)
+						if (!subsribedListener.equals(MorkimTask.this.listener))
+							subsribedListener.onTaskUpdate(result);
 			} else {
 				listener.onTaskComplete(result);
 
-				for (MorkimTaskListener subsribedListener : subscribedListeners)
-					if (!subsribedListener.equals(MorkimTask.this.listener))
-						subsribedListener.onTaskComplete(result);
+				if (subscribedListeners != null)
+					for (MorkimTaskListener subsribedListener : subscribedListeners)
+						if (!subsribedListener.equals(MorkimTask.this.listener))
+							subsribedListener.onTaskComplete(result);
 			}
 		} else
 			listener.onTaskComplete(null);

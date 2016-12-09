@@ -4,7 +4,7 @@ import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendimpl.BackEndCallImpl;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.examples.repo.ExampleGateway;
-import lib.morkim.examples.task.ExampleTaskDependencies;
+import lib.morkim.examples.usecase.ExampleTaskDependencies;
 import lib.morkim.mfw.repo.gateway.Gateway;
 
 class ExampleTaskDependenciesImpl implements ExampleTaskDependencies {

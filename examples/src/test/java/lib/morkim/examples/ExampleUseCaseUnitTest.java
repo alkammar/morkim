@@ -7,8 +7,8 @@ import java.util.List;
 
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
-import lib.morkim.examples.task.ExampleTask;
-import lib.morkim.examples.task.ExampleTaskDependencies;
+import lib.morkim.examples.usecase.ExampleTask;
+import lib.morkim.examples.usecase.ExampleTaskDependencies;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.Gateway;

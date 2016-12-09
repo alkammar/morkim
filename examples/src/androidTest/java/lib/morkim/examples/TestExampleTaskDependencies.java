@@ -2,7 +2,7 @@ package lib.morkim.examples;
 
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
-import lib.morkim.examples.task.ExampleTaskDependencies;
+import lib.morkim.examples.usecase.ExampleTaskDependencies;
 import lib.morkim.mfw.repo.gateway.Gateway;
 
 class TestExampleTaskDependencies implements ExampleTaskDependencies {
