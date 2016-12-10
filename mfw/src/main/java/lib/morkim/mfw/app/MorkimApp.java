@@ -22,7 +22,6 @@ import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.TaskFactory;
 import lib.morkim.mfw.task.TaskScheduler;
 import lib.morkim.mfw.ui.Controller;
-import lib.morkim.mfw.ui.EmptyController;
 import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.UpdateListener;
@@ -129,18 +128,12 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 				}
 			}
 
-			if (controllerClass != null)
-				break;
-
-		} while (genericSuperclass != null);
+		} while (controllerClass == null);
 
 		try {
-			if (controllerClass != null) {
-				Constructor<c> constructor = (Constructor<c>) controllerClass.getDeclaredConstructors()[0];
-				constructor.setAccessible(true);
-				return constructor.newInstance();
-			} else
-				return (c) new EmptyController();
+			Constructor<c> constructor = (Constructor<c>) controllerClass.getDeclaredConstructors()[0];
+			constructor.setAccessible(true);
+			return constructor.newInstance();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
