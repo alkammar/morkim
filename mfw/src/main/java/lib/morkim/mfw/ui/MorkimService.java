@@ -8,9 +8,9 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class MorkimService<C extends Controller>
+public abstract class MorkimService<U extends UpdateListener, C extends Controller>
 		extends Service
-		implements Viewable<UpdateListener, C, EmptyPresenter> {
+		implements Viewable<U, C, EmptyPresenter> {
 
 	protected C controller;
 	protected EmptyPresenter presenter;
@@ -62,6 +62,14 @@ public abstract class MorkimService<C extends Controller>
 	public void finish() {
 		stopSelf();
 	}
+
+	@Override
+	public U getUpdateListener() {
+		return (U) this;
+	}
+
+	@Override
+	public void onAssignListeners() {}
 
 	@Override
 	public Context getContext() {
