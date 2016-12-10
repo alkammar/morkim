@@ -61,17 +61,25 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	}
 
 	private void subscribeUseCaseListeners() {
-		for (Field field : getClass ().getDeclaredFields()) {
-			if (field.isAnnotationPresent(UseCaseSubscription.class))
-				try {
-					field.setAccessible(true);
-					morkimApp.subscribeToUseCase(
-							field.getAnnotation(UseCaseSubscription.class).value(),
-							(MorkimTaskListener<? extends TaskResult>) field.get(this));
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-		}
+
+		Class<?> cls = getClass();
+
+		do {
+			for (Field field : cls.getDeclaredFields()) {
+				if (field.isAnnotationPresent(UseCaseSubscription.class))
+					try {
+						field.setAccessible(true);
+						morkimApp.subscribeToUseCase(
+								field.getAnnotation(UseCaseSubscription.class).value(),
+								(MorkimTaskListener<? extends TaskResult>) field.get(this));
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+			}
+
+			cls = cls.getSuperclass();
+
+		} while (cls != null);
 	}
 
 	@SuppressWarnings("WeakerAccess")
