@@ -13,6 +13,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 	protected A appContext;
 	@TaskDependency
 	protected M model;
+	@TaskDependency
 	protected Repository repo;
 
 	protected MorkimTaskListener<Res> listener = new MorkimTaskListener<Res>() {

@@ -12,6 +12,7 @@ import lib.morkim.examples.usecase.ExampleUseCaseDependencies;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Filter;
+import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.Gateway;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
@@ -47,6 +48,11 @@ public class ExampleUseCaseUnitTest {
 
         @Override
         public Model getModel() {
+            return null;
+        }
+
+        @Override
+        public Repository getRepository() {
             return null;
         }
 
