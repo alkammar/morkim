@@ -12,12 +12,16 @@ public abstract class MorkimService<U extends UpdateListener, C extends Controll
 		extends Service
 		implements Viewable<U, C, EmptyPresenter> {
 
+	private UUID id;
+
 	protected C controller;
 	protected EmptyPresenter presenter;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		id = UUID.randomUUID();
 
 		UiComponentHelper.createUiComponents(this, getApplication());
 	}
@@ -81,7 +85,7 @@ public abstract class MorkimService<U extends UpdateListener, C extends Controll
 
 	@Override
 	public UUID getInstanceId() {
-		return null;
+		return id;
 	}
 
 	@Override

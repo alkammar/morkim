@@ -109,15 +109,30 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return controller;
     }
 
+	// TODO need to handle case where superclass is not generic
 	private <c extends Controller> c constructController(Viewable<?, c, ?> viewable) {
-
-		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
 
 		Class<c> controllerClass = null;
 
-		if (genericSuperclass instanceof ParameterizedType) {
-			controllerClass = (Class<c>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[1];
-		}
+		Type genericSuperclass;
+		do {
+			genericSuperclass = viewable.getClass().getGenericSuperclass();
+
+			if (genericSuperclass instanceof ParameterizedType) {
+				Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
+
+				for (Type type : actualTypeArguments) {
+					if (Controller.class.isAssignableFrom(((Class<?>) type))) {
+						controllerClass = (Class<c>) type;
+						break;
+					}
+				}
+			}
+
+			if (controllerClass != null)
+				break;
+
+		} while (genericSuperclass != null);
 
 		try {
 			if (controllerClass != null) {
