@@ -59,6 +59,11 @@ public abstract class MorkimService<C extends Controller>
 	}
 
 	@Override
+	public void finish() {
+		stopSelf();
+	}
+
+	@Override
 	public Context getContext() {
 		return this;
 	}
