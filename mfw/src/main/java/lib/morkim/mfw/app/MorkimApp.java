@@ -129,7 +129,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 				}
 			}
 
-			viewableClass = (Class<?>) genericSuperclass;
+			viewableClass = viewableClass.getSuperclass();
 
 		} while (controllerClass == null);
 
