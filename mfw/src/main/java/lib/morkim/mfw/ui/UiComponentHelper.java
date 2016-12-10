@@ -14,13 +14,15 @@ class UiComponentHelper {
 
 	static <V extends UpdateListener, C extends Controller, P extends Presenter> void createUiComponents(Viewable<V, C, P> viewable, Application app) {
 
+		MorkimApp morkimApp;
 		try {
-			MorkimApp morkimApp = (MorkimApp) app;
-			//noinspection unchecked
-			morkimApp.createUiComponents(viewable);
+			morkimApp = (MorkimApp) app;
 		} catch (ClassCastException e) {
 			throw new ClassCastException("Application class must extend a " + MorkimApp.class.getSimpleName() + " class");
 		}
+
+		//noinspection unchecked
+		morkimApp.createUiComponents(viewable);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
