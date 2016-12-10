@@ -122,7 +122,14 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 				Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
 
 				for (Type type : actualTypeArguments) {
-					if (Controller.class.isAssignableFrom(((Class<?>) type))) {
+
+					Class<?> cls;
+
+					cls = type instanceof ParameterizedType ?
+							(Class<?>) ((ParameterizedType) type).getRawType() :
+							(Class<?>) type;
+
+					if (Controller.class.isAssignableFrom(cls)) {
 						controllerClass = (Class<c>) type;
 						break;
 					}
