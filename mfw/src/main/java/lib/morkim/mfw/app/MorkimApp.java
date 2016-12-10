@@ -130,7 +130,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 							(Class<?>) type;
 
 					if (Controller.class.isAssignableFrom(cls)) {
-						controllerClass = (Class<c>) type;
+						controllerClass = (Class<c>) cls;
 						break;
 					}
 				}
