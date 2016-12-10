@@ -112,10 +112,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	private <c extends Controller> c constructController(Viewable<?, c, ?> viewable) {
 
 		Class<c> controllerClass = null;
-
+		Class<?> viewableClass = viewable.getClass();
 		Type genericSuperclass;
+
 		do {
-			genericSuperclass = viewable.getClass().getGenericSuperclass();
+			genericSuperclass = viewableClass.getGenericSuperclass();
 
 			if (genericSuperclass instanceof ParameterizedType) {
 				Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
@@ -127,6 +128,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 					}
 				}
 			}
+
+			viewableClass = (Class<?>) genericSuperclass;
 
 		} while (controllerClass == null);
 
