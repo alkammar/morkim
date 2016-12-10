@@ -39,7 +39,7 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 		permissionsRequestControllers = new HashMap<>();
 
-		UiComponentHelper.createUiComponents(this, this);
+		UiComponentHelper.createUiComponents(this, getApplication());
 	}
 
 	@Override

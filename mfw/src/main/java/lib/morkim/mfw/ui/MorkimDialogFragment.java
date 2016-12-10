@@ -27,7 +27,7 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 		if (layoutId > 0)
 			dialog.setContentView(layoutId());
 
-		UiComponentHelper.createUiComponents(this, getActivity());
+		UiComponentHelper.createUiComponents(this, getActivity().getApplication());
 
 		return dialog;
 	}

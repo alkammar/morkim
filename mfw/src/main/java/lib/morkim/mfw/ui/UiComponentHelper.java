@@ -3,6 +3,7 @@ package lib.morkim.mfw.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Application;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,10 +12,10 @@ import lib.morkim.mfw.app.MorkimApp;
 
 class UiComponentHelper {
 
-	static <V extends UpdateListener, C extends Controller, P extends Presenter> void createUiComponents(Viewable<V, C, P> viewable, Activity activity) {
+	static <V extends UpdateListener, C extends Controller, P extends Presenter> void createUiComponents(Viewable<V, C, P> viewable, Application app) {
 
 		try {
-			MorkimApp morkimApp = (MorkimApp) activity.getApplication();
+			MorkimApp morkimApp = (MorkimApp) app;
 			//noinspection unchecked
 			morkimApp.createUiComponents(viewable);
 		} catch (ClassCastException e) {

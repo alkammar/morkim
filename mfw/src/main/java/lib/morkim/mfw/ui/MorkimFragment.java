@@ -31,7 +31,7 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
 
         id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-        UiComponentHelper.createUiComponents(this, getActivity());
+        UiComponentHelper.createUiComponents(this, getActivity().getApplication());
     }
 
     @Override

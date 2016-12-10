@@ -39,7 +39,7 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 
 		permissionsRequestControllers = new HashMap<>();
 
-		UiComponentHelper.createUiComponents(this, this);
+		UiComponentHelper.createUiComponents(this, getApplication());
 	}
 
 	@Override
