@@ -74,7 +74,7 @@ class ExampleScreenController
 
             new UseCaseCreator<ExampleTask>()
                     .create(ExampleTask.class)
-                    .with(new ExampleTaskDependenciesImpl(getAppContext()))
+                    .with(new ExampleUseCaseDependenciesImpl(getAppContext()))
                     .execute();
         }
     };

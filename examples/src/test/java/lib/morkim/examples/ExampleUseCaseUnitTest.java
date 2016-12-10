@@ -8,13 +8,14 @@ import java.util.List;
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.examples.usecase.ExampleTask;
-import lib.morkim.examples.usecase.ExampleTaskDependencies;
+import lib.morkim.examples.usecase.ExampleUseCaseDependencies;
 import lib.morkim.mfw.domain.Entity;
+import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Filter;
 import lib.morkim.mfw.repo.gateway.Gateway;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
-import lib.morkim.mfw.usecase.TaskDependencies;
+import lib.morkim.mfw.usecase.UseCaseDependencies;
 import lib.morkim.mfw.usecase.UseCaseCreator;
 
 public class ExampleUseCaseUnitTest {
@@ -37,10 +38,15 @@ public class ExampleUseCaseUnitTest {
 //        assertEquals(4, 2 + 2);
     }
 
-    private TaskDependencies exampleUseCaseDependencies = new ExampleTaskDependencies() {
+    private UseCaseDependencies exampleUseCaseDependencies = new ExampleUseCaseDependencies() {
 
         @Override
         public ExampleApp getContext() {
+            return null;
+        }
+
+        @Override
+        public Model getModel() {
             return null;
         }
 

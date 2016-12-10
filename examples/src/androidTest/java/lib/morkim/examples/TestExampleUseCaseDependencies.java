@@ -2,14 +2,14 @@ package lib.morkim.examples;
 
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
-import lib.morkim.examples.usecase.ExampleTaskDependencies;
+import lib.morkim.examples.usecase.ExampleUseCaseDependencies;
 import lib.morkim.mfw.repo.gateway.Gateway;
 
-class TestExampleTaskDependencies implements ExampleTaskDependencies {
+class TestExampleUseCaseDependencies implements ExampleUseCaseDependencies {
 
     private ExampleApp context;
 
-    public TestExampleTaskDependencies(ExampleApp context) {
+    public TestExampleUseCaseDependencies(ExampleApp context) {
         this.context = context;
     }
 

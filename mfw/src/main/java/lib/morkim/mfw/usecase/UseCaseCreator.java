@@ -11,8 +11,6 @@ import java.util.Map;
 
 import lib.morkim.mfw.util.GenericsUtils;
 
-import static android.R.attr.type;
-
 public class UseCaseCreator<T extends MorkimTask> {
 
     private T task;
@@ -37,7 +35,7 @@ public class UseCaseCreator<T extends MorkimTask> {
         return this;
     }
 
-    public <d extends TaskDependencies> T with(d dependency) {
+    public <d extends UseCaseDependencies> T with(d dependency) {
 
         Map<Class, Field> fieldTypes = new HashMap<>();
 

@@ -11,6 +11,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 	@TaskDependency
 	protected A appContext;
+	@TaskDependency
 	protected M model;
 	protected Repository repo;
 
