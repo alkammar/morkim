@@ -131,19 +131,20 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		} while (controllerClass == null);
 
 		try {
-			Constructor<c> constructor = (Constructor<c>) controllerClass.getDeclaredConstructors()[0];
-			constructor.setAccessible(true);
-			return constructor.newInstance();
+//			Constructor<c> constructor = (Constructor<c>) controllerClass.getDeclaredConstructors()[0];
+//			constructor.setAccessible(true);
+			return controllerClass.newInstance();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			Log.e("MorkimApp", e.getCause().getMessage());
-			for (StackTraceElement element : e.getCause().getStackTrace())
-				Log.e("MorkimApp", "\tat " + element);
-			e.printStackTrace();
 		}
+//		catch (InvocationTargetException e) {
+//			Log.e("MorkimApp", e.getCause().getMessage());
+//			for (StackTraceElement element : e.getCause().getStackTrace())
+//				Log.e("MorkimApp", "\tat " + element);
+//			e.printStackTrace();
+//		}
 
 		return null;
 	}
