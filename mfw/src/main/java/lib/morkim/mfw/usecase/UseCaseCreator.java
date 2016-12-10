@@ -3,12 +3,15 @@ package lib.morkim.mfw.usecase;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 
 import lib.morkim.mfw.util.GenericsUtils;
+
+import static android.R.attr.type;
 
 public class UseCaseCreator<T extends MorkimTask> {
 
@@ -83,7 +86,11 @@ public class UseCaseCreator<T extends MorkimTask> {
                     }
             }
 
-            fieldTypes.put((Class) fieldType, field);
+            Class<?> cls = fieldType instanceof ParameterizedType ?
+                    (Class<?>) ((ParameterizedType) fieldType).getRawType() :
+                    (Class<?>) fieldType;
+
+            fieldTypes.put(cls, field);
         }
     }
 }

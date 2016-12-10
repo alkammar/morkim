@@ -123,9 +123,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 				for (Type type : actualTypeArguments) {
 
-					Class<?> cls;
-
-					cls = type instanceof ParameterizedType ?
+					Class<?> cls = type instanceof ParameterizedType ?
 							(Class<?>) ((ParameterizedType) type).getRawType() :
 							(Class<?>) type;
 
