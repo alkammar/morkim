@@ -63,12 +63,12 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 
 	@Override
 	public void execute(Req request) {
+		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 		asyncTask.execute(request);
 	}
 
 	@Override
 	public void execute() {
-
 		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 		asyncTask.execute();
 	}
