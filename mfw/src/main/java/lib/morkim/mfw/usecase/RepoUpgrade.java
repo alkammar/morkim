@@ -32,7 +32,7 @@ public abstract class RepoUpgrade extends MorkimAsyncTask {
 	}
 	
 	@Override
-	protected void onSaveModel() {
+	protected void onPostExecute() {
 
 //        SharedPreferences.Editor editor = prefs.edit();
 //        editor.putInt("lastUpdate", versionCode);

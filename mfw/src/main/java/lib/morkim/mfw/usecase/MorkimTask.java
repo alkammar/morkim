@@ -5,6 +5,7 @@ import java.util.List;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
+import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult> {
@@ -66,6 +67,11 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 		setRequest(request);
 		onExecute(request);
+		try {
+			onPostExecute();
+		} catch (GatewayPersistException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void cancel() {
@@ -85,9 +91,9 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 				listener.onTaskUpdate(result);
 
 				if (subscribedListeners != null)
-					for (MorkimTaskListener subsribedListener : subscribedListeners)
-						if (!subsribedListener.equals(MorkimTask.this.listener))
-							subsribedListener.onTaskUpdate(result);
+					for (MorkimTaskListener subscribedListener : subscribedListeners)
+						if (!subscribedListener.equals(MorkimTask.this.listener))
+							subscribedListener.onTaskUpdate(result);
 			} else {
 				listener.onTaskComplete(result);
 
@@ -100,7 +106,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 			listener.onTaskComplete(null);
 	}
 
-	protected void onSaveModel() {}
+	protected void onPostExecute() throws GatewayPersistException {}
 
 	public void setAppContext(A appContext) {
 		this.appContext = appContext;

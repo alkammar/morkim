@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
+import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 
 @SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
 public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
@@ -45,7 +46,12 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 				setRequest(params[0]);
 
 			publishProgress(onExecute(getRequest()));
-			onSaveModel();
+
+			try {
+				MorkimAsyncTask.this.onPostExecute();
+			} catch (GatewayPersistException e) {
+				e.printStackTrace();
+			}
 
 			return null;
 		}
