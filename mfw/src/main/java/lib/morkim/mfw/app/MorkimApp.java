@@ -285,30 +285,38 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return getResources().getConfiguration().locale.getCountry();
 	}
 
-	public void subscribeToUseCase(Class<? extends MorkimTask> task, MorkimTaskListener<? extends TaskResult> listener) {
+	public void subscribeToUseCase(Class<? extends MorkimTask>[] taskClasses, MorkimTaskListener<? extends TaskResult> listener) {
 
 		synchronized (this) {
-			List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(task);
 
-			if (useCaseListeners == null) {
-				useCaseListeners = new ArrayList<>();
-				useCasesListeners.put(task, useCaseListeners);
+			for (Class<? extends MorkimTask> taskClass : taskClasses) {
+
+				List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
+
+				if (useCaseListeners == null) {
+					useCaseListeners = new ArrayList<>();
+					useCasesListeners.put(taskClass, useCaseListeners);
+				}
+
+				useCaseListeners.add(listener);
 			}
-
-			useCaseListeners.add(listener);
 		}
 	}
 
-	public void unsubscribeFromUseCase(Class<? extends MorkimTask> task, MorkimTaskListener listener) {
+	public void unsubscribeFromUseCase(Class<? extends MorkimTask>[] taskClasses, MorkimTaskListener listener) {
 
 		synchronized (this) {
-			List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(task);
 
-			if (useCaseListeners != null) {
-				useCaseListeners.remove(listener);
+			for (Class<? extends MorkimTask> taskClass : taskClasses) {
 
-				if (useCaseListeners.isEmpty())
-					useCasesListeners.remove(task);
+				List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
+
+				if (useCaseListeners != null) {
+					useCaseListeners.remove(listener);
+
+					if (useCaseListeners.isEmpty())
+						useCasesListeners.remove(taskClass);
+				}
 			}
 		}
 	}

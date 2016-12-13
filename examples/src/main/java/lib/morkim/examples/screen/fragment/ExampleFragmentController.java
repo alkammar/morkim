@@ -30,7 +30,7 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFra
 		}
 	};
 
-	@UseCaseSubscription(ExampleTask.class)
+	@UseCaseSubscription({ExampleTask.class, ExampleTask.class})
 	private MorkimTaskListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
 
 		@Override
