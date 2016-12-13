@@ -1,6 +1,7 @@
 package lib.morkim.mfw.app;
 
 import android.app.Application;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
@@ -94,7 +95,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
         controller = (controller == null) ? constructController(viewable) : controller;
 	    controller.onAttachApp(this);
 
-	    p presenter = createPresenter(viewable);
+	    p presenter = constructPresenter(viewable);
 
 	    viewable.onAttachPresenter(presenter);
 	    viewable.onAttachController(controller);
@@ -109,10 +110,21 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return controller;
     }
 
-	// TODO need to handle case where superclass is not generic
 	private <c extends Controller> c constructController(Viewable<?, c, ?> viewable) {
 
-		Class<c> controllerClass = null;
+		c controller = constructComponent(viewable, Controller.class);
+		return controller != null ? controller : (c) new EmptyController();
+	}
+
+	private <p extends Presenter> p constructPresenter(Viewable<?, ?, p> viewable) {
+
+		p presenter = constructComponent(viewable, Presenter.class);
+		return presenter != null ? presenter : (p) new EmptyPresenter();
+	}
+
+	@Nullable
+	private <comp> comp constructComponent(Viewable viewable, Class<?> component) {
+		Class<comp> concreteClass = null;
 		Class<?> viewableClass = viewable.getClass();
 		Type genericSuperclass;
 
@@ -130,8 +142,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 					else if (type instanceof Class)
 						cls = (Class<?>) type;
 
-					if (cls != null && Controller.class.isAssignableFrom(cls)) {
-						controllerClass = (Class<c>) cls;
+					if (cls != null && component.isAssignableFrom(cls)) {
+						concreteClass = (Class<comp>) cls;
 						break;
 					}
 				}
@@ -139,22 +151,26 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 			viewableClass = viewableClass.getSuperclass();
 
-		} while (controllerClass == null && viewableClass != null);
+		} while (concreteClass == null && viewableClass != null);
 
 		try {
-			return controllerClass != null ? controllerClass.newInstance() : (c) new EmptyController();
+			if (concreteClass != null) {
+				Constructor<comp> constructor = concreteClass.getDeclaredConstructor();
+				constructor.setAccessible(true);
+				return constructor.newInstance();
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			Log.e("MorkimApp", e.getCause().getMessage());
+			for (StackTraceElement element : e.getCause().getStackTrace())
+				Log.e("MorkimApp", "\tat " + element);
+			e.printStackTrace();
 		}
-//		catch (InvocationTargetException e) {
-//			Log.e("MorkimApp", e.getCause().getMessage());
-//			for (StackTraceElement element : e.getCause().getStackTrace())
-//				Log.e("MorkimApp", "\tat " + element);
-//			e.printStackTrace();
-//		}
-
 		return null;
 	}
 
