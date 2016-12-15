@@ -28,9 +28,14 @@ import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.UpdateListener;
 import lib.morkim.mfw.ui.Viewable;
-import lib.morkim.mfw.usecase.MorkimTask;
+import lib.morkim.mfw.usecase.EmptyUseCase;
 import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.TaskRequest;
 import lib.morkim.mfw.usecase.TaskResult;
+import lib.morkim.mfw.usecase.UndoRecord;
+import lib.morkim.mfw.usecase.UseCase;
+import lib.morkim.mfw.usecase.UseCaseCreator;
+import lib.morkim.mfw.usecase.UseCaseDependencies;
 
 /**
  * Holds application configuration. You should create here your Repository, Model ... etc.
@@ -49,11 +54,12 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	private M model;
 
-	private Map<Class<? extends MorkimTask>, List<MorkimTaskListener<? extends TaskResult>>> useCasesListeners;
+	private Map<Class<? extends UseCase>, List<MorkimTaskListener<? extends TaskResult>>> useCasesListeners;
+	private List<UndoRecord> undoRecords;
 
 	private TaskScheduler taskScheduler;
 
-    @Override
+	@Override
 	public void onCreate() {
 		super.onCreate();
 
@@ -73,6 +79,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 			throw new Error(String.format("createModel() method in %s must return a non-null implementation", this.getClass()));
 
 	    useCasesListeners = new HashMap<>();
+		undoRecords = new ArrayList<>();
 
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
 
@@ -174,35 +181,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return null;
 	}
 
-	public <p extends Presenter> p createPresenter(Viewable<?, ?, p> viewable) {
-
-		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
-
-		Class<p> presenterClass;
-
-		if (genericSuperclass instanceof ParameterizedType)
-			presenterClass = (Class<p>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[2];
-		else
-			presenterClass = (Class<p>) EmptyPresenter.class;
-
-		try {
-			Constructor<p> constructor = presenterClass.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			Log.e("MorkimApp", "constructPresenter " + e.getCause().getMessage());
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
 	/**
 	 * Destroys the {@link Controller} associated with the passed Viewable
 	 * @param viewable Viewable to fetch Controller for
@@ -285,11 +263,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return getResources().getConfiguration().locale.getCountry();
 	}
 
-	public void subscribeToUseCase(Class<? extends MorkimTask>[] taskClasses, MorkimTaskListener<? extends TaskResult> listener) {
+	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, MorkimTaskListener<? extends TaskResult> listener) {
 
 		synchronized (this) {
 
-			for (Class<? extends MorkimTask> taskClass : taskClasses) {
+			for (Class<? extends UseCase> taskClass : taskClasses) {
 
 				List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
 
@@ -303,11 +281,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		}
 	}
 
-	public void unsubscribeFromUseCase(Class<? extends MorkimTask>[] taskClasses, MorkimTaskListener listener) {
+	public void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, MorkimTaskListener listener) {
 
 		synchronized (this) {
 
-			for (Class<? extends MorkimTask> taskClass : taskClasses) {
+			for (Class<? extends UseCase> taskClass : taskClasses) {
 
 				List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
 
@@ -321,10 +299,34 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		}
 	}
 
-	public List<MorkimTaskListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends MorkimTask> aClass) {
+	public List<MorkimTaskListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
 		synchronized (this) {
 			List<MorkimTaskListener<? extends TaskResult>> useCasekListeners = useCasesListeners.get(aClass);
 			return useCasekListeners != null ? useCasekListeners : new ArrayList<MorkimTaskListener<? extends TaskResult>>();
 		}
+	}
+
+	public void addToUndoStack(UseCase useCase, TaskRequest request) {
+
+		undoRecords.add(new UndoRecord(useCase.getClass(), request));
+	}
+
+	public <u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies) {
+
+		if (undoRecords.size() > 0) {
+
+			UndoRecord undoRecord = undoRecords.get(undoRecords.size() - 1);
+
+			return new UseCaseCreator<u>()
+					.create(undoRecord.<u>getUseCaseClass())
+					.with(dependencies)
+					.setRequest(undoRecord.getRequest());
+		}
+
+		return new EmptyUseCase();
+	}
+
+	public void clearUndoStack() {
+		undoRecords.clear();
 	}
 }

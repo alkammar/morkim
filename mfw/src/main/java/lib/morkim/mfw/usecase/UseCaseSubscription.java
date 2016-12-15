@@ -7,5 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UseCaseSubscription {
 
-	Class<? extends MorkimTask> [] value();
+	Class<? extends UseCase> [] value();
 }

@@ -7,23 +7,25 @@ import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 
 @SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
-public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
-		extends MorkimTask<A, M, Req, Res> {
+public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
+		extends UseCase<A, M, Req, Res> {
 
 	private Task asyncTask;
 
-	public MorkimAsyncTask(A appContext) {
+	private boolean isUndoing;
+
+	public AsyncUseCase(A appContext) {
 		this(appContext, null);
 	}
 
-	public MorkimAsyncTask(A morkimApp, MorkimTaskListener<Res> listener) {
+	public AsyncUseCase(A morkimApp, MorkimTaskListener<Res> listener) {
 		super(morkimApp, listener);
 
 		this.asyncTask = new Task();
 
 	}
 
-	public MorkimAsyncTask() {
+	public AsyncUseCase() {
 		super();
 
 		this.asyncTask = new Task();
@@ -36,7 +38,7 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			listener.onTaskStart(MorkimAsyncTask.this);
+			listener.onTaskStart(AsyncUseCase.this);
 		}
 
 		@Override
@@ -45,10 +47,11 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 			if (params.length > 0)
 				setRequest(params[0]);
 
-			publishProgress(onExecute(getRequest()));
+			publishProgress(!isUndoing ? onExecute(getRequest()) : onUndo(getRequest()));
+			isUndoing = false;
 
 			try {
-				MorkimAsyncTask.this.onPostExecute();
+				AsyncUseCase.this.onPostExecute();
 			} catch (GatewayPersistException e) {
 				e.printStackTrace();
 			}
@@ -77,6 +80,13 @@ public abstract class MorkimAsyncTask<A extends MorkimApp<M, ?>, M extends Model
 	public void execute() {
 		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 		asyncTask.execute();
+	}
+
+	@Override
+	public void undo() {
+
+		isUndoing = true;
+		asyncTask.execute(getRequest());
 	}
 
 	@Override

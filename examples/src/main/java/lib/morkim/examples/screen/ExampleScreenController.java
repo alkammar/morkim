@@ -104,6 +104,10 @@ class ExampleScreenController
 
             entities.get(position).index++;
             getUpdateListener().updateListItem(position);
+
+            getAppContext()
+                    .popUseCaseStack(new ExampleUseCaseDependenciesImpl(getAppContext()))
+                    .undo();
         }
     };
 

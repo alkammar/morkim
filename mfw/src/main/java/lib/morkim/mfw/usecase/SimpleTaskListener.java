@@ -4,7 +4,7 @@ package lib.morkim.mfw.usecase;
 public class SimpleTaskListener<Res extends TaskResult> implements MorkimTaskListener<Res> {
 
 	@Override
-	public void onTaskStart(MorkimTask morkimTask) {
+	public void onTaskStart(UseCase useCase) {
 
 	}
 

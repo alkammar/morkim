@@ -8,7 +8,7 @@ import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult> {
+public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult> {
 
 	@TaskDependency
 	protected A appContext;
@@ -19,7 +19,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 	protected MorkimTaskListener<Res> listener = new MorkimTaskListener<Res>() {
 		@Override
-		public void onTaskStart(MorkimTask task) {}
+		public void onTaskStart(UseCase task) {}
 
 		@Override
 		public void onTaskUpdate(Res result) {}
@@ -35,7 +35,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 	private Req request;
 
-	public MorkimTask(A morkimApp, MorkimTaskListener<Res> listener) {
+	public UseCase(A morkimApp, MorkimTaskListener<Res> listener) {
 
 		this.appContext = morkimApp;
 		this.model = appContext.getModel();
@@ -45,7 +45,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 			this.listener = listener;
 	}
 
-	public MorkimTask() {
+	public UseCase() {
 
 	}
 
@@ -63,6 +63,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 	public void executeSync(Req request) {
 
+		// TODO getUseCaseSubscriptions should be from implemented interface or dependency
 		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 
 		setRequest(request);
@@ -74,6 +75,10 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 		}
 	}
 
+	public void undo() {
+		onUndo(getRequest());
+	}
+
 	public void cancel() {
 
 	}
@@ -83,6 +88,7 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 	}
 
 	protected abstract Res onExecute(Req request);
+	protected abstract Res onUndo(Req request);
 
 	protected void updateListener(Res result) {
 
@@ -92,15 +98,19 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 
 				if (subscribedListeners != null)
 					for (MorkimTaskListener subscribedListener : subscribedListeners)
-						if (!subscribedListener.equals(MorkimTask.this.listener))
+						if (!subscribedListener.equals(UseCase.this.listener))
 							subscribedListener.onTaskUpdate(result);
 			} else {
 				listener.onTaskComplete(result);
 
 				if (subscribedListeners != null)
-					for (MorkimTaskListener subsribedListener : subscribedListeners)
-						if (!subsribedListener.equals(MorkimTask.this.listener))
-							subsribedListener.onTaskComplete(result);
+					for (MorkimTaskListener subscribedListener : subscribedListeners)
+						if (!subscribedListener.equals(UseCase.this.listener))
+							subscribedListener.onTaskComplete(result);
+
+				if (canUndo())
+					// TODO addToUndoStack should be from implemented interface or dependency
+					appContext.addToUndoStack(this, getRequest());
 			}
 		} else
 			listener.onTaskComplete(null);
@@ -116,17 +126,23 @@ public abstract class MorkimTask<A extends MorkimApp<M, ?>, M extends Model, Req
 		return request;
 	}
 
-	public void setRequest(Req request) {
+	public UseCase<A, M, Req, Res> setRequest(Req request) {
 		this.request = request;
+
+		return this;
 	}
 
 	public MorkimTaskListener<Res> getListener() {
 		return listener;
 	}
 
-	public MorkimTask setListener(MorkimTaskListener<Res> listener) {
+	public UseCase setListener(MorkimTaskListener<Res> listener) {
 		this.listener = listener;
 
 		return this;
+	}
+
+	protected boolean canUndo() {
+		return false;
 	}
 }
