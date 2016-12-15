@@ -12,13 +12,11 @@ public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, R
 
 	private Task asyncTask;
 
-	private boolean isUndoing;
-
 	public AsyncUseCase(A appContext) {
 		this(appContext, null);
 	}
 
-	public AsyncUseCase(A morkimApp, MorkimTaskListener<Res> listener) {
+	public AsyncUseCase(A morkimApp, UseCaseListener<Res> listener) {
 		super(morkimApp, listener);
 
 		this.asyncTask = new Task();
@@ -48,7 +46,6 @@ public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, R
 				setRequest(params[0]);
 
 			publishProgress(!isUndoing ? onExecute(getRequest()) : onUndo(getRequest()));
-			isUndoing = false;
 
 			try {
 				AsyncUseCase.this.onPostExecute();
@@ -84,7 +81,7 @@ public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, R
 
 	@Override
 	public void undo() {
-
+		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 		isUndoing = true;
 		asyncTask.execute(getRequest());
 	}

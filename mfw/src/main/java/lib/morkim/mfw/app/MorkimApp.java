@@ -29,7 +29,7 @@ import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.UpdateListener;
 import lib.morkim.mfw.ui.Viewable;
 import lib.morkim.mfw.usecase.EmptyUseCase;
-import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 import lib.morkim.mfw.usecase.TaskResult;
 import lib.morkim.mfw.usecase.UndoRecord;
@@ -54,7 +54,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	private M model;
 
-	private Map<Class<? extends UseCase>, List<MorkimTaskListener<? extends TaskResult>>> useCasesListeners;
+	private Map<Class<? extends UseCase>, List<UseCaseListener<? extends TaskResult>>> useCasesListeners;
 	private List<UndoRecord> undoRecords;
 
 	private TaskScheduler taskScheduler;
@@ -263,13 +263,13 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return getResources().getConfiguration().locale.getCountry();
 	}
 
-	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, MorkimTaskListener<? extends TaskResult> listener) {
+	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener) {
 
 		synchronized (this) {
 
 			for (Class<? extends UseCase> taskClass : taskClasses) {
 
-				List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
+				List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
 
 				if (useCaseListeners == null) {
 					useCaseListeners = new ArrayList<>();
@@ -281,13 +281,13 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		}
 	}
 
-	public void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, MorkimTaskListener listener) {
+	public void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener listener) {
 
 		synchronized (this) {
 
 			for (Class<? extends UseCase> taskClass : taskClasses) {
 
-				List<MorkimTaskListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
+				List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
 
 				if (useCaseListeners != null) {
 					useCaseListeners.remove(listener);
@@ -299,10 +299,10 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		}
 	}
 
-	public List<MorkimTaskListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
+	public List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
 		synchronized (this) {
-			List<MorkimTaskListener<? extends TaskResult>> useCasekListeners = useCasesListeners.get(aClass);
-			return useCasekListeners != null ? useCasekListeners : new ArrayList<MorkimTaskListener<? extends TaskResult>>();
+			List<UseCaseListener<? extends TaskResult>> useCasekListeners = useCasesListeners.get(aClass);
+			return useCasekListeners != null ? useCasekListeners : new ArrayList<UseCaseListener<? extends TaskResult>>();
 		}
 	}
 

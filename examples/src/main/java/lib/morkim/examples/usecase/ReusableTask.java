@@ -5,13 +5,13 @@ import android.os.SystemClock;
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.AsyncUseCase;
-import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.TaskRequest;
 
 public class ReusableTask extends AsyncUseCase<ExampleApp, Model, TaskRequest, ReusableResult> {
 
-	public ReusableTask(ExampleApp appContext, MorkimTaskListener<ReusableResult> morkimTaskListener) {
-		super(appContext, morkimTaskListener);
+	public ReusableTask(ExampleApp appContext, UseCaseListener<ReusableResult> useCaseListener) {
+		super(appContext, useCaseListener);
 	}
 
 	@Override

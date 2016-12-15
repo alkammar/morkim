@@ -17,7 +17,9 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 	@TaskDependency
 	protected Repository repo;
 
-	protected MorkimTaskListener<Res> listener = new MorkimTaskListener<Res>() {
+	protected boolean isUndoing;
+
+	protected UseCaseListener<Res> listener = new UseCaseListener<Res>() {
 		@Override
 		public void onTaskStart(UseCase task) {}
 
@@ -28,14 +30,19 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 		public void onTaskComplete(Res result) {}
 
 		@Override
+		public void onUndone(Res result) {
+
+		}
+
+		@Override
 		public void onTaskCancel() {}
 	};
 
-	protected List<MorkimTaskListener<? extends TaskResult>> subscribedListeners;
+	protected List<UseCaseListener<? extends TaskResult>> subscribedListeners;
 
 	private Req request;
 
-	public UseCase(A morkimApp, MorkimTaskListener<Res> listener) {
+	public UseCase(A morkimApp, UseCaseListener<Res> listener) {
 
 		this.appContext = morkimApp;
 		this.model = appContext.getModel();
@@ -76,7 +83,13 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 	}
 
 	public void undo() {
+		// TODO getUseCaseSubscriptions should be from implemented interface or dependency
+		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
 		onUndo(getRequest());
+	}
+
+	public void undoSync() {
+		undo();
 	}
 
 	public void cancel() {
@@ -94,26 +107,53 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 
 		if (result != null) {
 			if (result.completionPercent != 100) {
-				listener.onTaskUpdate(result);
-
-				if (subscribedListeners != null)
-					for (MorkimTaskListener subscribedListener : subscribedListeners)
-						if (!subscribedListener.equals(UseCase.this.listener))
-							subscribedListener.onTaskUpdate(result);
-			} else {
-				listener.onTaskComplete(result);
-
-				if (subscribedListeners != null)
-					for (MorkimTaskListener subscribedListener : subscribedListeners)
-						if (!subscribedListener.equals(UseCase.this.listener))
-							subscribedListener.onTaskComplete(result);
+				updateListenerUpdate(result);
+			} else if (!isUndoing) {
+				updateListenerComplete(result);
 
 				if (canUndo())
 					// TODO addToUndoStack should be from implemented interface or dependency
 					appContext.addToUndoStack(this, getRequest());
+			} else {
+				updateListenerUndo(result);
+
+				isUndoing = false;
 			}
-		} else
-			listener.onTaskComplete(null);
+		} else {
+			if (!isUndoing)
+				updateListenerComplete(null);
+			else {
+				updateListenerUndo(null);
+				isUndoing = false;
+			}
+		}
+	}
+
+	private void updateListenerUpdate(Res result) {
+		listener.onTaskUpdate(result);
+
+		if (subscribedListeners != null)
+			for (UseCaseListener subscribedListener : subscribedListeners)
+				if (!subscribedListener.equals(UseCase.this.listener))
+					subscribedListener.onTaskUpdate(result);
+	}
+
+	private void updateListenerComplete(Res result) {
+		listener.onTaskComplete(result);
+
+		if (subscribedListeners != null)
+			for (UseCaseListener subscribedListener : subscribedListeners)
+				if (!subscribedListener.equals(UseCase.this.listener))
+					subscribedListener.onTaskComplete(result);
+	}
+
+	private void updateListenerUndo(Res result) {
+		listener.onUndone(result);
+
+		if (subscribedListeners != null)
+			for (UseCaseListener subscribedListener : subscribedListeners)
+				if (!subscribedListener.equals(UseCase.this.listener))
+					subscribedListener.onUndone(result);
 	}
 
 	protected void onPostExecute() throws GatewayPersistException {}
@@ -132,11 +172,11 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 		return this;
 	}
 
-	public MorkimTaskListener<Res> getListener() {
+	public UseCaseListener<Res> getListener() {
 		return listener;
 	}
 
-	public UseCase setListener(MorkimTaskListener<Res> listener) {
+	public UseCase setListener(UseCaseListener<Res> listener) {
 		this.listener = listener;
 
 		return this;
