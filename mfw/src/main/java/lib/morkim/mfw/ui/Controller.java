@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -216,7 +217,12 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 
 		Type[] actualArgs = GenericsUtils.resolveActualTypeArgs(getClass(), Controller.class);
 
-		Class<U> cls = (Class<U>) actualArgs[2];
+		Class<U> cls;
+		Type actualUpdateListener = actualArgs[2];
+		if (actualUpdateListener instanceof TypeVariable)
+			cls = (Class<U>) ((TypeVariable) actualUpdateListener).getBounds()[0];
+		else
+			cls = (Class<U>) actualUpdateListener;
 
 		instance = getAnnotatedUpdateListenerPendingImplementation(cls);
 
