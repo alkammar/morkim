@@ -63,18 +63,24 @@ public class UseCaseCreator<T extends UseCase> {
             cls = cls.getSuperclass();
         } while (!cls.isInstance(Object.class));
 
-        for (Method method : dependenciesImpl.getClass().getDeclaredMethods()) {
+        Class<?> dependenciesImplClass = dependenciesImpl.getClass();
 
-            Field field = fieldTypes.get(method.getReturnType());
-            if (field != null)
-                try {
-                    field.setAccessible(true);
-                    field.set(task, method.invoke(dependenciesImpl));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+        while (!dependenciesImplClass.isInstance(Object.class)) {
+            for (Method method : dependenciesImplClass.getDeclaredMethods()) {
+
+                Field field = fieldTypes.get(method.getReturnType());
+                if (field != null)
+                    try {
+                        field.setAccessible(true);
+                        field.set(task, method.invoke(dependenciesImpl));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+            }
+
+            dependenciesImplClass = dependenciesImplClass.getSuperclass();
         }
 
         return task;
