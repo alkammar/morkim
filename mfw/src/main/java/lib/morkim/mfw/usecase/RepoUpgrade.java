@@ -2,11 +2,11 @@ package lib.morkim.mfw.usecase;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class RepoUpgrade extends MorkimAsyncTask {
+public abstract class RepoUpgrade extends AsyncUseCase {
 
 //	private int versionCode;
 
-	public RepoUpgrade(MorkimApp morkimApp, MorkimTaskListener listener) {
+	public RepoUpgrade(MorkimApp morkimApp, UseCaseListener listener) {
 		super(morkimApp, listener);
 	}
 

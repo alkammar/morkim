@@ -42,4 +42,11 @@
         android:layout_margin="5dp">
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/fl_fragment_non_abstract_generic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+    </FrameLayout>
+
 </LinearLayout>

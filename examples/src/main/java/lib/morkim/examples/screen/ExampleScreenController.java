@@ -15,7 +15,7 @@ import lib.morkim.examples.usecase.ExampleTask;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
-import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.OnTaskUpdateListener;
 import lib.morkim.mfw.usecase.UseCaseCreator;
 import lib.morkim.mfw.usecase.UseCaseSubscription;
@@ -80,7 +80,7 @@ class ExampleScreenController
     };
 
     @UseCaseSubscription(ExampleTask.class)
-    private MorkimTaskListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
+    private UseCaseListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
 
         @Override
         public void onTaskUpdate(ExampleResult result) {
@@ -96,6 +96,15 @@ class ExampleScreenController
                 getUpdateListener().updateListItem(entities.indexOf(entity));
             }
         }
+
+        @Override
+        public void onUndone(ExampleResult result) {
+
+            for (ExampleEntity entity : entities) {
+                entity.index -= 100;
+                getUpdateListener().updateListItem(entities.indexOf(entity));
+            }
+        }
     };
 
     ItemClickSupport.OnItemClickListener listItemClickListener = new ItemClickSupport.OnItemClickListener() {
@@ -104,6 +113,10 @@ class ExampleScreenController
 
             entities.get(position).index++;
             getUpdateListener().updateListItem(position);
+
+            getAppContext()
+                    .popUseCaseStack(new ExampleUseCaseDependenciesImpl(getAppContext()))
+                    .undo();
         }
     };
 

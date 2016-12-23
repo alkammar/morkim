@@ -1,10 +1,10 @@
 package lib.morkim.mfw.usecase;
 
 
-public abstract class OnTaskUpdateListener<Res extends TaskResult> implements MorkimTaskListener<Res> {
+public abstract class OnTaskUpdateListener<Res extends TaskResult> implements UseCaseListener<Res> {
 
 	@Override
-	public void onTaskStart(MorkimTask useCase) {
+	public void onTaskStart(UseCase useCase) {
 
 	}
 

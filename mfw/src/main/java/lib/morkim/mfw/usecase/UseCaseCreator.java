@@ -11,7 +11,7 @@ import java.util.Map;
 
 import lib.morkim.mfw.util.GenericsUtils;
 
-public class UseCaseCreator<T extends MorkimTask> {
+public class UseCaseCreator<T extends UseCase> {
 
     private T task;
     private Class<T> taskClass;
@@ -35,7 +35,22 @@ public class UseCaseCreator<T extends MorkimTask> {
         return this;
     }
 
-    public <d extends UseCaseDependencies> T with(d dependency) {
+    public UseCaseCreator<T> add(Class<T> taskClass) {
+
+        this.taskClass = taskClass;
+
+        try {
+            task = taskClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return this;
+    }
+
+    public <d extends UseCaseDependencies> T with(d dependenciesImpl) {
 
         Map<Class, Field> fieldTypes = new HashMap<>();
 
@@ -48,18 +63,24 @@ public class UseCaseCreator<T extends MorkimTask> {
             cls = cls.getSuperclass();
         } while (!cls.isInstance(Object.class));
 
-        for (Method method : dependency.getClass().getDeclaredMethods()) {
+        Class<?> dependenciesImplClass = dependenciesImpl.getClass();
 
-            Field field = fieldTypes.get(method.getReturnType());
-            if (field != null)
-                try {
-                    field.setAccessible(true);
-                    field.set(task, method.invoke(dependency));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+        while (!dependenciesImplClass.isInstance(Object.class)) {
+            for (Method method : dependenciesImplClass.getDeclaredMethods()) {
+
+                Field field = fieldTypes.get(method.getReturnType());
+                if (field != null)
+                    try {
+                        field.setAccessible(true);
+                        field.set(task, method.invoke(dependenciesImpl));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+            }
+
+            dependenciesImplClass = dependenciesImplClass.getSuperclass();
         }
 
         return task;

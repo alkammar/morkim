@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -19,7 +20,7 @@ import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.UiTaskObserver;
-import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.TaskResult;
 import lib.morkim.mfw.usecase.UseCaseSubscription;
 import lib.morkim.mfw.util.GenericsUtils;
@@ -71,7 +72,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 						field.setAccessible(true);
 						morkimApp.subscribeToUseCase(
 								field.getAnnotation(UseCaseSubscription.class).value(),
-								(MorkimTaskListener<? extends TaskResult>) field.get(this));
+								(UseCaseListener<? extends TaskResult>) field.get(this));
 					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					}
@@ -157,7 +158,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 					field.setAccessible(true);
 					morkimApp.unsubscribeFromUseCase(
 							field.getAnnotation(UseCaseSubscription.class).value(),
-							(MorkimTaskListener<? extends TaskResult>) field.get(this));
+							(UseCaseListener<? extends TaskResult>) field.get(this));
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
@@ -216,7 +217,12 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 
 		Type[] actualArgs = GenericsUtils.resolveActualTypeArgs(getClass(), Controller.class);
 
-		Class<U> cls = (Class<U>) actualArgs[2];
+		Class<U> cls;
+		Type actualUpdateListener = actualArgs[2];
+		if (actualUpdateListener instanceof TypeVariable)
+			cls = (Class<U>) ((TypeVariable) actualUpdateListener).getBounds()[0];
+		else
+			cls = (Class<U>) actualUpdateListener;
 
 		instance = getAnnotatedUpdateListenerPendingImplementation(cls);
 

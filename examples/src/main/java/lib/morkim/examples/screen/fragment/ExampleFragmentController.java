@@ -8,7 +8,7 @@ import lib.morkim.examples.usecase.ExampleTask;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.ui.Controller;
 import lib.morkim.mfw.ui.Viewable;
-import lib.morkim.mfw.usecase.MorkimTaskListener;
+import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.OnTaskUpdateListener;
 import lib.morkim.mfw.usecase.UseCaseSubscription;
 
@@ -31,7 +31,7 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFra
 	};
 
 	@UseCaseSubscription({ExampleTask.class, ExampleTask.class})
-	private MorkimTaskListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
+	private UseCaseListener<ExampleResult> exampleTaskListener = new OnTaskUpdateListener<ExampleResult>() {
 
 		@Override
 		public void onTaskUpdate(ExampleResult result) {
@@ -41,6 +41,11 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFra
 		@Override
 		public void onTaskComplete(ExampleResult result) {
 			getUpdateListener().doFragmentAction();
+		}
+
+		@Override
+		public void onUndone(ExampleResult result) {
+
 		}
 	};
 }

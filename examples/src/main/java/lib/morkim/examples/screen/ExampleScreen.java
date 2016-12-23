@@ -43,6 +43,12 @@ public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, Exampl
                 .replace(R.id.fl_fragment_non_generic, new ExampleNonGenericFragment())
                 .addToBackStack(null)
                 .commit();
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fl_fragment_non_abstract_generic, new ExampleNonAbstractGenericFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

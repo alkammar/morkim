@@ -5,22 +5,14 @@ import android.os.SystemClock;
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.usecase.MorkimAsyncTask;
+import lib.morkim.mfw.usecase.AsyncUseCase;
 import lib.morkim.mfw.usecase.TaskDependency;
 import lib.morkim.mfw.usecase.TaskRequest;
 
-public class ExampleTask extends MorkimAsyncTask<ExampleApp, Model, TaskRequest, ExampleResult> {
+public class ExampleTask extends AsyncUseCase<ExampleApp, Model, TaskRequest, ExampleResult> {
 
 	@TaskDependency
 	private BackEndCall backEndCall;
-
-//	public ExampleTask() {
-//		super();
-//	}
-//
-//	public ExampleTask(ExampleApp appContext, MorkimTaskListener<ExampleResult> morkimTaskListener) {
-//		super(appContext, morkimTaskListener);
-//	}
 
 	@Override
 	protected ExampleResult onExecute(TaskRequest request) {
@@ -41,5 +33,15 @@ public class ExampleTask extends MorkimAsyncTask<ExampleApp, Model, TaskRequest,
 		result.setCompletionPercent(100);
 
 		return result;
+	}
+
+	@Override
+	protected ExampleResult onUndo(TaskRequest request) {
+		return null;
+	}
+
+	@Override
+	protected boolean canUndo() {
+		return true;
 	}
 }
