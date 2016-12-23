@@ -105,6 +105,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	    viewable.onBindViews();
 	    controller.onInitializeViews();
 
+	    // TODO i think this should be just after construction
 		controllers.put(viewable.getInstanceId(), controller);
 
 		return controller;
@@ -171,35 +172,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 				Log.e("MorkimApp", "\tat " + element);
 			e.printStackTrace();
 		}
-		return null;
-	}
-
-	public <p extends Presenter> p createPresenter(Viewable<?, ?, p> viewable) {
-
-		Type genericSuperclass = viewable.getClass().getGenericSuperclass();
-
-		Class<p> presenterClass;
-
-		if (genericSuperclass instanceof ParameterizedType)
-			presenterClass = (Class<p>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[2];
-		else
-			presenterClass = (Class<p>) EmptyPresenter.class;
-
-		try {
-			Constructor<p> constructor = presenterClass.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			return constructor.newInstance();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			Log.e("MorkimApp", "constructPresenter " + e.getCause().getMessage());
-			e.printStackTrace();
-		}
-
 		return null;
 	}
 
