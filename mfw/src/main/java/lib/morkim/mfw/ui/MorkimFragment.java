@@ -29,9 +29,13 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
+        id = (savedInstanceState == null) ? generateUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
         UiComponentHelper.createUiComponents(this, getActivity().getApplication());
+    }
+
+    protected UUID generateUUID() {
+        return UUID.randomUUID();
     }
 
     @Override
