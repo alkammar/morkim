@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.UUID;
 
@@ -19,17 +22,25 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
-
 		Dialog dialog = createDialog();
 
 		int layoutId = layoutId();
 		if (layoutId > 0)
 			dialog.setContentView(layoutId());
 
-		UiComponentHelper.createUiComponents(this, getActivity().getApplication());
-
 		return dialog;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
+
+		UiComponentHelper.createUiComponents(this, getActivity());
+
+		controller.onAttachParent(this);
+
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
