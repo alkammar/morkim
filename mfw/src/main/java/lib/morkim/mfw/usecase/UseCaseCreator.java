@@ -54,21 +54,33 @@ public class UseCaseCreator<T extends UseCase> {
 
         Map<Class, Field> fieldTypes = new HashMap<>();
 
-        Class cls = taskClass;
+        Class tc = taskClass;
+        Class dic = dependenciesImpl.getClass();
 
         do {
-            for (Field field : cls.getDeclaredFields()) {
-                addAnnotatedField(fieldTypes, field, GenericsUtils.resolveActualTypeArgs(taskClass, cls));
+            for (Field field : tc.getDeclaredFields()) {
+                addAnnotatedField(fieldTypes, field, GenericsUtils.resolveActualTypeArgs(taskClass, tc));
             }
-            cls = cls.getSuperclass();
-        } while (!cls.isInstance(Object.class));
+            tc = tc.getSuperclass();
+        } while (!tc.isInstance(Object.class));
 
-        Class<?> dependenciesImplClass = dependenciesImpl.getClass();
+        while (!dic.isInstance(Object.class)) {
+            for (Method method : dic.getDeclaredMethods()) {
 
-        while (!dependenciesImplClass.isInstance(Object.class)) {
-            for (Method method : dependenciesImplClass.getDeclaredMethods()) {
+                Type[] resolvedTypes = GenericsUtils.resolveActualTypeArgs(dependenciesImpl.getClass(), dic);
 
-                Field field = fieldTypes.get(method.getReturnType());
+                TypeVariable[] dependenciesTypeParams = dic.getTypeParameters();
+
+                Class<?> returnType = method.getReturnType();
+
+                for (int i = 0; i < dependenciesTypeParams.length; i++) {
+                    if (dependenciesTypeParams[i].equals(method.getGenericReturnType())) {
+                        returnType = (Class<?>) resolvedTypes[i];
+                        break;
+                    }
+                }
+
+                Field field = fieldTypes.get(returnType);
                 if (field != null)
                     try {
                         field.setAccessible(true);
@@ -80,7 +92,7 @@ public class UseCaseCreator<T extends UseCase> {
                     }
             }
 
-            dependenciesImplClass = dependenciesImplClass.getSuperclass();
+            dic = dic.getSuperclass();
         }
 
         return task;

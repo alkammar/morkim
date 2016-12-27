@@ -36,7 +36,7 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
-		UiComponentHelper.createUiComponents(this, getActivity());
+		UiComponentHelper.createUiComponents(this, getActivity().getApplication());
 
 		controller.onAttachParent(this);
 

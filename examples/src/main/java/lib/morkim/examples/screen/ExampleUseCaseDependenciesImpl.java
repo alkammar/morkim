@@ -6,30 +6,14 @@ import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.examples.repo.ExampleGateway;
 import lib.morkim.examples.usecase.ExampleUseCaseDependencies;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.Gateway;
 
-class ExampleUseCaseDependenciesImpl implements ExampleUseCaseDependencies {
-
-    private ExampleApp context;
+class ExampleUseCaseDependenciesImpl
+        extends BaseExampleUseCaseDependenciesImpl<ExampleApp, Model>
+        implements ExampleUseCaseDependencies {
 
     ExampleUseCaseDependenciesImpl(ExampleApp context) {
-        this.context = context;
-    }
-
-    @Override
-    public ExampleApp getContext() {
-        return context;
-    }
-
-    @Override
-    public Model getModel() {
-        return context.getModel();
-    }
-
-    @Override
-    public Repository getRepository() {
-        return context.getRepo();
+        super(context);
     }
 
     @Override
