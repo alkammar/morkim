@@ -18,77 +18,119 @@ public class GenericsUtils {
 	 * @param <T> base type
 	 * @param offspring class or interface subclassing or extending the base type
 	 * @param base base class
-	 * @param actualArgs the actual type arguments passed to the offspring class
 	 * @return actual generic type arguments, must match the type parameters of the offspring class. If omitted, the
 	 * type parameters will be used instead.
 	 */
-	public static <T> Type[] resolveActualTypeArgs (Class<? extends T> offspring, Class<T> base, Type... actualArgs) {
+	public static <T> Type[] resolveActualTypeArgs(Class<? extends T> offspring, Class<T> base) {
 
-		assert offspring != null;
-		assert base != null;
-		assert actualArgs.length == 0 || actualArgs.length == offspring.getTypeParameters().length;
+		return resolveActualTypesInternal(offspring, base, null);
+	}
 
-		//  If actual types are omitted, the type parameters will be used instead.
-		if (actualArgs.length == 0) {
-			actualArgs = offspring.getTypeParameters();
-		}
-		// map type parameters into the actual types
-		Map<String, Type> typeVariables = new HashMap<String, Type>();
-		for (int i = 0; i < actualArgs.length; i++) {
-			TypeVariable<?> typeVariable = offspring.getTypeParameters()[i];
-			typeVariables.put(typeVariable.getName(), actualArgs[i]);
-		}
+	private static <T> Type[] resolveActualTypesInternal(Class<? extends T> offspring, Class<T> base, Type[] actualTypes) {
 
-		// Find direct ancestors (superclass, interfaces)
-		List<Type> ancestors = new LinkedList<>();
-		if (offspring.getGenericSuperclass() != null) {
-			ancestors.add(offspring.getGenericSuperclass());
-		}
+		Type[] resolvedTypes = new Type[0];
 
-		Collections.addAll(ancestors, offspring.getGenericInterfaces());
+		Map<String, Type> mappedTypes = new HashMap<>();
 
-		// Recurse into ancestors (superclass, interfaces)
-		for (Type type : ancestors) {
-			if (type instanceof Class<?>) {
-				// ancestor is non-parameterized. Recurse only if it matches the base class.
-				Class<?> ancestorClass = (Class<?>) type;
-				if (base.isAssignableFrom(ancestorClass)) {
-					Type[] result = resolveActualTypeArgs((Class<? extends T>) ancestorClass, base);
-					if (result != null) {
-						return result;
-					}
-				}
+		if (actualTypes == null) actualTypes = new Type[0];
+
+		if (base != null) {
+
+			TypeVariable<? extends Class<? extends T>>[] offspringParameters = offspring.getTypeParameters();
+
+			List<Type> ancestors = new LinkedList<>();
+			if (offspring.getGenericSuperclass() != null) {
+				ancestors.add(offspring.getGenericSuperclass());
 			}
-			if (type instanceof ParameterizedType) {
-				// ancestor is parameterized. Recurse only if the raw type matches the base class.
-				ParameterizedType parameterizedType = (ParameterizedType) type;
-				Type rawType = parameterizedType.getRawType();
-				if (rawType instanceof Class<?>) {
-					Class<?> rawTypeClass = (Class<?>) rawType;
-					if (base.isAssignableFrom(rawTypeClass)) {
 
-						// loop through all type arguments and replace type variables with the actually known types
-						List<Type> resolvedTypes = new LinkedList<Type>();
-						for (Type t : parameterizedType.getActualTypeArguments()) {
-							if (t instanceof TypeVariable<?>) {
-								Type resolvedType = typeVariables.get(((TypeVariable<?>) t).getName());
-								resolvedTypes.add(resolvedType != null ? resolvedType : t);
-							} else {
-								resolvedTypes.add(t);
+			Collections.addAll(ancestors, offspring.getGenericInterfaces());
+
+			for (Type ancestor : ancestors) {
+
+				if (!offspring.equals(base)) {
+
+					if (offspringParameters.length == 0) {
+						if (ancestor instanceof ParameterizedType) {
+							Type[] parametrizedActualTypes = ((ParameterizedType) ancestor).getActualTypeArguments();
+							actualTypes = new Type[parametrizedActualTypes.length];
+							System.arraycopy(parametrizedActualTypes, 0, actualTypes, 0, parametrizedActualTypes.length);
+						}
+
+						resolvedTypes = resolveActualTypesInternal(getRawType(ancestor), base, actualTypes);
+					} else {
+
+						for (TypeVariable typeVariable : offspringParameters)
+							mappedTypes.put(typeVariable.getName(), typeVariable.getBounds()[0]);
+
+						if (ancestor instanceof ParameterizedType) {
+							ParameterizedType parametrizedGenericSuperClass = (ParameterizedType) ancestor;
+							Type[] parametrizedGenericActualArguments = parametrizedGenericSuperClass.getActualTypeArguments();
+
+							Type[] offspringTypes = new Type[parametrizedGenericActualArguments.length];
+
+							if (actualTypes.length == 0)
+								actualTypes = new Type[offspringTypes.length];
+
+							for (int i = 0; i < parametrizedGenericActualArguments.length; i++) {
+								Type mappedType = mappedTypes.get(parametrizedGenericActualArguments[i].toString());
+								if (mappedType != null) {
+									mappedType = findInActualTypes(actualTypes, mappedType);
+									offspringTypes[i] = mappedType;
+								} else {
+									offspringTypes[i] = parametrizedGenericActualArguments[i];
+								}
 							}
-						}
 
-						Type[] result = resolveActualTypeArgs((Class<? extends T>) rawTypeClass, base, resolvedTypes.toArray(new Type[] {}));
-						if (result != null) {
-							return result;
+							if (actualTypes.length != offspringTypes.length)
+								actualTypes = new Type[offspringTypes.length];
+
+							System.arraycopy(offspringTypes, 0, actualTypes, 0, offspringTypes.length);
+
+							resolvedTypes = resolveActualTypesInternal(getRawType(ancestor),  base, actualTypes);
 						}
 					}
 				}
+//				else {
+
+				if (resolvedTypes.length == 0) {
+					if (offspringParameters.length > 0 && actualTypes.length == 0) {
+						actualTypes = new Type[offspringParameters.length];
+						for (int i = 0; i < offspringParameters.length; i++)
+							actualTypes[i] = offspringParameters[i].getBounds()[0];
+					}
+
+					resolvedTypes = new Type[actualTypes.length];
+
+					if (actualTypes.length > 0) {
+						System.arraycopy(actualTypes, 0, resolvedTypes, 0, actualTypes.length);
+					}
+				} else {
+					actualTypes = new Type[resolvedTypes.length];
+					System.arraycopy(resolvedTypes, 0, actualTypes, 0, resolvedTypes.length);
+				}
+//				}
 			}
 		}
 
-		// we have a result if we reached the base class.
-		return offspring.equals(base) ? actualArgs : null;
+		return resolvedTypes;
+	}
+
+	private static Type findInActualTypes(Type[] actualTypes, Type mappedType) {
+
+		Class<?> raw = getRawType(mappedType);
+
+		for (Type actualType : actualTypes) {
+			if (actualType != null && raw.isAssignableFrom((Class<?>) actualType)) {
+				mappedType = actualType;
+				break;
+			}
+		}
+
+		return mappedType;
+	}
+
+	public static Class getRawType(Type type) {
+		return (Class) (type instanceof ParameterizedType ? ((ParameterizedType) type).getRawType() : type);
 	}
 
 }

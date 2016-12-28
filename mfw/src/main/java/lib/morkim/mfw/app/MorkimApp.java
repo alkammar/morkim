@@ -6,8 +6,6 @@ import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -38,6 +36,7 @@ import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseCreator;
 import lib.morkim.mfw.usecase.UseCaseDependencies;
 import lib.morkim.mfw.usecase.UseCaseListener;
+import lib.morkim.mfw.util.GenericsUtils;
 
 /**
  * Holds application configuration. You should create here your Repository, Model ... etc.
@@ -121,39 +120,41 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	private <c extends Controller> c constructController(Viewable<?, c, ?> viewable) {
 
-		c controller = constructComponent(viewable, Controller.class);
+		c controller = constructComponent(viewable, 1);//Controller.class);
 		return controller != null ? controller : (c) new EmptyController();
 	}
 
 	private <p extends Presenter> p constructPresenter(Viewable<?, ?, p> viewable) {
 
-		p presenter = constructComponent(viewable, Presenter.class);
+		p presenter = constructComponent(viewable, 2);//Presenter.class);
 		return presenter != null ? presenter : (p) new EmptyPresenter();
 	}
 
 	@Nullable
-	private <comp> comp constructComponent(Viewable viewable, Class<?> component) {
+	private <comp> comp constructComponent(Viewable viewable, int index) {//Class<?> component) {
 
 		Class<comp> concreteClass;
 
 		Class<?> viewableClass = viewable.getClass();
 		Type genericSuperclass;
 
-		TypeVariable<? extends Class<? extends Viewable>>[] typeParameters = viewable.getClass().getTypeParameters();
+		Type [] resolvedTypes = GenericsUtils.resolveActualTypeArgs((Class<? extends Viewable>) viewableClass, Viewable.class);
 
-		concreteClass = getDefaultComponentClass(component, typeParameters);
+		TypeVariable<?>[] typeParameters = viewable.getClass().getTypeParameters();
 
-		while (concreteClass == null && viewableClass != null) {
-			genericSuperclass = viewableClass.getGenericSuperclass();
+		concreteClass = GenericsUtils.getRawType(resolvedTypes[index]);//GenericsUtils.getDefaultComponentClass(component, typeParameters);
 
-			if (genericSuperclass instanceof ParameterizedType) {
-				Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-
-				concreteClass = findComponentConcreteClass(component, actualTypeArguments);
-			}
-
-			viewableClass = viewableClass.getSuperclass();
-		}
+//		while (concreteClass == null && viewableClass != null) {
+//			genericSuperclass = viewableClass.getGenericSuperclass();
+//
+//			if (genericSuperclass instanceof ParameterizedType) {
+//				Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
+//
+//				concreteClass = GenericsUtils.findComponentConcreteClass(component, actualTypeArguments);
+//			}
+//
+//			viewableClass = viewableClass.getSuperclass();
+//		}
 
 		try {
 			if (concreteClass != null) {
@@ -174,42 +175,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@Nullable
-	private <comp> Class<comp> getDefaultComponentClass(Class<?> component, TypeVariable<? extends Class<? extends Viewable>>[] typeParameters) {
-
-		Class<comp> concreteClass = null;
-
-		if (typeParameters.length > 0) {
-			for (TypeVariable typeVariable : typeParameters) {
-				concreteClass = findComponentConcreteClass(component, typeVariable.getBounds());
-
-				if (concreteClass != null) break;
-			}
-		}
-		return concreteClass;
-	}
-
-	private <comp> Class<comp> findComponentConcreteClass(Class<?> component, Type[] typeArguments) {
-
-		Class<comp> concreteClass = null;
-
-		for (Type type : typeArguments) {
-
-			Class<?> cls = null;
-			if (type instanceof ParameterizedType)
-				cls = (Class<?>) ((ParameterizedType) type).getRawType();
-			else if (type instanceof Class)
-				cls = (Class<?>) type;
-
-			if (cls != null && component.isAssignableFrom(cls) && !Modifier.isAbstract(cls.getModifiers() )) {
-				concreteClass = (Class<comp>) cls;
-				break;
-			}
-		}
-
-		return concreteClass;
 	}
 
 	/**
