@@ -146,7 +146,7 @@ public class GenericsTest {
 
 	}
 
-	private class L1Generic_L0Generic<A extends P1, B extends P2> extends L0Generic<A, B> {
+	private class L1Generic_L0Generic<A extends P1<B, ?>, B extends P2> extends L0Generic<A, B> {
 
 	}
 
@@ -166,7 +166,7 @@ public class GenericsTest {
 
 	}
 
-	private class P1 {
+	private class P1<X extends P2, Y> {
 
 	}
 
@@ -174,7 +174,11 @@ public class GenericsTest {
 
 	}
 
-	private class PB1 extends P1 {
+	private class P3 {
+
+	}
+
+	private class PB1 extends P1<PB2, P3> {
 
 	}
 

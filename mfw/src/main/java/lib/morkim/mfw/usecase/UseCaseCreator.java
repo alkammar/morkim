@@ -58,16 +58,19 @@ public class UseCaseCreator<T extends UseCase> {
         Class dic = dependenciesImpl.getClass();
 
         do {
+            Type[] resolvedTaskClassTypes = GenericsUtils.resolveActualTypeArgs(taskClass, tc);
+
             for (Field field : tc.getDeclaredFields()) {
-                addAnnotatedField(fieldTypes, field, GenericsUtils.resolveActualTypeArgs(taskClass, tc));
+                addAnnotatedField(fieldTypes, field, resolvedTaskClassTypes);
             }
             tc = tc.getSuperclass();
         } while (!tc.isInstance(Object.class));
 
         while (!dic.isInstance(Object.class)) {
-            for (Method method : dic.getDeclaredMethods()) {
 
-                Type[] resolvedTypes = GenericsUtils.resolveActualTypeArgs(dependenciesImpl.getClass(), dic);
+            Type[] resolvedTypes = GenericsUtils.resolveActualTypeArgs(dependenciesImpl.getClass(), dic);
+
+            for (Method method : dic.getDeclaredMethods()) {
 
                 TypeVariable[] dependenciesTypeParams = dic.getTypeParameters();
 

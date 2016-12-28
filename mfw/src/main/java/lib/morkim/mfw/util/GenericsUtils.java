@@ -51,7 +51,7 @@ public class GenericsUtils {
 
 					if (offspringParameters.length == 0) {
 						if (ancestor instanceof ParameterizedType) {
-							Type[] parametrizedActualTypes = ((ParameterizedType) ancestor).getActualTypeArguments();
+							Type[] parametrizedActualTypes = getRawTypes(((ParameterizedType) ancestor).getActualTypeArguments());
 							actualTypes = new Type[parametrizedActualTypes.length];
 							System.arraycopy(parametrizedActualTypes, 0, actualTypes, 0, parametrizedActualTypes.length);
 						}
@@ -77,7 +77,7 @@ public class GenericsUtils {
 									mappedType = findInActualTypes(actualTypes, mappedType);
 									offspringTypes[i] = mappedType;
 								} else {
-									offspringTypes[i] = parametrizedGenericActualArguments[i];
+									offspringTypes[i] = getRawType(parametrizedGenericActualArguments[i]);
 								}
 							}
 
@@ -90,13 +90,12 @@ public class GenericsUtils {
 						}
 					}
 				}
-//				else {
 
 				if (resolvedTypes.length == 0) {
 					if (offspringParameters.length > 0 && actualTypes.length == 0) {
 						actualTypes = new Type[offspringParameters.length];
 						for (int i = 0; i < offspringParameters.length; i++)
-							actualTypes[i] = offspringParameters[i].getBounds()[0];
+							actualTypes[i] = getRawType(offspringParameters[i].getBounds()[0]);
 					}
 
 					resolvedTypes = new Type[actualTypes.length];
@@ -108,9 +107,18 @@ public class GenericsUtils {
 					actualTypes = new Type[resolvedTypes.length];
 					System.arraycopy(resolvedTypes, 0, actualTypes, 0, resolvedTypes.length);
 				}
-//				}
 			}
 		}
+
+		return resolvedTypes;
+	}
+
+	private static Type [] getRawTypes(Type [] types) {
+
+		Type [] resolvedTypes = new Type[types.length];
+
+		for (int i = 0; i < types.length; i++)
+			resolvedTypes[i] = getRawType(types[i]);
 
 		return resolvedTypes;
 	}
@@ -120,13 +128,14 @@ public class GenericsUtils {
 		Class<?> raw = getRawType(mappedType);
 
 		for (Type actualType : actualTypes) {
-			if (actualType != null && raw.isAssignableFrom((Class<?>) actualType)) {
-				mappedType = actualType;
+			Class actualRawType = getRawType(actualType);
+			if (actualType != null && raw.isAssignableFrom(actualRawType)) {
+				mappedType = actualRawType;
 				break;
 			}
 		}
 
-		return mappedType;
+		return getRawType(mappedType);
 	}
 
 	public static Class getRawType(Type type) {
