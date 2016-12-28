@@ -3,6 +3,7 @@ package lib.morkim.mfw.usecase;
 import java.util.List;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.app.UseCaseManager;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
@@ -16,6 +17,8 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 	protected M model;
 	@TaskDependency
 	protected Repository repo;
+	@TaskDependency
+	protected UseCaseManager useCaseManager;
 
 	protected boolean isUndoing;
 
@@ -71,7 +74,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 	public void executeSync(Req request) {
 
 		// TODO getUseCaseSubscriptions should be from implemented interface or dependency
-		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
+		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 
 		setRequest(request);
 		onExecute(request);
@@ -84,7 +87,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 
 	public void undo() {
 		// TODO getUseCaseSubscriptions should be from implemented interface or dependency
-		subscribedListeners = appContext.getUseCaseSubscriptions(this.getClass());
+		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 		onUndo(getRequest());
 	}
 
@@ -113,7 +116,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 
 				if (canUndo())
 					// TODO addToUndoStack should be from implemented interface or dependency
-					appContext.addToUndoStack(this, getRequest());
+					useCaseManager.addToUndoStack(this, getRequest());
 			} else {
 				updateListenerUndo(result);
 

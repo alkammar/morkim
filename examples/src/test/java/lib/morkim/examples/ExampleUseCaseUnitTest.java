@@ -9,6 +9,7 @@ import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.examples.usecase.ExampleTask;
 import lib.morkim.examples.usecase.ExampleUseCaseDependencies;
+import lib.morkim.mfw.app.UseCaseManager;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Filter;
@@ -53,6 +54,11 @@ public class ExampleUseCaseUnitTest {
 
         @Override
         public Repository getRepository() {
+            return null;
+        }
+
+        @Override
+        public UseCaseManager getUseCaseManager() {
             return null;
         }
 

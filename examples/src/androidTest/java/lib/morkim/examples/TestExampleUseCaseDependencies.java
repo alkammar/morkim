@@ -3,6 +3,7 @@ package lib.morkim.examples;
 import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.examples.usecase.ExampleUseCaseDependencies;
+import lib.morkim.mfw.app.UseCaseManager;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
 import lib.morkim.mfw.repo.gateway.Gateway;
@@ -28,6 +29,11 @@ class TestExampleUseCaseDependencies implements ExampleUseCaseDependencies {
     @Override
     public Repository getRepository() {
         return context.getRepo();
+    }
+
+    @Override
+    public UseCaseManager getUseCaseManager() {
+        return context.getUseCaseManager();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package lib.morkim.examples.screen;
 
 import lib.morkim.mfw.app.MorkimApp;
+import lib.morkim.mfw.app.UseCaseManager;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.Repository;
 
@@ -23,5 +24,9 @@ public class BaseExampleUseCaseDependenciesImpl<A extends MorkimApp<M, ?>, M ext
 
     public Repository getRepository() {
         return context.getRepo();
+    }
+
+    public UseCaseManager getUseCaseManager() {
+        return context.getUseCaseManager();
     }
 }

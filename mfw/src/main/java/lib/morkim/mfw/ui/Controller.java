@@ -70,7 +70,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 				if (field.isAnnotationPresent(UseCaseSubscription.class))
 					try {
 						field.setAccessible(true);
-						morkimApp.subscribeToUseCase(
+						morkimApp.getUseCaseManager().subscribeToUseCase(
 								field.getAnnotation(UseCaseSubscription.class).value(),
 								(UseCaseListener<? extends TaskResult>) field.get(this));
 					} catch (IllegalAccessException e) {
@@ -156,7 +156,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 			if (field.isAnnotationPresent(UseCaseSubscription.class))
 				try {
 					field.setAccessible(true);
-					morkimApp.unsubscribeFromUseCase(
+					morkimApp.getUseCaseManager().unsubscribeFromUseCase(
 							field.getAnnotation(UseCaseSubscription.class).value(),
 							(UseCaseListener<? extends TaskResult>) field.get(this));
 				} catch (IllegalAccessException e) {

@@ -8,9 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,14 +26,6 @@ import lib.morkim.mfw.ui.EmptyPresenter;
 import lib.morkim.mfw.ui.Presenter;
 import lib.morkim.mfw.ui.UpdateListener;
 import lib.morkim.mfw.ui.Viewable;
-import lib.morkim.mfw.usecase.EmptyUseCase;
-import lib.morkim.mfw.usecase.TaskRequest;
-import lib.morkim.mfw.usecase.TaskResult;
-import lib.morkim.mfw.usecase.UndoRecord;
-import lib.morkim.mfw.usecase.UseCase;
-import lib.morkim.mfw.usecase.UseCaseCreator;
-import lib.morkim.mfw.usecase.UseCaseDependencies;
-import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.util.GenericsUtils;
 
 /**
@@ -53,10 +43,9 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
     private Map<UUID, Controller> controllers;
 
-	private M model;
+	private UseCaseManager useCaseManager;
 
-	private Map<Class<? extends UseCase>, List<UseCaseListener<? extends TaskResult>>> useCasesListeners;
-	private List<UndoRecord> undoRecords;
+	private M model;
 
 	private TaskScheduler taskScheduler;
 
@@ -75,12 +64,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
         controllers = new HashMap<>();
 
+		useCaseManager = createUseCaseManager();
+
 		model = createModel();
 		if (model == null) 
 			throw new Error(String.format("createModel() method in %s must return a non-null implementation", this.getClass()));
-
-	    useCasesListeners = new HashMap<>();
-		undoRecords = new ArrayList<>();
 
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
 
@@ -89,6 +77,10 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		} catch (GatewayRetrieveException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private UseCaseManager createUseCaseManager() {
+		return new UseCaseManagerImpl();
 	}
 
 	/**
@@ -259,70 +251,7 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return getResources().getConfiguration().locale.getCountry();
 	}
 
-	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener) {
-
-		synchronized (this) {
-
-			for (Class<? extends UseCase> taskClass : taskClasses) {
-
-				List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
-
-				if (useCaseListeners == null) {
-					useCaseListeners = new ArrayList<>();
-					useCasesListeners.put(taskClass, useCaseListeners);
-				}
-
-				useCaseListeners.add(listener);
-			}
-		}
-	}
-
-	public void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener listener) {
-
-		synchronized (this) {
-
-			for (Class<? extends UseCase> taskClass : taskClasses) {
-
-				List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
-
-				if (useCaseListeners != null) {
-					useCaseListeners.remove(listener);
-
-					if (useCaseListeners.isEmpty())
-						useCasesListeners.remove(taskClass);
-				}
-			}
-		}
-	}
-
-	public List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
-		synchronized (this) {
-			List<UseCaseListener<? extends TaskResult>> useCasekListeners = useCasesListeners.get(aClass);
-			return useCasekListeners != null ? useCasekListeners : new ArrayList<UseCaseListener<? extends TaskResult>>();
-		}
-	}
-
-	public void addToUndoStack(UseCase useCase, TaskRequest request) {
-
-		undoRecords.add(new UndoRecord(useCase.getClass(), request));
-	}
-
-	public <u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies) {
-
-		if (undoRecords.size() > 0) {
-
-			UndoRecord undoRecord = undoRecords.get(undoRecords.size() - 1);
-
-			return new UseCaseCreator<u>()
-					.create(undoRecord.<u>getUseCaseClass())
-					.with(dependencies)
-					.setRequest(undoRecord.getRequest());
-		}
-
-		return new EmptyUseCase();
-	}
-
-	public void clearUndoStack() {
-		undoRecords.clear();
+	public UseCaseManager getUseCaseManager() {
+		return useCaseManager;
 	}
 }
