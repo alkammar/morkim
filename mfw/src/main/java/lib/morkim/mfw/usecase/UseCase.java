@@ -73,11 +73,13 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 
 	public void executeSync(Req request) {
 
-		// TODO getUseCaseSubscriptions should be from implemented interface or dependency
 		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 
 		setRequest(request);
-		onExecute(request);
+		Res result = onExecute(request);
+
+		updateListener(result);
+
 		try {
 			onPostExecute();
 		} catch (GatewayPersistException e) {
@@ -86,7 +88,6 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 	}
 
 	public void undo() {
-		// TODO getUseCaseSubscriptions should be from implemented interface or dependency
 		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 		onUndo(getRequest());
 	}
@@ -115,7 +116,6 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 				updateListenerComplete(result);
 
 				if (canUndo())
-					// TODO addToUndoStack should be from implemented interface or dependency
 					useCaseManager.addToUndoStack(this, getRequest());
 			} else {
 				updateListenerUndo(result);
