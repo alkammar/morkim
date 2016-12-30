@@ -92,8 +92,10 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
     public <u extends UpdateListener, c extends Controller, p extends Presenter> c createUiComponents(Viewable<u, c, p> viewable) {
 
         c controller = (c) controllers.get(viewable.getInstanceId());
-        controller = (controller == null) ? constructController(viewable) : controller;
-	    controller.onAttachApp(this);
+	    if (controller == null) {
+		    controller = constructController(viewable);
+		    controller.onAttachApp(this);
+	    }
 
 	    p presenter = constructPresenter(viewable);
 
