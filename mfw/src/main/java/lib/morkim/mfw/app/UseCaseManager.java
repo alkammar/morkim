@@ -21,4 +21,6 @@ public interface UseCaseManager {
 	public <u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies);
 
 	public void clearUndoStack();
+
+	void runOnUi(Runnable runnable);
 }

@@ -81,7 +81,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 		setRequest(request);
 		final Res result = onExecute(request);
 
-		new Handler(Looper.getMainLooper()).post(new Runnable() {
+		useCaseManager.runOnUi(new Runnable() {
 			@Override
 			public void run() {
 				updateListener(result);

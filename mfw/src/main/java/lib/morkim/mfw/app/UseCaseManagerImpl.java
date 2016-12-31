@@ -1,5 +1,8 @@
 package lib.morkim.mfw.app;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,5 +93,10 @@ class UseCaseManagerImpl implements UseCaseManager {
 
 	public void clearUndoStack() {
 		undoRecords.clear();
+	}
+
+	@Override
+	public void runOnUi(Runnable runnable) {
+		new Handler(Looper.getMainLooper()).post(runnable);
 	}
 }
