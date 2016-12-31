@@ -1,8 +1,7 @@
 package lib.morkim.mfw.repo.persistence;
 
-import android.util.SparseArray;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import lib.morkim.mfw.app.MorkimApp;
@@ -12,12 +11,12 @@ import lib.morkim.mfw.repo.gateway.AbstractGateway;
 
 public abstract class InMemoryGateway<E extends Entity> extends AbstractGateway<E> {
 	
-	private SparseArray<E> entities;
+	private HashMap<Integer, E> entities;
 
 	public InMemoryGateway(MorkimApp morkimApp) {
 		super(morkimApp);
 
-		entities = new SparseArray<>();
+		entities = new HashMap<>();
 	}
 
 	@Override
@@ -47,14 +46,14 @@ public abstract class InMemoryGateway<E extends Entity> extends AbstractGateway<
 		return asList(entities);
 	}
 	
-	private static <C> List<C> asList(SparseArray<C> sparseArray) {
+	private static <C> List<C> asList(HashMap<Integer, C> map) {
 	    
-		if (sparseArray == null) return null;
+		if (map == null) return null;
 	    
-		List<C> arrayList = new ArrayList<>(sparseArray.size());
+		List<C> arrayList = new ArrayList<>(map.size());
 	    
-		for (int i = 0; i < sparseArray.size(); i++)
-	        arrayList.add(sparseArray.valueAt(i));
+		for (int i = 0; i < map.size(); i++)
+	        arrayList.add(map.get(i));
 	    
 		return arrayList;
 	}
