@@ -1,5 +1,8 @@
 package lib.morkim.mfw.usecase;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.List;
 
 import lib.morkim.mfw.app.MorkimApp;
@@ -76,9 +79,14 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 
 		setRequest(request);
-		Res result = onExecute(request);
+		final Res result = onExecute(request);
 
-		updateListener(result);
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+			@Override
+			public void run() {
+				updateListener(result);
+			}
+		});
 
 		try {
 			onPostExecute();
