@@ -92,6 +92,8 @@ public class UseCaseCreator<T extends UseCase> {
                     }
                 }
 
+                Log.d(useCaseClass.getSimpleName(), "dependencies return type: " + method.toString());
+
                 Field field = fieldTypes.get(returnType);
                 if (field != null)
                     try {
