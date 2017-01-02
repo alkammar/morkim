@@ -135,7 +135,7 @@ public class UseCaseCreator<T extends UseCase> {
 
             fieldTypes.put(cls, field);
 
-            Log.d(useCaseClass.getSimpleName(), "annotated field: " + field.toString());
+            Log.d(useCaseClass.getSimpleName(), "annotated field: " + field.getName() + ", " + field.toString());
         }
     }
 }
