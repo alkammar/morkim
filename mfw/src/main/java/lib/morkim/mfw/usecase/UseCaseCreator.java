@@ -1,5 +1,7 @@
 package lib.morkim.mfw.usecase;
 
+import android.util.Log;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,19 +15,19 @@ import lib.morkim.mfw.util.GenericsUtils;
 
 public class UseCaseCreator<T extends UseCase> {
 
-    private T task;
-    private Class<T> taskClass;
+    private T useCase;
+    private Class<T> useCaseClass;
 
     public UseCaseCreator() {
 
     }
 
-    public UseCaseCreator<T> create(Class<T> taskClass) {
+    public UseCaseCreator<T> create(Class<T> useCaseClass) {
 
-        this.taskClass = taskClass;
+        this.useCaseClass = useCaseClass;
 
         try {
-            task = taskClass.newInstance();
+            useCase = useCaseClass.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -37,10 +39,10 @@ public class UseCaseCreator<T extends UseCase> {
 
     public UseCaseCreator<T> add(Class<T> taskClass) {
 
-        this.taskClass = taskClass;
+        this.useCaseClass = taskClass;
 
         try {
-            task = taskClass.newInstance();
+            useCase = taskClass.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -54,21 +56,28 @@ public class UseCaseCreator<T extends UseCase> {
 
         Map<Class, Field> fieldTypes = new HashMap<>();
 
-        Class tc = taskClass;
+        Class ucc = useCaseClass;
         Class dic = dependenciesImpl.getClass();
 
         do {
-            Type[] resolvedTaskClassTypes = GenericsUtils.resolveActualTypeArgs(taskClass, tc);
+            Type[] resolvedTaskClassTypes = GenericsUtils.resolveActualTypeArgs(useCaseClass, ucc);
 
-            for (Field field : tc.getDeclaredFields()) {
+            for (Type type : resolvedTaskClassTypes)
+                Log.d(useCaseClass.getSimpleName(), "resolved types for use case: " + type.toString());
+
+            for (Field field : ucc.getDeclaredFields()) {
                 addAnnotatedField(fieldTypes, field, resolvedTaskClassTypes);
             }
-            tc = tc.getSuperclass();
-        } while (!tc.isInstance(Object.class));
+            ucc = ucc.getSuperclass();
+        } while (!ucc.isInstance(Object.class));
 
         while (!dic.isInstance(Object.class)) {
 
             Type[] resolvedTypes = GenericsUtils.resolveActualTypeArgs(dependenciesImpl.getClass(), dic);
+
+
+            for (Type type : resolvedTypes)
+                Log.d(useCaseClass.getSimpleName(), "resolved types for dependencies: " + type.toString());
 
             for (Method method : dic.getDeclaredMethods()) {
 
@@ -87,7 +96,7 @@ public class UseCaseCreator<T extends UseCase> {
                 if (field != null)
                     try {
                         field.setAccessible(true);
-                        field.set(task, method.invoke(dependenciesImpl));
+                        field.set(useCase, method.invoke(dependenciesImpl));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
@@ -98,7 +107,7 @@ public class UseCaseCreator<T extends UseCase> {
             dic = dic.getSuperclass();
         }
 
-        return task;
+        return useCase;
     }
 
     private boolean isFieldGeneric(Field field) {
@@ -125,6 +134,8 @@ public class UseCaseCreator<T extends UseCase> {
                     (Class<?>) fieldType;
 
             fieldTypes.put(cls, field);
+
+            Log.d(useCaseClass.getSimpleName(), "annotated field: " + field.getName());
         }
     }
 }

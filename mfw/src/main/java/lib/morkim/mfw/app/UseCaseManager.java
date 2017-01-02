@@ -10,17 +10,17 @@ import lib.morkim.mfw.usecase.UseCaseListener;
 
 public interface UseCaseManager {
 
-	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener);
+	void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener);
 
-	public void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener listener);
+	void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener listener);
 
-	public List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass);
+	List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass);
 
-	public void addToUndoStack(UseCase useCase, TaskRequest request);
+	void addToUndoStack(UseCase useCase, TaskRequest request);
 
-	public <u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies);
+	<u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies);
 
-	public void clearUndoStack();
+	void clearUndoStack();
 
 	void runOnUi(Runnable runnable);
 }
