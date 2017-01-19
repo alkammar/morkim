@@ -1,7 +1,5 @@
 package lib.morkim.mfw.usecase;
 
-import android.util.Log;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,9 +60,6 @@ public class UseCaseCreator<T extends UseCase> {
         do {
             Type[] resolvedTaskClassTypes = GenericsUtils.resolveActualTypeArgs(useCaseClass, ucc);
 
-            for (Type type : resolvedTaskClassTypes)
-                Log.d(useCaseClass.getSimpleName(), "resolved types for use case: " + type.toString());
-
             for (Field field : ucc.getDeclaredFields()) {
                 addAnnotatedField(fieldTypes, field, resolvedTaskClassTypes);
             }
@@ -74,10 +69,6 @@ public class UseCaseCreator<T extends UseCase> {
         while (!dic.isInstance(Object.class)) {
 
             Type[] resolvedTypes = GenericsUtils.resolveActualTypeArgs(dependenciesImpl.getClass(), dic);
-
-
-            for (Type type : resolvedTypes)
-                Log.d(useCaseClass.getSimpleName(), "resolved types for dependencies: " + type.toString());
 
             for (Method method : dic.getDeclaredMethods()) {
 
@@ -91,8 +82,6 @@ public class UseCaseCreator<T extends UseCase> {
                         break;
                     }
                 }
-
-                Log.d(useCaseClass.getSimpleName(), "dependencies return type: " + method.toString());
 
                 Field field = fieldTypes.get(returnType);
                 if (field != null)
@@ -136,8 +125,6 @@ public class UseCaseCreator<T extends UseCase> {
                     (Class<?>) fieldType;
 
             fieldTypes.put(cls, field);
-
-            Log.d(useCaseClass.getSimpleName(), "annotated field: " + field.getName() + ", " + field.toString());
         }
     }
 }

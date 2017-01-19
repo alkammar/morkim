@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import lib.morkim.mfw.domain.EmptyModel;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.Repository;
@@ -67,8 +68,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		useCaseManager = createUseCaseManager();
 
 		model = createModel();
-		if (model == null) 
-			throw new Error(String.format("createModel() method in %s must return a non-null implementation", this.getClass()));
+		if (model == null)
+			model = (M) new EmptyModel(this);
 
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
 
