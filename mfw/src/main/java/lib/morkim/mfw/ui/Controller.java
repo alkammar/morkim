@@ -20,20 +20,26 @@ import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.task.ScheduledTask;
 import lib.morkim.mfw.task.UiTaskObserver;
-import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.TaskResult;
+import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.UseCaseSubscription;
 import lib.morkim.mfw.util.GenericsUtils;
 
 /**
- * {@link Viewable} controller. Handles Viewable communication with application data model.
- * Mainly runs background tasks on data model and sends notifications on data model changes needed
- * to update the Viewable.
- * This class stays alive even if the Viewable is destroyed due to rotation. Will be destroyed when
- * its Viewable is completely destroyed.
+ * Handles {@link Viewable} updates and events. Routing events to as well as receiving updates from
+ * underlying layer.
+ * Stays alive even if the Viewable is destroyed due to rotation. Will only be destroyed when its
+ * viewable is completely destroyed (e.g. when viewable is removed by pressing back button or killed
+ * by OS).
+ * Can be used to cache viewable's data model.
+ * Controller handles the updates to your viewable, updating your viewable only when it is in the
+ * correct viewing state.
+ * Keeps states all the updates to viewable (e.g. you can safely update an activity in the stopped
+ * state without losing state or data).
+ *
  * @param <A> The {@link MorkimApp} application that extends Android {@link android.app.Application}
- * @param <M> The {@link Model} container for this application
- * @param <U> The {@link UpdateListener} associated with the Viewable
+ * @param <M> The {@link Model} cached data model container for this application
+ * @param <U> The {@link UpdateListener} associated with the viewable
  */
 public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U extends UpdateListener> {
 
@@ -54,6 +60,14 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		pendingUpdateListener = createPendingUpdateListener();
 	}
 
+	/**
+	 * Called when creating the controller. At this point the controller has a {@link MorkimApp}
+	 * reference.
+	 * For Morkim Use Case layer, this is where all defined {@link UseCaseListener}s get registered to
+	 * their respective use cases.
+	 *
+	 * @param morkimApp morkim application
+	 */
 	public void onAttachApp(A morkimApp) {
 
 		this.morkimApp = morkimApp;
@@ -61,6 +75,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		subscribeUseCaseListeners();
 	}
 
+	// TODO this needs to be put in some utility to be available for other classes like application and use case
 	private void subscribeUseCaseListeners() {
 
 		Class<?> cls = getClass();
@@ -83,31 +98,63 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		} while (cls != null);
 	}
 
-	@SuppressWarnings("WeakerAccess")
-	protected void onExtractExtraData(@SuppressWarnings("UnusedParameters") Bundle bundledData) {}
-
+	/**
+	 * Called when a {@link Viewable} is attached to the controller. Viewable can be attached more
+	 * than once due to screen rotation.
+	 *
+	 * @param viewable viewable
+	 */
 	public void onAttachViewable(Viewable<U, ?, ?> viewable) {
 		this.viewable = viewable;
 
 		updateListener = viewable.getUpdateListener();
 
-		Bundle bundledData = viewable.getBundledData();
-		if (bundledData != null)
-			onExtractExtraData(bundledData);
 
 		if (!initializationTaskExecuted) {
-			executeInitializationTask();
+
+			Bundle bundledData = viewable.getBundledData();
+			if (bundledData != null)
+				onExtractExtraData(bundledData);
+
+			onExecuteInitializationTasks();
 			initializationTaskExecuted = true;
 		}
 	}
 
+	/**
+	 * Called when creating the controller for fetching data passed the first {@link Viewable}.
+	 *
+	 * @param bundledData data
+	 */
+	@SuppressWarnings("WeakerAccess")
+	protected void onExtractExtraData(@SuppressWarnings("UnusedParameters") Bundle bundledData) {}
+
+	/**
+	 * Called when creating the controller. This is a convenient place to run initialization
+	 * background tasks (e.g. async data loaders or backend calls for initializing controller's data).
+	 */
+	@SuppressWarnings("WeakerAccess")
+	protected void onExecuteInitializationTasks() {}
+
+	/**
+	 * Called every time a {@link Viewable} is attached to the controller. This is a typical place to
+	 * initialize the viewable with whatever data available as the viewable will be ready to be
+	 * visible shortly.
+	 * Use {@link #getUpdateListener()} method to get reference to the viewable update interface.
+	 */
 	public void onInitializeViews() {}
 
+	/**
+	 * Called when the {@link Viewable} is attached to its parent. This is typical for fragment
+	 * viewable, where a fragment will have either a parnt activity or a parent fragment.
+	 * This method is mainly to get reference to viewable's parent as a listener interface.
+	 * This is useful if the controller wants to communicate events to parent viewable.
+	 * To achieve this use {@link Viewable#getParentListener()}
+	 *
+	 * @param viewable viewable
+	 */
 	@SuppressWarnings("WeakerAccess")
 	public void onAttachParent(@SuppressWarnings("UnusedParameters") Viewable<U, ?, ?> viewable) {}
-
-	@SuppressWarnings("WeakerAccess")
-	protected void executeInitializationTask() {}
 
 	protected A getAppContext() {
 		return morkimApp;
@@ -117,6 +164,9 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		return morkimApp.getModel();
 	}
 
+	/**
+	 * Calls the finish method of the {@link Viewable}. Use this to force the view to terminate itself.
+	 */
 	protected void finish() { viewable.finish(); }
 
     Viewable getViewable() {
@@ -143,10 +193,14 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		morkimApp.getTaskScheduler().unregister(task, observer);
 	}
 
+	/**
+	 * Called when the controller is being destroyed.
+	 */
 	public void onDestroy() {
 		unsubscribeUseCaseListeners();
 	}
 
+	// TODO this needs to be put in some utility to be available for other classes like application and use case
 	private void unsubscribeUseCaseListeners() {
 		for (Field field : getClass ().getDeclaredFields()) {
 			if (field.isAnnotationPresent(UseCaseSubscription.class))
@@ -204,12 +258,19 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		}
 	}
 
+	/**
+	 * Called when the {@link Viewable} is visible.
+	 */
 	protected void onShowViewable() {
 		if (pendingUpdateListener instanceof AbstractUpdateListenerPending)
+			//noinspection unchecked
 			((AbstractUpdateListenerPending) pendingUpdateListener).setUpdateListener(updateListener);
 		pendingEventsExecutor.onExecutePendingEvents();
 	}
 
+	/**
+	 * Called when the {@link Viewable} is no longer visible
+	 */
 	@SuppressWarnings("WeakerAccess")
 	protected void onHideViewable() {}
 
@@ -222,8 +283,10 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		Class<U> cls;
 		Type actualUpdateListener = actualArgs[2];
 		if (actualUpdateListener instanceof TypeVariable)
+			//noinspection unchecked
 			cls = (Class<U>) ((TypeVariable) actualUpdateListener).getBounds()[0];
 		else
+			//noinspection unchecked
 			cls = (Class<U>) actualUpdateListener;
 
 		instance = getAnnotatedUpdateListenerPendingImplementation(cls);
@@ -239,16 +302,17 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		try {
 			// TODO need to remove dependency on static text "Pending"
 			// TODO need to get package name from compiler project
+			//noinspection unchecked
 			generatedInterfaceImpl = (Class<U>) Class.forName("lib.morkim.mfw.generated.update.listeners." + cls.getSimpleName() + "Pending");
 			Log.i("Controller", generatedInterfaceImpl.toString());
 			instance = generatedInterfaceImpl.newInstance();
 			((AbstractUpdateListenerPending) instance).setPendingEventsExecutor(pendingEventsExecutor);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
+			// This viewable does not have a pending update interface
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new Error("Unable to access member");
+		} catch (InstantiationException e) {
+			throw new Error("Unable to access default constructor");
 		}
 
 		return instance;
@@ -263,6 +327,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 			}
 		};
 
+		//noinspection unchecked
 		instance = (U) Proxy.newProxyInstance(cls.getClassLoader(), new Class<?>[]{cls}, handler);
 
 		return instance;

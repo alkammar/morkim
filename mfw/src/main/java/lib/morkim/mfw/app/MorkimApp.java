@@ -2,17 +2,14 @@ package lib.morkim.mfw.app;
 
 import android.app.Application;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import lib.morkim.mfw.domain.EmptyModel;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.MorkimRepository;
 import lib.morkim.mfw.repo.Repository;
@@ -58,7 +55,10 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 		repo = createRepo();
 		if (repo == null) 
-			throw new Error(String.format("createRepo() method in %s must return a non-null implementation", this.getClass()));
+			throw new Error(String.format("createRepo() method in %s must return a non-null implementation." +
+					" If you don't wish to use a MorkimRepository component, then you " +
+					"need extend abstract MorkimRepository class and provide an empty implementation.",
+					this.getClass()));
 
 		analytics = createAnalytics();
 		analytics.initialize();
@@ -69,7 +69,10 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 		model = createModel();
 		if (model == null)
-			model = (M) new EmptyModel(this);
+			throw new Error(String.format("createModel() method in %s must return a non-null implementation." +
+					" If you don't wish to use a Model component, then you " +
+					"need extend abstract Model class and provide an empty implementation.",
+					this.getClass()));
 
 		taskScheduler = new TaskScheduler(createScheduledTaskFactory());
 
@@ -87,14 +90,17 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	/**
 	 * Gets the Controller associated with a given Viewable.
 	 * Will create the controller if it is not already created.
+	 *
 	 * @param viewable Viewable to fetch Controller for
 	 * @return Controller associated with passed viewable
 	 */
     public <u extends UpdateListener, c extends Controller, p extends Presenter> c createUiComponents(Viewable<u, c, p> viewable) {
 
-        c controller = (c) controllers.get(viewable.getInstanceId());
+	    //noinspection unchecked
+	    c controller = (c) controllers.get(viewable.getInstanceId());
 	    if (controller == null) {
 		    controller = constructController(viewable);
+		    //noinspection unchecked
 		    controller.onAttachApp(this);
 	    }
 
@@ -102,7 +108,9 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	    viewable.onAttachPresenter(presenter);
 	    viewable.onAttachController(controller);
+	    //noinspection unchecked
 	    controller.onAttachViewable(viewable);
+	    //noinspection unchecked
 	    presenter.onAttachController(controller);
 
 	    viewable.onBindViews();
@@ -115,41 +123,30 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 
 	private <c extends Controller> c constructController(Viewable<?, c, ?> viewable) {
 
-		c controller = constructComponent(viewable, 1);//Controller.class);
+		c controller = constructComponent(viewable, 1);
+		//noinspection unchecked
 		return controller != null ? controller : (c) new EmptyController();
 	}
 
 	private <p extends Presenter> p constructPresenter(Viewable<?, ?, p> viewable) {
 
-		p presenter = constructComponent(viewable, 2);//Presenter.class);
+		p presenter = constructComponent(viewable, 2);
+		//noinspection unchecked
 		return presenter != null ? presenter : (p) new EmptyPresenter();
 	}
 
 	@Nullable
-	private <comp> comp constructComponent(Viewable viewable, int index) {//Class<?> component) {
+	private <comp> comp constructComponent(Viewable viewable, int index) {
 
 		Class<comp> concreteClass;
 
 		Class<?> viewableClass = viewable.getClass();
-		Type genericSuperclass;
 
+		//noinspection unchecked
 		Type [] resolvedTypes = GenericsUtils.resolveActualTypeArgs((Class<? extends Viewable>) viewableClass, Viewable.class);
 
-		TypeVariable<?>[] typeParameters = viewable.getClass().getTypeParameters();
-
-		concreteClass = GenericsUtils.getRawType(resolvedTypes[index]);//GenericsUtils.getDefaultComponentClass(component, typeParameters);
-
-//		while (concreteClass == null && viewableClass != null) {
-//			genericSuperclass = viewableClass.getGenericSuperclass();
-//
-//			if (genericSuperclass instanceof ParameterizedType) {
-//				Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-//
-//				concreteClass = GenericsUtils.findComponentConcreteClass(component, actualTypeArguments);
-//			}
-//
-//			viewableClass = viewableClass.getSuperclass();
-//		}
+		//noinspection unchecked
+		concreteClass = GenericsUtils.getRawType(resolvedTypes[index]);
 
 		try {
 			if (concreteClass != null) {
@@ -158,17 +155,20 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 				return constructor.newInstance();
 			}
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new Error("Unable to access member");
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			throw new Error("Unable to access default constructor");
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			throw new Error("Unable to find default constructor " + concreteClass.getSimpleName() + "()");
 		} catch (InvocationTargetException e) {
-			Log.e("MorkimApp", e.getCause().getMessage());
+			String message = e.getCause().getMessage();
+
 			for (StackTraceElement element : e.getCause().getStackTrace())
-				Log.e("MorkimApp", "\tat " + element);
-			e.printStackTrace();
+				message += "\n\tat " + element;
+
+			throw new Error(message);
 		}
+
 		return null;
 	}
 
@@ -192,10 +192,11 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	protected abstract void createFactories();
 
 	/**
-	 * Creates the data repository for your application. This repository has the
-	 * knowledge of all needed data {@link Gateway}s to be created on request
+	 * Creates the data repository for your application. This repository has
+	 * all needed data {@link Gateway}s to be created on request
 	 * from the application. See more details in the {@link MorkimRepository}
-	 * interface on how to create data gateways.
+	 * interface on how to create data gateways. If you don't wish to use a MorkimRepository component,
+	 * then you need extend abstract MorkimRepository class and provide an empty implementation.
 	 * 
 	 * @return Repository interface
 	 */
@@ -205,7 +206,8 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 	 * Creates the application data model container. {@link Model} should contain
 	 * all your business entity hierarchy that needs to be alive regardless
 	 * of Android components states or entities that might be needed among
-	 * more than one Android component
+	 * more than one Android component. If you don't wish to use a Model component, then you
+	 * need extend abstract Model class and provide an empty implementation.
 	 * 
 	 * @return Application data model
 	 */
