@@ -1,8 +1,5 @@
 package lib.morkim.mfw.usecase;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import java.util.List;
 
 import lib.morkim.mfw.app.MorkimApp;
@@ -81,18 +78,20 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 		setRequest(request);
 		final Res result = onExecute(request);
 
+//		try {
+//			onPostExecute();
+//		} catch (GatewayPersistException e) {
+//			e.printStackTrace();
+//		}
+	}
+
+	private void updateListenersOnUiThread(final Res result) {
 		useCaseManager.runOnUi(new Runnable() {
 			@Override
 			public void run() {
 				updateListener(result);
 			}
 		});
-
-		try {
-			onPostExecute();
-		} catch (GatewayPersistException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void undo() {
