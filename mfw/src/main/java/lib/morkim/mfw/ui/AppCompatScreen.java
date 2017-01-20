@@ -61,13 +61,6 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 		return getIntent().getExtras();
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		outState.putString(VIEWABLE_ID, id.toString());
-	}
-
 	protected int layoutId() {
 		return 0;
 	}
@@ -77,6 +70,15 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 		super.onStart();
 
 		controller.bindViews();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putString(VIEWABLE_ID, id.toString());
+
+		controller.unbindViews();
 	}
 
 	@Override
