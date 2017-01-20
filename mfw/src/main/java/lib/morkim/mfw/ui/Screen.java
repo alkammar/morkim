@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.WindowManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,13 +61,6 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 		return getIntent().getExtras();
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		outState.putString(VIEWABLE_ID, id.toString());
-	}
-
 	protected int layoutId() {
 		return 0;
 	}
@@ -81,10 +73,12 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 
-		keepScreenOn(false);
+		outState.putString(VIEWABLE_ID, id.toString());
+
+		controller.unbindViews();
 	}
 
 	@Override
@@ -104,13 +98,6 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 
 	protected void setCustomTitleBar() {
 
-	}
-
-	@Override
-	public void keepScreenOn(boolean keepOn) {
-
-		if (keepOn) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	@Override

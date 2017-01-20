@@ -20,8 +20,6 @@ public interface Viewable<V extends UpdateListener, C extends Controller, P exte
 	<T> T getParentListener();
 	<T> T getChildListener();
 
-	void keepScreenOn(boolean keepOn);
-
 	UUID getInstanceId();
 
 	void onAssignListeners();

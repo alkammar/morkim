@@ -86,11 +86,6 @@ public abstract class MorkimPreferenceFragment<V extends UpdateListener, C exten
 	}
 
 	@Override
-	public void keepScreenOn(boolean keepOn) {
-		((AppCompatScreen) getActivity()).keepScreenOn(keepOn);
-	}
-
-	@Override
 	public UUID getInstanceId() {
 		return id;
 	}

@@ -108,11 +108,6 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
     }
 
     @Override
-    public void keepScreenOn(boolean b) {
-
-    }
-
-    @Override
     public UUID getInstanceId() {
         return id;
     }

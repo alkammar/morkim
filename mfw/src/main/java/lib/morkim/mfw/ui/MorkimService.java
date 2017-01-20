@@ -58,11 +58,6 @@ public abstract class MorkimService<U extends UpdateListener, C extends Controll
 	}
 
 	@Override
-	public void keepScreenOn(boolean keepOn) {
-
-	}
-
-	@Override
 	public void finish() {
 		stopSelf();
 	}

@@ -100,11 +100,6 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	}
 
 	@Override
-	public void keepScreenOn(boolean b) {
-
-	}
-
-	@Override
 	public UUID getInstanceId() {
 		return id;
 	}

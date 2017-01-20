@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.WindowManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,13 +80,6 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-
-		keepScreenOn(false);
-	}
-
-	@Override
 	protected void onStop() {
 		super.onStop();
 
@@ -104,13 +96,6 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 	protected void setCustomTitleBar() {
 
-	}
-
-	@Override
-	public void keepScreenOn(boolean keepOn) {
-
-		if (keepOn) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	@Override

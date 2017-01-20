@@ -118,10 +118,6 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	}
 
 	protected void finish() { viewable.finish(); }
-	
-	protected void keepScreenOn(boolean keepOn) {
-		viewable.keepScreenOn(keepOn);
-	}
 
     Viewable getViewable() {
         return viewable;
@@ -185,20 +181,26 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 
 	void bindViews() {
 
-		synchronized (this) {
-			isViewUpdatable = true;
-			viewable.onAssignListeners();
-		}
+		if (!isViewUpdatable) {
 
-		onShowViewable();
+			synchronized (this) {
+				isViewUpdatable = true;
+				viewable.onAssignListeners();
+			}
+
+			onShowViewable();
+		}
 	}
 
 	void unbindViews() {
 
-		onHideViewable();
+		if (isViewUpdatable) {
 
-		synchronized (this) {
-			isViewUpdatable = false;
+			onHideViewable();
+
+			synchronized (this) {
+				isViewUpdatable = false;
+			}
 		}
 	}
 
