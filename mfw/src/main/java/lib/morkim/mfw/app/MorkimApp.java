@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,15 +150,15 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		concreteClass = GenericsUtils.getRawType(resolvedTypes[index]);
 
 		try {
-			if (concreteClass != null) {
+			if (concreteClass != null && !Modifier.isAbstract(concreteClass.getModifiers())) {
 				Constructor<comp> constructor = concreteClass.getDeclaredConstructor();
 				constructor.setAccessible(true);
 				return constructor.newInstance();
 			}
 		} catch (IllegalAccessException e) {
-			throw new Error("Unable to access member");
+			throw new Error("Unable to access member in " + concreteClass.getSimpleName());
 		} catch (InstantiationException e) {
-			throw new Error("Unable to access default constructor");
+			throw new Error("Unable to access default constructor " + concreteClass.getSimpleName());
 		} catch (NoSuchMethodException e) {
 			throw new Error("Unable to find default constructor " + concreteClass.getSimpleName() + "()");
 		} catch (InvocationTargetException e) {

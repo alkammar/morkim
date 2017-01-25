@@ -1,5 +1,6 @@
 package lib.morkim.mfw.util;
 
+import android.support.annotation.NonNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -32,7 +33,7 @@ public class GenericsUtils {
 
 		Map<String, Type> mappedTypes = new HashMap<>();
 
-		if (actualTypes == null) actualTypes = new Type[0];
+		if (actualTypes == null) actualTypes = getDefaultTypes(base);
 
 		if (base != null) {
 
@@ -52,8 +53,10 @@ public class GenericsUtils {
 					if (offspringParameters.length == 0) {
 						if (ancestor instanceof ParameterizedType) {
 							Type[] parametrizedActualTypes = getRawTypes(((ParameterizedType) ancestor).getActualTypeArguments());
-							actualTypes = new Type[parametrizedActualTypes.length];
-							System.arraycopy(parametrizedActualTypes, 0, actualTypes, 0, parametrizedActualTypes.length);
+//                   actualTypes = new Type[parametrizedActualTypes.length];
+//                   System.arraycopy(parametrizedActualTypes, 0, actualTypes, 0, parametrizedActualTypes.length);
+
+							updateActualTypes(actualTypes, parametrizedActualTypes);
 						}
 
 						resolvedTypes = resolveActualTypesInternal(getRawType(ancestor), base, actualTypes);
@@ -81,10 +84,7 @@ public class GenericsUtils {
 								}
 							}
 
-							if (actualTypes.length != offspringTypes.length)
-								actualTypes = new Type[offspringTypes.length];
-
-							System.arraycopy(offspringTypes, 0, actualTypes, 0, offspringTypes.length);
+							actualTypes = updateActualTypes(actualTypes, offspringTypes);
 
 							resolvedTypes = resolveActualTypesInternal(getRawType(ancestor),  base, actualTypes);
 						}
@@ -111,6 +111,40 @@ public class GenericsUtils {
 		}
 
 		return resolvedTypes;
+	}
+
+	private static Type[] getDefaultTypes(Class base) {
+
+		Type[] types;
+
+		if (base != null) {
+			TypeVariable[] typeVariables = base.getTypeParameters();
+			types = new Type[typeVariables.length];
+
+			for (int i = 0; i < typeVariables.length; i++) {
+				types[i] = typeVariables[i].getBounds()[0];
+			}
+		} else {
+			types = new Type[0];
+		}
+
+		return types;
+	}
+
+	@NonNull
+	private static Type[] updateActualTypes(Type[] actualTypes, Type[] offspringTypes) {
+
+		for (Type offspringType : offspringTypes) {
+			for (int j = 0; j < actualTypes.length; j++) {
+				if (getRawType(actualTypes[j]).isAssignableFrom(getRawType(offspringType))) {
+					actualTypes[j] = offspringType;
+					break;
+				}
+			}
+		}
+
+
+		return actualTypes;
 	}
 
 	private static Type [] getRawTypes(Type [] types) {

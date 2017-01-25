@@ -126,6 +126,17 @@ public class GenericsTest {
 		assertEquals(P2.class, actualArgs[1]);
 	}
 
+	@Test
+	public void genericSubclassGenericScrambled_WithGenericInterface_resolveToClassBounds() {
+
+		Type[] actualArgs;
+
+		actualArgs = resolveActualTypeArgs(L1Generic_L0Generic_Scrambled_GenericInterface.class, L0Generic.class);
+		assertEquals(2, actualArgs.length);
+		assertEquals(P1.class, actualArgs[0]);
+		assertEquals(P2.class, actualArgs[1]);
+	}
+
 	private class NoGenerics {
 
 	}
@@ -134,7 +145,7 @@ public class GenericsTest {
 
 	}
 
-	private class L0Plain {
+	private abstract class L0Plain {
 
 	}
 
@@ -166,6 +177,10 @@ public class GenericsTest {
 
 	}
 
+	private class L1Generic_L0Generic_Scrambled_GenericInterface<B extends P2, A extends P1> extends L0Generic<A, B> implements GenericInterface<P3> {
+
+	}
+
 	private class P1<X extends P2, Y> {
 
 	}
@@ -183,6 +198,10 @@ public class GenericsTest {
 	}
 
 	private class PB2 extends P2 {
+
+	}
+
+	private interface GenericInterface<P3> {
 
 	}
 }
