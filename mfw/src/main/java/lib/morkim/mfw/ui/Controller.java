@@ -109,12 +109,11 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 
 		updateListener = viewable.getUpdateListener();
 
+		Bundle bundledData = viewable.getBundledData();
+		if (bundledData != null)
+			onExtractExtraData(bundledData);
 
 		if (!initializationTaskExecuted) {
-
-			Bundle bundledData = viewable.getBundledData();
-			if (bundledData != null)
-				onExtractExtraData(bundledData);
 
 			onExecuteInitializationTasks();
 			initializationTaskExecuted = true;
