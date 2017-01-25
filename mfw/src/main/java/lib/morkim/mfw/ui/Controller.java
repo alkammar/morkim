@@ -121,7 +121,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	}
 
 	/**
-	 * Called when creating the controller for fetching data passed the first {@link Viewable}.
+	 * Called when creating the {@link Viewable} for fetching data passed to component.
 	 *
 	 * @param bundledData data
 	 */

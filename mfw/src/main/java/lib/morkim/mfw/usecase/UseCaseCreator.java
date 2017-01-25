@@ -78,7 +78,7 @@ public class UseCaseCreator<T extends UseCase> {
 
                 for (int i = 0; i < dependenciesTypeParams.length; i++) {
                     if (dependenciesTypeParams[i].equals(method.getGenericReturnType())) {
-                        returnType = (Class<?>) resolvedTypes[i];
+                        returnType = GenericsUtils.getRawType(resolvedTypes[i]);
                         break;
                     }
                 }
