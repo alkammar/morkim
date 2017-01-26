@@ -1,14 +1,14 @@
 package lib.morkim.mfw.repo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.Map.Entry;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 public class SpRepo {
 
@@ -136,6 +136,20 @@ public class SpRepo {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		Editor editor = sharedPreferences.edit();
 		editor.putLong(key, value);
+		editor.commit();
+	}
+
+	public static boolean readBoolean(Context context, String key, boolean defaultValue) {
+
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return sharedPreferences.getBoolean(key, defaultValue);
+	}
+
+	public static void writeBoolean(Context context, String key, boolean value) {
+
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(key, value);
 		editor.commit();
 	}
 }
