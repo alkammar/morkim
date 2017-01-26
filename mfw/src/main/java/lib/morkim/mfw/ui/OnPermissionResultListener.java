@@ -1,5 +1,5 @@
 package lib.morkim.mfw.ui;
 
-public interface OnPermissionResultListener1 {
+public interface OnPermissionResultListener {
 	void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults);
 }

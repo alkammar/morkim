@@ -84,7 +84,7 @@ public abstract class MorkimService<U extends UpdateListener, C extends Controll
 	}
 
 	@Override
-	public void registerPermissionListener(String permission, OnPermissionResultListener1 listener) {}
+	public void registerPermissionListener(String permission, OnPermissionResultListener listener) {}
 
 	@Override
 	public <T> T getParentListener() {

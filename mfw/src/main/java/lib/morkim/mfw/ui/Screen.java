@@ -22,7 +22,7 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	protected C controller;
 	protected P presenter;
 
-	private Map<String, OnPermissionResultListener1> permissionsRequestControllers;
+	private Map<String, OnPermissionResultListener> permissionsRequestControllers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,20 +119,20 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-		Set<OnPermissionResultListener1> listeners = new HashSet<>();
+		Set<OnPermissionResultListener> listeners = new HashSet<>();
 
 		for (String permission : permissions) {
-			OnPermissionResultListener1 controller = permissionsRequestControllers.get(permission);
+			OnPermissionResultListener controller = permissionsRequestControllers.get(permission);
 			if (controller != null)
 				listeners.add(controller);
 		}
 
-		for (OnPermissionResultListener1 listener : listeners)
+		for (OnPermissionResultListener listener : listeners)
 			listener.onRequestPermissionResult(requestCode, permissions, grantResults);
 	}
 
 	@Override
-	public void registerPermissionListener(String permission, OnPermissionResultListener1 listener) {
+	public void registerPermissionListener(String permission, OnPermissionResultListener listener) {
 		permissionsRequestControllers.put(permission, listener);
 	}
 
