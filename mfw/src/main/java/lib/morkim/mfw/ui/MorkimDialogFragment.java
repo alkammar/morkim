@@ -105,7 +105,7 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	}
 
 	@Override
-	public void registerPermissionListener(String s, onPermissionResultListener onPermissionResultListener) {
+	public void registerPermissionListener(String s, OnPermissionResultListener1 onPermissionResultListener) {
 
 	}
 

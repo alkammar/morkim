@@ -113,7 +113,7 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
     }
 
     @Override
-    public void registerPermissionListener(String s, onPermissionResultListener onPermissionResultListener) {
+    public void registerPermissionListener(String s, OnPermissionResultListener1 onPermissionResultListener) {
 
     }
 
