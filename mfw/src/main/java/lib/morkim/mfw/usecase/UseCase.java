@@ -186,7 +186,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 		return listener;
 	}
 
-	public UseCase setListener(UseCaseListener<Res> listener) {
+	public UseCase<A, M, Req, Res> setListener(UseCaseListener<Res> listener) {
 		this.listener = listener;
 
 		return this;
