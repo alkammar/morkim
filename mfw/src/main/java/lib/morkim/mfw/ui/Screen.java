@@ -78,7 +78,7 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 
 		outState.putString(VIEWABLE_ID, id.toString());
 
-		controller.unbindViews();
+//		controller.unbindViews();
 	}
 
 	@Override

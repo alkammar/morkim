@@ -78,7 +78,7 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 		outState.putString(VIEWABLE_ID, id.toString());
 
-		controller.unbindViews();
+//		controller.unbindViews();
 	}
 
 	@Override
