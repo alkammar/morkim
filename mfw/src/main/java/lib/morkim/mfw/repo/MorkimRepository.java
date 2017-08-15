@@ -25,7 +25,7 @@ public abstract class MorkimRepository implements Repository {
 		int currentVersion = version();
 		for (int version = savedVersion + 1; version <= currentVersion; version++) {
 
-			onUpgrade(currentVersion);
+			onUpgrade(version);
 
 			if (version == currentVersion) repoVersion.set(currentVersion);
 		}
