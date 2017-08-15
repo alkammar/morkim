@@ -1,5 +1,6 @@
 package lib.morkim.mfw.domain;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
@@ -9,7 +10,7 @@ import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.repo.gateway.GatewayRetrieveException;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class Entity extends Observable {
+public abstract class Entity extends Observable implements Serializable {
 
 	public static final String ID = "position";
 

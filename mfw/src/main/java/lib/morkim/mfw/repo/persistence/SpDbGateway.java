@@ -1,6 +1,7 @@
 package lib.morkim.mfw.repo.persistence;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 	@Override
 	public void persist(E entity) throws GatewayPersistException {
 		try {
-			spRepo.write(source(), entity.getSysId(), serialize(entity));
+			spRepo.write(source(), entity.getSysId(), serialize(entity).toString());
 		} catch (JSONException e) {
 			throw new GatewayPersistException();
 		}
@@ -54,7 +55,7 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 		List<E> list = new ArrayList<>();
 		for (String key : pairs.keySet())
 			try {
-				E entity = deserialize((String) pairs.get(key));
+				E entity = deserialize(new JSONObject((String) pairs.get(key)));
 				entity.setSysId(UUID.fromString(key));
 				list.add(entity);
 			} catch (JSONException e) {
@@ -74,8 +75,8 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 		spRepo.delete(source(), data.getSysId().toString());
 	}
 
-	protected abstract String serialize(Entity entity) throws JSONException;
-	protected abstract E deserialize(String string) throws JSONException;
+	protected abstract JSONObject serialize(Entity entity) throws JSONException;
+	protected abstract E deserialize(JSONObject jsonObject) throws JSONException;
 
 	protected long asLong(Object object) {
 		return (object instanceof Integer) ? (Integer) object : (Long) object;
