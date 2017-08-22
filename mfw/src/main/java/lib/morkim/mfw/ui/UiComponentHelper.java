@@ -12,7 +12,7 @@ import lib.morkim.mfw.app.MorkimApp;
 
 class UiComponentHelper {
 
-	static <V extends UpdateListener, C extends Controller, P extends Presenter> void createUiComponents(Viewable<V, C, P> viewable, Application app) {
+	static <V extends UpdateListener, C extends Controller, P extends Presenter> void createUiComponents(Viewable<C, P> viewable, Application app) {
 
 		MorkimApp morkimApp;
 		try {
@@ -22,7 +22,7 @@ class UiComponentHelper {
 		}
 
 		//noinspection unchecked
-		morkimApp.createUiComponents(viewable);
+		morkimApp.createUiComponents(viewable);	
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

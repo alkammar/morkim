@@ -13,14 +13,16 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class AppCompatScreen<V extends UpdateListener, C extends Controller, P extends Presenter>
+public abstract class AppCompatScreen<C extends Controller, P extends Presenter>
 		extends AppCompatActivity
-		implements Viewable<V, C, P> {
+		implements Viewable<C, P> {
 
 	private UUID id;
 
 	protected C controller;
 	protected P presenter;
+
+	private boolean isRestored;
 
 	private Map<String, onPermissionResultListener> permissionsRequestControllers;
 
@@ -30,6 +32,8 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
 
+		isRestored = (savedInstanceState != null);
+
 		setCustomTitleBar();
 
 		int layoutId = layoutId();
@@ -38,7 +42,7 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 		permissionsRequestControllers = new HashMap<>();
 
-		UiComponentHelper.createUiComponents(this, getApplication());
+		UiComponentHelper.createUiComponents(this, this.getApplication());
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 		outState.putString(VIEWABLE_ID, id.toString());
 
-		controller.unbindViews();
+//		controller.unbindViews();
 	}
 
 	@Override
@@ -102,6 +106,11 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 
 	@Override
 	public Context getContext() {
+		return this;
+	}
+
+	@Override
+	public UpdateListener getUpdateListener() {
 		return this;
 	}
 
@@ -148,5 +157,10 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 	@Override
 	public <T> T getChildListener() {
 		return (T) controller;
+	}
+
+	@Override
+	public boolean isRestored() {
+		return isRestored;
 	}
 }

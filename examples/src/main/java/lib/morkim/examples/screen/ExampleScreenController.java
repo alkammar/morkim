@@ -105,6 +105,16 @@ class ExampleScreenController
                 getUpdateListener().updateListItem(entities.indexOf(entity));
             }
         }
+
+        @Override
+        public boolean onTaskError(ExampleResult errorResult) {
+            return false;
+        }
+
+        @Override
+        public void onTaskAborted() {
+
+        }
     };
 
     ItemClickSupport.OnItemClickListener listItemClickListener = new ItemClickSupport.OnItemClickListener() {

@@ -10,7 +10,7 @@ import lib.morkim.mfw.app.MorkimApp;
 
 public abstract class MorkimService<U extends UpdateListener, C extends Controller>
 		extends Service
-		implements Viewable<U, C, EmptyPresenter> {
+		implements Viewable<C, EmptyPresenter> {
 
 	private UUID id;
 

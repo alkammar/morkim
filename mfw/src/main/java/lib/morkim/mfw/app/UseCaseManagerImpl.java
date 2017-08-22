@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import lib.morkim.mfw.usecase.EmptyUseCase;
+import lib.morkim.mfw.usecase.TaskPendingResult;
 import lib.morkim.mfw.usecase.TaskRequest;
 import lib.morkim.mfw.usecase.TaskResult;
 import lib.morkim.mfw.usecase.UndoRecord;
@@ -21,13 +22,18 @@ class UseCaseManagerImpl implements UseCaseManager {
 
 	private Map<Class<? extends UseCase>, List<UseCaseListener<? extends TaskResult>>> useCasesListeners;
 	private List<UndoRecord> undoRecords;
+	private Map<Class<? extends UseCase>, UseCase> stickyUseCases;
+
+	private static final TaskResult PENDING_RESULT = new TaskPendingResult();
 
 	UseCaseManagerImpl() {
 
 		useCasesListeners = new HashMap<>();
 		undoRecords = new ArrayList<>();
+		stickyUseCases = new HashMap<>();
 	}
 
+	@Override
 	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener) {
 
 		synchronized (this) {
@@ -46,6 +52,7 @@ class UseCaseManagerImpl implements UseCaseManager {
 		}
 	}
 
+	@Override
 	public void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener listener) {
 
 		synchronized (this) {
@@ -64,18 +71,21 @@ class UseCaseManagerImpl implements UseCaseManager {
 		}
 	}
 
+	@Override
 	public List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
 		synchronized (this) {
-			List<UseCaseListener<? extends TaskResult>> useCasekListeners = useCasesListeners.get(aClass);
-			return useCasekListeners != null ? useCasekListeners : new ArrayList<UseCaseListener<? extends TaskResult>>();
+			List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(aClass);
+			return useCaseListeners != null ? useCaseListeners : new ArrayList<UseCaseListener<? extends TaskResult>>();
 		}
 	}
 
+	@Override
 	public void addToUndoStack(UseCase useCase, TaskRequest request) {
 
 		undoRecords.add(new UndoRecord(useCase.getClass(), request));
 	}
 
+	@Override
 	public <u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies) {
 
 		if (undoRecords.size() > 0) {
@@ -91,8 +101,42 @@ class UseCaseManagerImpl implements UseCaseManager {
 		return new EmptyUseCase();
 	}
 
+	@Override
 	public void clearUndoStack() {
 		undoRecords.clear();
+	}
+
+	@Override
+	public void addToStickyUseCases(UseCase useCase) {
+		// TODO optimization : needs to be synchronized for the specific use case
+		synchronized (this) {
+			stickyUseCases.put(useCase.getClass(), useCase);
+		}
+	}
+
+	@Override
+	public TaskResult getStickyResult(Class<? extends UseCase> cls) {
+		synchronized (this) {
+			if (stickyUseCases.containsKey(cls)) {
+				TaskResult stickyResult = stickyUseCases.get(cls).getStickyResult();
+				return stickyResult == null ? PENDING_RESULT : stickyResult;
+			} else
+				return null;
+		}
+	}
+
+	@Override
+	public void removeSticky(Class<? extends UseCase> useCaseClass) {
+		synchronized (this) {
+			stickyUseCases.remove(useCaseClass);
+		}
+	}
+
+	@Override
+	public void clearSticky() {
+		synchronized (this) {
+			stickyUseCases.clear();
+		}
 	}
 
 	@Override

@@ -12,9 +12,9 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class MorkimFragment<V extends UpdateListener, C extends Controller, P extends Presenter>
+public abstract class MorkimFragment<C extends Controller, P extends Presenter>
         extends Fragment
-        implements Viewable<V, C, P> {
+        implements Viewable<C, P> {
 
     private UUID id;
 
@@ -29,18 +29,14 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        id = (savedInstanceState == null) ? generateUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
-
-        UiComponentHelper.createUiComponents(this, getActivity().getApplication());
-    }
-
-    protected UUID generateUUID() {
-        return UUID.randomUUID();
+        id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        UiComponentHelper.createUiComponents(this, getActivity().getApplication());
 
         controller.onAttachParent(this);
     }
@@ -88,8 +84,8 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
     }
 
     @Override
-    public V getUpdateListener() {
-        return (V) this;
+    public UpdateListener getUpdateListener() {
+        return this;
     }
 
     @Override
@@ -147,5 +143,10 @@ public abstract class MorkimFragment<V extends UpdateListener, C extends Control
                 .beginTransaction()
                 .remove(this)
                 .commit();
+    }
+
+    @Override
+    public boolean isRestored() {
+        return false;
     }
 }

@@ -11,7 +11,7 @@ import lib.morkim.examples.screen.fragment.ExampleFragment;
 import lib.morkim.mfw.ui.AppCompatScreen;
 import lib.morkim.mfw.ui.lists.ItemClickSupport;
 
-public class ExampleScreen extends AppCompatScreen<ExampleUpdateListener, ExampleScreenController, ExamplePresenter>
+public class ExampleScreen extends AppCompatScreen<ExampleScreenController, ExamplePresenter>
         implements ExampleUpdateListener {
 
     private TextView textView;

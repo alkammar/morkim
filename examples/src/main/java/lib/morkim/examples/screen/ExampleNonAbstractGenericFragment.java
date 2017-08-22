@@ -4,13 +4,12 @@ import lib.morkim.examples.ExampleBaseController;
 import lib.morkim.examples.R;
 import lib.morkim.mfw.ui.MorkimFragment;
 import lib.morkim.mfw.ui.Presenter;
-import lib.morkim.mfw.ui.UpdateListener;
 
 /**
  * Created by Kammar on 12/10/2016.
  */
-public class ExampleNonAbstractGenericFragment<U extends UpdateListener, C extends ExampleBaseController, P extends Presenter>
-		extends MorkimFragment<U, C, P> {
+public class ExampleNonAbstractGenericFragment<C extends ExampleBaseController, P extends Presenter>
+		extends MorkimFragment<C, P> {
 
 	@Override
 	protected int layoutId() {

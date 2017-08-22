@@ -22,5 +22,13 @@ public interface UseCaseManager {
 
 	void clearUndoStack();
 
-	void runOnUi(Runnable runnable);
+	void addToStickyUseCases(UseCase useCase);
+
+	TaskResult getStickyResult(Class<? extends UseCase> cls);
+
+	<Req extends TaskRequest, Res extends TaskResult> void runOnUi(Runnable runnable);
+
+	void removeSticky(Class<? extends UseCase> useCaseClass);
+
+	void clearSticky();
 }

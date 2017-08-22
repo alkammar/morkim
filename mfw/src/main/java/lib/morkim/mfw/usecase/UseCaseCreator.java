@@ -35,12 +35,12 @@ public class UseCaseCreator<T extends UseCase> {
         return this;
     }
 
-    public UseCaseCreator<T> add(Class<T> taskClass) {
+    public UseCaseCreator<T> add(Class<T> useCaseClass) {
 
-        this.useCaseClass = taskClass;
+        this.useCaseClass = useCaseClass;
 
         try {
-            useCase = taskClass.newInstance();
+            useCase = useCaseClass.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -54,48 +54,27 @@ public class UseCaseCreator<T extends UseCase> {
 
         Map<Class, Field> fieldTypes = new HashMap<>();
 
-        Class ucc = useCaseClass;
-        Class dic = dependenciesImpl.getClass();
+        Class cls = useCaseClass;
 
         do {
-            Type[] resolvedTaskClassTypes = GenericsUtils.resolveActualTypeArgs(useCaseClass, ucc);
-
-            for (Field field : ucc.getDeclaredFields()) {
-                addAnnotatedField(fieldTypes, field, resolvedTaskClassTypes);
+            for (Field field : cls.getDeclaredFields()) {
+                addAnnotatedField(fieldTypes, field, GenericsUtils.resolveActualTypeArgs(useCaseClass, cls));
             }
-            ucc = ucc.getSuperclass();
-        } while (!ucc.isInstance(Object.class));
+            cls = cls.getSuperclass();
+        } while (!cls.isInstance(Object.class));
 
-        while (!dic.isInstance(Object.class)) {
+        for (Method method : dependenciesImpl.getClass().getDeclaredMethods()) {
 
-            Type[] resolvedTypes = GenericsUtils.resolveActualTypeArgs(dependenciesImpl.getClass(), dic);
-
-            for (Method method : dic.getDeclaredMethods()) {
-
-                TypeVariable[] dependenciesTypeParams = dic.getTypeParameters();
-
-                Class<?> returnType = method.getReturnType();
-
-                for (int i = 0; i < dependenciesTypeParams.length; i++) {
-                    if (dependenciesTypeParams[i].equals(method.getGenericReturnType())) {
-                        returnType = (Class<?>) resolvedTypes[i];
-                        break;
-                    }
+            Field field = fieldTypes.get(method.getReturnType());
+            if (field != null)
+                try {
+                    field.setAccessible(true);
+                    field.set(useCase, method.invoke(dependenciesImpl));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
-
-                Field field = fieldTypes.get(returnType);
-                if (field != null)
-                    try {
-                        field.setAccessible(true);
-                        field.set(useCase, method.invoke(dependenciesImpl));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-            }
-
-            dic = dic.getSuperclass();
         }
 
         return useCase;

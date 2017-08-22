@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import java.util.UUID;
 
-public interface Viewable<V extends UpdateListener, C extends Controller, P extends Presenter>
+public interface Viewable<C extends Controller, P extends Presenter>
 		extends UpdateListener {
 
 	static final String VIEWABLE_ID = "viewable.position";
@@ -15,7 +15,7 @@ public interface Viewable<V extends UpdateListener, C extends Controller, P exte
 	void runOnUi(Runnable runnable);
 	void finish();
 
-	V getUpdateListener();
+	UpdateListener getUpdateListener();
 
 	<T> T getParentListener();
 	<T> T getChildListener();
@@ -33,4 +33,6 @@ public interface Viewable<V extends UpdateListener, C extends Controller, P exte
 	void onAttachController(C controller);
 
 	void onAttachPresenter(P presenter);
+
+	boolean isRestored();
 }

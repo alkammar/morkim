@@ -18,8 +18,6 @@ import java.util.Observable;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.task.ScheduledTask;
-import lib.morkim.mfw.task.UiTaskObserver;
 import lib.morkim.mfw.usecase.TaskResult;
 import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.UseCaseSubscription;
@@ -44,7 +42,7 @@ import lib.morkim.mfw.util.GenericsUtils;
 public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U extends UpdateListener> {
 
 	private A morkimApp;
-	protected Viewable<U, ?, ?> viewable;
+	protected Viewable<?, ?> viewable;
 
 	private U updateListener;
 	private U pendingUpdateListener;
@@ -104,11 +102,15 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	 *
 	 * @param viewable viewable
 	 */
-	public void onAttachViewable(Viewable<U, ?, ?> viewable) {
+	public void onAttachViewable(Viewable<?, ?> viewable) {
 		this.viewable = viewable;
 
-		updateListener = viewable.getUpdateListener();
-
+		UpdateListener updateListener = viewable.getUpdateListener();
+		try {
+			this.updateListener = (U) updateListener;
+		} catch (ClassCastException e) {
+			throw new Error(updateListener.getClass() + " must implement correct update listener");
+		}
 
 		if (!initializationTaskExecuted) {
 
@@ -154,7 +156,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	 * @param viewable viewable
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public void onAttachParent(@SuppressWarnings("UnusedParameters") Viewable<U, ?, ?> viewable) {}
+	public void onAttachParent(Viewable<?, ?> viewable) {}
 
 	protected A getAppContext() {
 		return morkimApp;
@@ -185,17 +187,14 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		observable.deleteObserver(entityObserver.getObserver());
 	}
 
-	protected <t extends ScheduledTask> void registerToTask(Class<t> task, UiTaskObserver<t> observer) {
-		morkimApp.getTaskScheduler().register(task, observer);
-	}
+//	protected <t extends ScheduledTask> void registerToTask(Class<t> task, UiTaskObserver<t> observer) {
+//		coreApp.getTaskScheduler().register(task, observer);
+//	}
+//
+//	protected <t extends ScheduledTask> void unregisterFromTask(Class<t> task, UiTaskObserver<t> observer) {
+//		coreApp.getTaskScheduler().unregister(task, observer);
+//	}
 
-	protected <t extends ScheduledTask> void unregisterFromTask(Class<t> task, UiTaskObserver<t> observer) {
-		morkimApp.getTaskScheduler().unregister(task, observer);
-	}
-
-	/**
-	 * Called when the controller is being destroyed.
-	 */
 	public void onDestroy() {
 		unsubscribeUseCaseListeners();
 	}

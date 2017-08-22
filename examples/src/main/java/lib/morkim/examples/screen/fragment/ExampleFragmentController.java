@@ -17,7 +17,7 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFra
 	private ExampleParentListener parentListener;
 
 	@Override
-	public void onAttachViewable(Viewable<ExampleFragmentUpdateListener, ?, ?> viewable) {
+	public void onAttachViewable(Viewable<?, ?> viewable) {
 		super.onAttachViewable(viewable);
 
 		parentListener = viewable.getParentListener();
@@ -45,6 +45,16 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFra
 
 		@Override
 		public void onUndone(ExampleResult result) {
+
+		}
+
+		@Override
+		public boolean onTaskError(ExampleResult errorResult) {
+			return false;
+		}
+
+		@Override
+		public void onTaskAborted() {
 
 		}
 	};

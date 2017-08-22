@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 
 import java.util.UUID;
 
-public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C extends Controller, P extends Presenter>
+public abstract class MorkimDialogFragment<C extends Controller, P extends Presenter>
 		extends DialogFragment
-		implements Viewable<V, C, P>, DialogUpdateListener {
+		implements Viewable<C, P>, DialogUpdateListener {
 
 	private UUID id;
 
@@ -81,8 +81,8 @@ public abstract class MorkimDialogFragment<V extends DialogUpdateListener, C ext
 	}
 
 	@Override
-	public V getUpdateListener() {
-		return (V) this;
+	public UpdateListener getUpdateListener() {
+		return this;
 	}
 
 	@Override

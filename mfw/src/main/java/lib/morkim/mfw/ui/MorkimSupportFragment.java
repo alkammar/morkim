@@ -12,9 +12,9 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class MorkimSupportFragment<V extends UpdateListener, C extends Controller, P extends Presenter>
+public abstract class MorkimSupportFragment<C extends Controller, P extends Presenter>
         extends Fragment
-        implements Viewable<V, C, P> {
+        implements Viewable<C, P> {
 
     private UUID id;
 
@@ -81,8 +81,8 @@ public abstract class MorkimSupportFragment<V extends UpdateListener, C extends 
     }
 
     @Override
-    public V getUpdateListener() {
-        return (V) this;
+    public UpdateListener getUpdateListener() {
+        return this;
     }
 
     @Override

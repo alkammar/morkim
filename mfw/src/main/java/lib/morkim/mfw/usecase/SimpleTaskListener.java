@@ -27,4 +27,14 @@ public class SimpleTaskListener<Res extends TaskResult> implements UseCaseListen
 	public void onTaskCancel() {
 
 	}
+
+	@Override
+	public boolean onTaskError(Res errorResult) {
+		return false;
+	}
+
+	@Override
+	public void onTaskAborted() {
+
+	}
 }

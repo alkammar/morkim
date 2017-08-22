@@ -28,7 +28,7 @@ public abstract class ListAdapter<C extends Controller, P extends Presenter, VH 
 		view.setOnClickListener(onClickListener);
 		view.setOnLongClickListener(onLongClickListener);
 
-		VH holder = holdView(view, 0);
+		VH holder = holdView(view, viewType);
 
 		view.setTag(holder);
 

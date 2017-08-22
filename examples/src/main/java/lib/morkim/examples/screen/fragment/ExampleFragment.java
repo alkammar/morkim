@@ -11,7 +11,7 @@ import lib.morkim.mfw.ui.MorkimFragment;
 
 
 public class ExampleFragment
-		extends MorkimFragment<ExampleFragmentUpdateListener, ExampleFragmentController, EmptyPresenter>
+		extends MorkimFragment<ExampleFragmentController, EmptyPresenter>
 		implements ExampleFragmentUpdateListener {
 
 	@Override

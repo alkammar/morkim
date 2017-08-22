@@ -13,14 +13,16 @@ import java.util.UUID;
 
 import lib.morkim.mfw.app.MorkimApp;
 
-public abstract class Screen<V extends UpdateListener, C extends Controller, P extends Presenter>
+public abstract class Screen<C extends Controller, P extends Presenter>
 		extends Activity
-		implements Viewable<V, C, P> {
+		implements Viewable<C, P> {
 
 	private UUID id;
 
 	protected C controller;
 	protected P presenter;
+
+	private boolean isRestored;
 
 	private Map<String, onPermissionResultListener> permissionsRequestControllers;
 
@@ -29,6 +31,8 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 		super.onCreate(savedInstanceState);
 
 		id = (savedInstanceState == null) ? UUID.randomUUID() : UUID.fromString(savedInstanceState.getString(VIEWABLE_ID));
+
+		isRestored = (savedInstanceState != null);
 
 		setCustomTitleBar();
 
@@ -106,6 +110,11 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	}
 
 	@Override
+	public UpdateListener getUpdateListener() {
+		return this;
+	}
+
+	@Override
 	public void runOnUi(Runnable runnable) {
 		runOnUiThread(runnable);
 	}
@@ -148,5 +157,10 @@ public abstract class Screen<V extends UpdateListener, C extends Controller, P e
 	@Override
 	public <T> T getChildListener() {
 		return (T) controller;
+	}
+
+	@Override
+	public boolean isRestored() {
+		return isRestored;
 	}
 }

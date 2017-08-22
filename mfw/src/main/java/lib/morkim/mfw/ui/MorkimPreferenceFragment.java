@@ -10,7 +10,7 @@ import java.util.UUID;
 @SuppressLint("NewApi")
 public abstract class MorkimPreferenceFragment<V extends UpdateListener, C extends Controller, P extends Presenter>
 		extends PreferenceFragment
-		implements Viewable<V, C, P> {
+		implements Viewable<C, P> {
 
 	protected C controller;
 	protected P presenter;

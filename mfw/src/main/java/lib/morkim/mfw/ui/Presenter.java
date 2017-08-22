@@ -21,4 +21,9 @@ public abstract class Presenter<C extends Controller> {
 	protected void onControllerAttached() {
 
 	}
+
+
+	public String getId(int position) {
+		return "";
+	}
 }

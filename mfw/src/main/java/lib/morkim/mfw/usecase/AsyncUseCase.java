@@ -69,19 +69,19 @@ public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, R
 
 	@Override
 	public void execute(Req request) {
-		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
+//		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 		asyncTask.execute(request);
 	}
 
 	@Override
 	public void execute() {
-		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
+//		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 		asyncTask.execute();
 	}
 
 	@Override
 	public void undo() {
-		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
+//		subscribedListeners = useCaseManager.getUseCaseSubscriptions(this.getClass());
 		isUndoing = true;
 		asyncTask.execute(getRequest());
 	}

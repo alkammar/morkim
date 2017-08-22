@@ -8,4 +8,8 @@ public interface UseCaseListener<Res extends TaskResult> {
 	void onTaskComplete(Res result);
 	void onUndone(Res result);
 	void onTaskCancel();
+
+	boolean onTaskError(Res errorResult);
+
+	void onTaskAborted();
 }
