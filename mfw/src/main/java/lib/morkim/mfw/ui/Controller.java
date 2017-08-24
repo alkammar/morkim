@@ -44,8 +44,8 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	private A morkimApp;
 	protected Viewable<?, ?> viewable;
 
-	private U updateListener;
-	private U pendingUpdateListener;
+	private U liveViewable;
+	private U pendingViewable;
 	private boolean isViewUpdatable;
 
 	private boolean initializationTaskExecuted;
@@ -55,7 +55,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	public Controller() {
 
 		pendingEventsExecutor = new PendingEventsExecutor(this);
-		pendingUpdateListener = createPendingUpdateListener();
+		pendingViewable = createPendingUpdateListener();
 	}
 
 	/**
@@ -107,7 +107,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 
 		UpdateListener updateListener = viewable.getUpdateListener();
 		try {
-			this.updateListener = (U) updateListener;
+			this.liveViewable = (U) updateListener;
 		} catch (ClassCastException e) {
 			throw new Error(updateListener.getClass() + " must implement correct update listener");
 		}
@@ -142,7 +142,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	 * Called every time a {@link Viewable} is attached to the controller. This is a typical place to
 	 * initialize the viewable with whatever data available as the viewable will be ready to be
 	 * visible shortly.
-	 * Use {@link #getUpdateListener()} method to get reference to the viewable update interface.
+	 * Use {@link #getLiveViewable()} method to get reference to the viewable update interface.
 	 */
 	public void onInitializeViews() {}
 
@@ -261,9 +261,9 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 	 * Called when the {@link Viewable} is visible.
 	 */
 	protected void onShowViewable() {
-		if (pendingUpdateListener instanceof AbstractUpdateListenerPending)
+		if (pendingViewable instanceof AbstractUpdateListenerPending)
 			//noinspection unchecked
-			((AbstractUpdateListenerPending) pendingUpdateListener).setUpdateListener(updateListener);
+			((AbstractUpdateListenerPending) pendingViewable).setUpdateListener(liveViewable);
 		pendingEventsExecutor.onExecutePendingEvents();
 	}
 
@@ -332,9 +332,9 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 		return instance;
 	}
 
-	protected U getUpdateListener() {
+	protected U getLiveViewable() {
 		synchronized (this) {
-			return (isViewUpdatable) ? updateListener : pendingUpdateListener;
+			return (isViewUpdatable) ? liveViewable : pendingViewable;
 		}
 	}
 

@@ -54,16 +54,16 @@ class ExampleScreenController
     protected void onShowViewable() {
         super.onShowViewable();
 
-        getUpdateListener().initializeTextView();
+        getLiveViewable().initializeTextView();
 
-        getUpdateListener().initializeList();
-        getUpdateListener().initializeListData();
+        getLiveViewable().initializeList();
+        getLiveViewable().initializeListData();
     }
 
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(android.view.View v) {
-            getUpdateListener().updateTextView();
+            getLiveViewable().updateTextView();
         }
     };
 
@@ -85,7 +85,7 @@ class ExampleScreenController
         @Override
         public void onTaskUpdate(ExampleResult result) {
             count = result.count;
-            getUpdateListener().updateTextView();
+            getLiveViewable().updateTextView();
         }
 
         @Override
@@ -93,7 +93,7 @@ class ExampleScreenController
 
             for (ExampleEntity entity : entities) {
                 entity.index += 100;
-                getUpdateListener().updateListItem(entities.indexOf(entity));
+                getLiveViewable().updateListItem(entities.indexOf(entity));
             }
         }
 
@@ -102,7 +102,7 @@ class ExampleScreenController
 
             for (ExampleEntity entity : entities) {
                 entity.index -= 100;
-                getUpdateListener().updateListItem(entities.indexOf(entity));
+                getLiveViewable().updateListItem(entities.indexOf(entity));
             }
         }
 
@@ -122,7 +122,7 @@ class ExampleScreenController
         public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
 
             entities.get(position).index++;
-            getUpdateListener().updateListItem(position);
+            getLiveViewable().updateListItem(position);
 
             getAppContext().getUseCaseManager()
                     .popUseCaseStack(new ExampleUseCaseDependenciesImpl(getAppContext()))
@@ -143,12 +143,12 @@ class ExampleScreenController
 
         for (ExampleEntity entity : entities) {
             entity.index -= 100;
-            getUpdateListener().updateListItem(entities.indexOf(entity));
+            getLiveViewable().updateListItem(entities.indexOf(entity));
         }
     }
 
     void onScreenStopped() {
-        getUpdateListener().updateSomethingWhenViewableNotAvailable();
+        getLiveViewable().updateSomethingWhenViewableNotAvailable();
     }
 
 }

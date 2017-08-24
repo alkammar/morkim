@@ -35,12 +35,12 @@ class ExampleFragmentController extends Controller<ExampleApp, Model, ExampleFra
 
 		@Override
 		public void onTaskUpdate(ExampleResult result) {
-			getUpdateListener().getClass();
+			getLiveViewable().getClass();
 		}
 
 		@Override
 		public void onTaskComplete(ExampleResult result) {
-			getUpdateListener().doFragmentAction();
+			getLiveViewable().doFragmentAction();
 		}
 
 		@Override
