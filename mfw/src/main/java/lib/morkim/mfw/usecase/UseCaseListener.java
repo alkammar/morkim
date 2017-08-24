@@ -1,7 +1,7 @@
 package lib.morkim.mfw.usecase;
 
 
-public interface UseCaseListener<Res extends TaskResult> {
+public interface UseCaseListener<Res extends UseCaseResult> {
 
 	void onTaskStart(UseCase useCase);
 	void onTaskUpdate(Res result);

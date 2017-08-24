@@ -7,15 +7,15 @@ import lib.morkim.examples.backendinterfaces.BackEndCall;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.AsyncUseCase;
 import lib.morkim.mfw.usecase.TaskDependency;
-import lib.morkim.mfw.usecase.TaskRequest;
+import lib.morkim.mfw.usecase.UseCaseRequest;
 
-public class ExampleTask extends AsyncUseCase<ExampleApp, Model, TaskRequest, ExampleResult> {
+public class ExampleTask extends AsyncUseCase<ExampleApp, Model, UseCaseRequest, ExampleResult> {
 
 	@TaskDependency
 	private BackEndCall backEndCall;
 
 	@Override
-	protected ExampleResult onExecute(TaskRequest request) {
+	protected ExampleResult onExecute(UseCaseRequest request) {
 
 		backEndCall.send(new BackEndCall.Request());
 
@@ -36,7 +36,7 @@ public class ExampleTask extends AsyncUseCase<ExampleApp, Model, TaskRequest, Ex
 	}
 
 	@Override
-	protected ExampleResult onUndo(TaskRequest request) {
+	protected ExampleResult onUndo(UseCaseRequest request) {
 		return null;
 	}
 

@@ -1,6 +1,6 @@
 package lib.morkim.mfw.usecase;
 
-public abstract class TaskResult {
+public abstract class UseCaseResult {
 
 	int completionPercent = 100;
 

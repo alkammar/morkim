@@ -7,7 +7,7 @@ import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 
 @SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
-public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
+public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, Req extends UseCaseRequest, Res extends UseCaseResult>
 		extends UseCase<A, M, Req, Res> {
 
 	private Task asyncTask;

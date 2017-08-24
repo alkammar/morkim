@@ -12,7 +12,7 @@ import lib.morkim.mfw.repo.gateway.GatewayPersistException;
 import lib.morkim.mfw.util.GenericsUtils;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult> {
+public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req extends UseCaseRequest, Res extends UseCaseResult> {
 
     @TaskDependency
     protected A appContext;
@@ -63,7 +63,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
         }
     };
 
-//	protected List<UseCaseListener<? extends TaskResult>> subscribedListeners;
+//	protected List<UseCaseListener<? extends UseCaseResult>> subscribedListeners;
 
     private Req request;
     private Res stickyResult;
@@ -84,9 +84,9 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 
     public void executeSticky() {
 
-        TaskResult stickyResult = useCaseManager.getStickyResult(this.getClass());
+        UseCaseResult stickyResult = useCaseManager.getStickyResult(this.getClass());
         if (stickyResult != null) {
-            if (!(stickyResult instanceof TaskPendingResult)) {
+            if (!(stickyResult instanceof UseCasePendingResult)) {
                 updateListenerStart();
                 updateProgress((Res) stickyResult);
             }
@@ -96,9 +96,9 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
 
     public void executeSticky(Req request) {
 
-        TaskResult stickyResult = useCaseManager.getStickyResult(this.getClass());
+        UseCaseResult stickyResult = useCaseManager.getStickyResult(this.getClass());
         if (stickyResult != null) {
-            if (!(stickyResult instanceof TaskPendingResult)) {
+            if (!(stickyResult instanceof UseCasePendingResult)) {
                 updateListenerStart();
                 updateProgress((Res) stickyResult);
             }

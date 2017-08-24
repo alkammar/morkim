@@ -4,9 +4,9 @@ package lib.morkim.mfw.usecase;
 public class UndoRecord {
 
 	private Class<? extends UseCase> useCaseClass;
-	private TaskRequest request;
+	private UseCaseRequest request;
 
-	public UndoRecord(Class<? extends UseCase> useCaseClass, TaskRequest request) {
+	public UndoRecord(Class<? extends UseCase> useCaseClass, UseCaseRequest request) {
 		this.useCaseClass = useCaseClass;
 		this.request = request;
 	}
@@ -15,7 +15,7 @@ public class UndoRecord {
 		return (Class<u>) useCaseClass;
 	}
 
-	public TaskRequest getRequest() {
+	public UseCaseRequest getRequest() {
 		return request;
 	}
 }

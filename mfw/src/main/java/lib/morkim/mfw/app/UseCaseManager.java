@@ -2,21 +2,21 @@ package lib.morkim.mfw.app;
 
 import java.util.List;
 
-import lib.morkim.mfw.usecase.TaskRequest;
-import lib.morkim.mfw.usecase.TaskResult;
+import lib.morkim.mfw.usecase.UseCaseRequest;
+import lib.morkim.mfw.usecase.UseCaseResult;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseDependencies;
 import lib.morkim.mfw.usecase.UseCaseListener;
 
 public interface UseCaseManager {
 
-	void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener);
+	void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends UseCaseResult> listener);
 
 	void unsubscribeFromUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener listener);
 
-	List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass);
+	List<UseCaseListener<? extends UseCaseResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass);
 
-	void addToUndoStack(UseCase useCase, TaskRequest request);
+	void addToUndoStack(UseCase useCase, UseCaseRequest request);
 
 	<u extends UseCase> UseCase popUseCaseStack(UseCaseDependencies dependencies);
 
@@ -24,9 +24,9 @@ public interface UseCaseManager {
 
 	void addToStickyUseCases(UseCase useCase);
 
-	TaskResult getStickyResult(Class<? extends UseCase> cls);
+	UseCaseResult getStickyResult(Class<? extends UseCase> cls);
 
-	<Req extends TaskRequest, Res extends TaskResult> void runOnUi(Runnable runnable);
+	<Req extends UseCaseRequest, Res extends UseCaseResult> void runOnUi(Runnable runnable);
 
 	void removeSticky(Class<? extends UseCase> useCaseClass);
 

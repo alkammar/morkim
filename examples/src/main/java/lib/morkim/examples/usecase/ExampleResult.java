@@ -1,7 +1,7 @@
 package lib.morkim.examples.usecase;
 
-import lib.morkim.mfw.usecase.TaskResult;
+import lib.morkim.mfw.usecase.UseCaseResult;
 
-public class ExampleResult extends TaskResult {
+public class ExampleResult extends UseCaseResult {
 	public int count;
 }

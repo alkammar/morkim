@@ -1,18 +1,18 @@
 package lib.morkim.mfw.usecase;
 
 
-public class TaskRequest {
+public class UseCaseRequest {
 
-	public static final TaskRequest EMPTY = new EmptyRequest(null);
+	public static final UseCaseRequest EMPTY = new EmptyRequest(null);
 
-	private static class EmptyRequest extends TaskRequest {
+	private static class EmptyRequest extends UseCaseRequest {
 
 		protected EmptyRequest(RequestBuilder builder) {
 			super(builder);
 		}
 	}
 
-	protected TaskRequest(RequestBuilder builder) {
+	protected UseCaseRequest(RequestBuilder builder) {
 
 	}
 

@@ -18,7 +18,7 @@ import java.util.Observable;
 import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Entity;
 import lib.morkim.mfw.domain.Model;
-import lib.morkim.mfw.usecase.TaskResult;
+import lib.morkim.mfw.usecase.UseCaseResult;
 import lib.morkim.mfw.usecase.UseCaseListener;
 import lib.morkim.mfw.usecase.UseCaseSubscription;
 import lib.morkim.mfw.util.GenericsUtils;
@@ -85,7 +85,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 						field.setAccessible(true);
 						morkimApp.getUseCaseManager().subscribeToUseCase(
 								field.getAnnotation(UseCaseSubscription.class).value(),
-								(UseCaseListener<? extends TaskResult>) field.get(this));
+								(UseCaseListener<? extends UseCaseResult>) field.get(this));
 					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					}
@@ -207,7 +207,7 @@ public abstract class Controller<A extends MorkimApp<M, ?>, M extends Model, U e
 					field.setAccessible(true);
 					morkimApp.getUseCaseManager().unsubscribeFromUseCase(
 							field.getAnnotation(UseCaseSubscription.class).value(),
-							(UseCaseListener<? extends TaskResult>) field.get(this));
+							(UseCaseListener<? extends UseCaseResult>) field.get(this));
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}

@@ -6,16 +6,16 @@ import lib.morkim.examples.app.ExampleApp;
 import lib.morkim.mfw.domain.Model;
 import lib.morkim.mfw.usecase.AsyncUseCase;
 import lib.morkim.mfw.usecase.UseCaseListener;
-import lib.morkim.mfw.usecase.TaskRequest;
+import lib.morkim.mfw.usecase.UseCaseRequest;
 
-public class ReusableTask extends AsyncUseCase<ExampleApp, Model, TaskRequest, ReusableResult> {
+public class ReusableTask extends AsyncUseCase<ExampleApp, Model, UseCaseRequest, ReusableResult> {
 
 	public ReusableTask(ExampleApp appContext, UseCaseListener<ReusableResult> useCaseListener) {
 		super(appContext, useCaseListener);
 	}
 
 	@Override
-	protected ReusableResult onExecute(TaskRequest request) {
+	protected ReusableResult onExecute(UseCaseRequest request) {
 
 		ReusableResult result = new ReusableResult();
 		result.setCompletionPercent(0);
@@ -34,7 +34,7 @@ public class ReusableTask extends AsyncUseCase<ExampleApp, Model, TaskRequest, R
 	}
 
 	@Override
-	protected ReusableResult onUndo(TaskRequest request) {
+	protected ReusableResult onUndo(UseCaseRequest request) {
 		return null;
 	}
 }

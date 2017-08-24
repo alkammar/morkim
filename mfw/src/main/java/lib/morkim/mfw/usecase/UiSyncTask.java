@@ -8,7 +8,7 @@ import lib.morkim.mfw.app.MorkimApp;
 import lib.morkim.mfw.domain.Model;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class UiSyncTask<A extends MorkimApp<M, ?>, M extends Model, Req extends TaskRequest, Res extends TaskResult>
+public abstract class UiSyncTask<A extends MorkimApp<M, ?>, M extends Model, Req extends UseCaseRequest, Res extends UseCaseResult>
 		extends UseCase<A, M, Req, Res> {
 
 	public UiSyncTask(A morkimApp, UseCaseListener<Res> listener) {

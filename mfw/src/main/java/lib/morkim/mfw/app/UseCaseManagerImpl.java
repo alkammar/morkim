@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import lib.morkim.mfw.usecase.EmptyUseCase;
-import lib.morkim.mfw.usecase.TaskPendingResult;
-import lib.morkim.mfw.usecase.TaskRequest;
-import lib.morkim.mfw.usecase.TaskResult;
+import lib.morkim.mfw.usecase.UseCasePendingResult;
+import lib.morkim.mfw.usecase.UseCaseRequest;
+import lib.morkim.mfw.usecase.UseCaseResult;
 import lib.morkim.mfw.usecase.UndoRecord;
 import lib.morkim.mfw.usecase.UseCase;
 import lib.morkim.mfw.usecase.UseCaseCreator;
@@ -20,11 +20,11 @@ import lib.morkim.mfw.usecase.UseCaseListener;
 
 class UseCaseManagerImpl implements UseCaseManager {
 
-	private Map<Class<? extends UseCase>, List<UseCaseListener<? extends TaskResult>>> useCasesListeners;
+	private Map<Class<? extends UseCase>, List<UseCaseListener<? extends UseCaseResult>>> useCasesListeners;
 	private List<UndoRecord> undoRecords;
 	private Map<Class<? extends UseCase>, UseCase> stickyUseCases;
 
-	private static final TaskResult PENDING_RESULT = new TaskPendingResult();
+	private static final UseCaseResult PENDING_RESULT = new UseCasePendingResult();
 
 	UseCaseManagerImpl() {
 
@@ -34,13 +34,13 @@ class UseCaseManagerImpl implements UseCaseManager {
 	}
 
 	@Override
-	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends TaskResult> listener) {
+	public void subscribeToUseCase(Class<? extends UseCase>[] taskClasses, UseCaseListener<? extends UseCaseResult> listener) {
 
 		synchronized (this) {
 
 			for (Class<? extends UseCase> taskClass : taskClasses) {
 
-				List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
+				List<UseCaseListener<? extends UseCaseResult>> useCaseListeners = useCasesListeners.get(taskClass);
 
 				if (useCaseListeners == null) {
 					useCaseListeners = new ArrayList<>();
@@ -59,7 +59,7 @@ class UseCaseManagerImpl implements UseCaseManager {
 
 			for (Class<? extends UseCase> taskClass : taskClasses) {
 
-				List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(taskClass);
+				List<UseCaseListener<? extends UseCaseResult>> useCaseListeners = useCasesListeners.get(taskClass);
 
 				if (useCaseListeners != null) {
 					useCaseListeners.remove(listener);
@@ -72,15 +72,15 @@ class UseCaseManagerImpl implements UseCaseManager {
 	}
 
 	@Override
-	public List<UseCaseListener<? extends TaskResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
+	public List<UseCaseListener<? extends UseCaseResult>> getUseCaseSubscriptions(Class<? extends UseCase> aClass) {
 		synchronized (this) {
-			List<UseCaseListener<? extends TaskResult>> useCaseListeners = useCasesListeners.get(aClass);
-			return useCaseListeners != null ? useCaseListeners : new ArrayList<UseCaseListener<? extends TaskResult>>();
+			List<UseCaseListener<? extends UseCaseResult>> useCaseListeners = useCasesListeners.get(aClass);
+			return useCaseListeners != null ? useCaseListeners : new ArrayList<UseCaseListener<? extends UseCaseResult>>();
 		}
 	}
 
 	@Override
-	public void addToUndoStack(UseCase useCase, TaskRequest request) {
+	public void addToUndoStack(UseCase useCase, UseCaseRequest request) {
 
 		undoRecords.add(new UndoRecord(useCase.getClass(), request));
 	}
@@ -115,10 +115,10 @@ class UseCaseManagerImpl implements UseCaseManager {
 	}
 
 	@Override
-	public TaskResult getStickyResult(Class<? extends UseCase> cls) {
+	public UseCaseResult getStickyResult(Class<? extends UseCase> cls) {
 		synchronized (this) {
 			if (stickyUseCases.containsKey(cls)) {
-				TaskResult stickyResult = stickyUseCases.get(cls).getStickyResult();
+				UseCaseResult stickyResult = stickyUseCases.get(cls).getStickyResult();
 				return stickyResult == null ? PENDING_RESULT : stickyResult;
 			} else
 				return null;

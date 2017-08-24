@@ -11,7 +11,7 @@ public abstract class RepoUpgrade extends AsyncUseCase {
 	}
 
 	@Override
-	protected TaskResult onExecute(TaskRequest request) {
+	protected UseCaseResult onExecute(UseCaseRequest request) {
 		
 //		Gateway gateway = getRepo().get(ThunderRepo.DATA_SOURCE_STATE);
 //		int currentVersion = gateway.getVersion();
