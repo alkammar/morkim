@@ -45,7 +45,8 @@ public abstract class AsyncUseCase<A extends MorkimApp<M, ?>, M extends Model, R
 			if (params.length > 0)
 				setRequest(params[0]);
 
-			publishProgress(!isUndoing ? onExecute(getRequest()) : onUndo(getRequest()));
+			if (isUndoing) onUndo(getRequest());
+			else onExecute(getRequest());
 
 			try {
 				AsyncUseCase.this.onPostExecute();

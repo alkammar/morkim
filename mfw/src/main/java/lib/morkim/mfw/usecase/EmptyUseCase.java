@@ -3,8 +3,8 @@ package lib.morkim.mfw.usecase;
 public class EmptyUseCase extends UseCase {
 
 	@Override
-	protected UseCaseResult onExecute(UseCaseRequest request) {
-		return new UseCaseResult() {};
+	protected void onExecute(UseCaseRequest request) {
+
 	}
 
 	@Override

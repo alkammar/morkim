@@ -15,7 +15,7 @@ public class ExampleTask extends AsyncUseCase<ExampleApp, Model, UseCaseRequest,
 	private BackEndCall backEndCall;
 
 	@Override
-	protected ExampleResult onExecute(UseCaseRequest request) {
+	protected void onExecute(UseCaseRequest request) {
 
 		backEndCall.send(new BackEndCall.Request());
 
@@ -32,7 +32,7 @@ public class ExampleTask extends AsyncUseCase<ExampleApp, Model, UseCaseRequest,
 
 		result.setCompletionPercent(100);
 
-		return result;
+		updateProgress(result);
 	}
 
 	@Override

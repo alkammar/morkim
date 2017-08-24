@@ -15,7 +15,7 @@ public class ReusableTask extends AsyncUseCase<ExampleApp, Model, UseCaseRequest
 	}
 
 	@Override
-	protected ReusableResult onExecute(UseCaseRequest request) {
+	protected void onExecute(UseCaseRequest request) {
 
 		ReusableResult result = new ReusableResult();
 		result.setCompletionPercent(0);
@@ -30,7 +30,7 @@ public class ReusableTask extends AsyncUseCase<ExampleApp, Model, UseCaseRequest
 
 		result.setCompletionPercent(100);
 
-		return result;
+		updateProgress(result);
 	}
 
 	@Override

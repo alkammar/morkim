@@ -125,7 +125,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
         if (isSticky()) useCaseManager.addToStickyUseCases(this);
 
         setRequest(request);
-        final Res result = onExecute(request);
+        onExecute(request);
     }
 
     private void updateListenersOnUiThread(final Res result) {
@@ -154,7 +154,7 @@ public abstract class UseCase<A extends MorkimApp<M, ?>, M extends Model, Req ex
         updateListener(result);
     }
 
-    protected abstract Res onExecute(Req request);
+    protected abstract void onExecute(Req request);
 
     protected abstract Res onUndo(Req request);
 
