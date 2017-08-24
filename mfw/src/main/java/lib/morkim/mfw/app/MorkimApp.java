@@ -1,7 +1,6 @@
 package lib.morkim.mfw.app;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
@@ -145,7 +144,6 @@ public abstract class MorkimApp<M extends Model, R extends MorkimRepository> ext
 		return presenter != null ? presenter : (p) new EmptyPresenter();
 	}
 
-	@Nullable
 	private <comp> comp constructComponent(Viewable viewable, int index) {
 
 		Class<comp> concreteClass;
