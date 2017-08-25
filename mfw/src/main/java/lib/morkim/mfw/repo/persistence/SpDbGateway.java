@@ -59,7 +59,7 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 				entity.setSysId(UUID.fromString(key));
 				list.add(entity);
 			} catch (JSONException e) {
-				throw new GatewayRetrieveException();
+				throw new GatewayRetrieveException(e.getMessage());
 			}
 		
 		return list ;
