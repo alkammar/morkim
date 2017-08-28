@@ -62,4 +62,9 @@ public abstract class InMemoryGateway<E extends Entity> extends AbstractGateway<
 	public void delete(E data) {
 		entities.remove(data.getLocalId());
 	}
+
+	@Override
+	public void deleteAll() {
+		entities.clear();
+	}
 }
