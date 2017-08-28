@@ -75,6 +75,11 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 		spRepo.delete(source(), data.getSysId().toString());
 	}
 
+	@Override
+	public void deleteAll() {
+		spRepo.delete(source());
+	}
+
 	protected abstract JSONObject serialize(E entity) throws JSONException;
 	protected abstract E deserialize(JSONObject jsonObject) throws JSONException;
 

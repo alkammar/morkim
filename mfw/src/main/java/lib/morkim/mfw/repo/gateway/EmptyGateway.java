@@ -37,6 +37,11 @@ public class EmptyGateway<E extends Entity> extends AbstractGateway<E> {
 	}
 
 	@Override
+	public void deleteAll() {
+
+	}
+
+	@Override
 	public void delete(Entity data) {
 
 	}

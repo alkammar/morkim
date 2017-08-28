@@ -96,6 +96,11 @@ public class ExampleUseCaseUnitTest {
                 }
 
                 @Override
+                public void deleteAll() {
+
+                }
+
+                @Override
                 public int getVersion() {
                     return 0;
                 }
