@@ -25,4 +25,9 @@ public class DummyAnalytics implements Analytics {
 		Log.i("DummyAnalytics", "category: " + category + ", action: " + action + ", value: " + value);
 	}
 
+	@Override
+	public void sendEvent(String category, String action, String label, long value) {
+		Log.i("DummyAnalytics", "category: " + category + ", action: " + action + ", label: " + label + ", value: " + value);
+	}
+
 }
