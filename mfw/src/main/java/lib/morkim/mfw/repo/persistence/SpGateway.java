@@ -60,6 +60,11 @@ public abstract class SpGateway<E extends Entity> extends AbstractGateway<E> {
 	}
 
 	@Override
+	public void deleteAll() {
+
+	}
+
+	@Override
 	public String source() {
 		return SP_DEFAULT;
 	}

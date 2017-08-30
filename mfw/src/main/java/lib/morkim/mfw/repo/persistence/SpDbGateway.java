@@ -59,7 +59,7 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 				entity.setSysId(UUID.fromString(key));
 				list.add(entity);
 			} catch (JSONException e) {
-				throw new GatewayRetrieveException();
+				throw new GatewayRetrieveException(e.getMessage());
 			}
 		
 		return list ;
@@ -73,6 +73,11 @@ public abstract class SpDbGateway<E extends Entity> extends AbstractGateway<E> {
 	@Override
 	public void delete(Entity data) {
 		spRepo.delete(source(), data.getSysId().toString());
+	}
+
+	@Override
+	public void deleteAll() {
+		spRepo.delete(source());
 	}
 
 	protected abstract JSONObject serialize(E entity) throws JSONException;
