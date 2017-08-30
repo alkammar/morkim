@@ -6,6 +6,7 @@ public interface Analytics {
 	void initialize();
 	void sendEvent(String category, String action);
 	void sendEvent(String category, String action, long value);
+	void sendEvent(String category, String action, String label);
 	void sendEvent(String category, String action, String label, long value);
 
 }
