@@ -15,7 +15,7 @@ public class ExampleRepository extends MorkimRepository {
 	}
 
 	@Override
-	protected void onUpgrade(int toVersion) {
+	protected void onUpgrade(int toVersion, int savedVersion) {
 
 	}
 }

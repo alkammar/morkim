@@ -25,7 +25,7 @@ public abstract class MorkimRepository implements Repository {
 		int currentVersion = version();
 		for (int version = savedVersion + 1; version <= currentVersion; version++) {
 
-			onUpgrade(version);
+			onUpgrade(version, savedVersion);
 
 			if (version == currentVersion) repoVersion.set(currentVersion);
 		}
@@ -77,6 +77,7 @@ public abstract class MorkimRepository implements Repository {
 	 * Remember that the latest database version is determined by
 	 * overriding the {@link #version()} method and returning the latest version number.
 	 * @param toVersion The version to upgrade to
+	 * @param savedVersion
 	 */
-	protected abstract void onUpgrade(int toVersion);
+	protected abstract void onUpgrade(int toVersion, int savedVersion);
 }
