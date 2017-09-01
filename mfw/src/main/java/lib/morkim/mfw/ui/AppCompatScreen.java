@@ -73,19 +73,12 @@ public abstract class AppCompatScreen<V extends UpdateListener, C extends Contro
 	}
 
 	@Override
-	protected void onPostResume() {
-		super.onPostResume();
-
-		controller.bindViews();
-	}
-
-	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
 		outState.putString(VIEWABLE_ID, id.toString());
 
-		controller.unbindViews();
+//		controller.unbindViews();
 	}
 
 	@Override
