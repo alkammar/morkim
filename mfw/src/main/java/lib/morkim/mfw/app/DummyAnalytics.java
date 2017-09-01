@@ -12,7 +12,7 @@ public class DummyAnalytics implements Analytics {
 
 	@Override
 	public void initialize() {
-		
+
 	}
 
 	@Override
