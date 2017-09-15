@@ -168,4 +168,8 @@ public class MTimer {
 		MTimer.test = test;
 		nowTest = System.currentTimeMillis();
 	}
+
+	public static long toDays(long millis) {
+		return millis != 0 ? millis / ONE_DAY : 0;
+	}
 }
